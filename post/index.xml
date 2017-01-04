@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Moisés Vilar</title>
+    <title>Posts on Developer!</title>
     <link>https://moisesvilar.github.io/post/index.xml</link>
-    <description>Recent content in Posts on Moisés Vilar</description>
+    <description>Recent content in Posts on Developer!</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-ES</language>
+    <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
     <lastBuildDate>Sat, 04 Mar 2017 13:43:24 +0100</lastBuildDate>
     <atom:link href="https://moisesvilar.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>test</title>
+      <title>bienvenida</title>
       <link>https://moisesvilar.github.io/post/test/</link>
       <pubDate>Sat, 04 Mar 2017 13:43:24 +0100</pubDate>
       
       <guid>https://moisesvilar.github.io/post/test/</guid>
-      <description>&lt;p&gt;I read &lt;strong&gt;Good to Great in January 2016&lt;/strong&gt;. An awesome read sharing detailed analysis on how good companies became great. Although this book is about how companies became great but we could apply a lot of the learnings on ourselves. Concepts like level 5 leader, hedgehog concept, the stockdale paradox are equally applicable to individuals.&lt;/p&gt;
+      <description>
 
-&lt;p&gt;In a new era the light and the dark will be so close that the sun bleh bleh bleh&lt;/p&gt;
+&lt;h1 id=&#34;quién-soy&#34;&gt;Quién soy&lt;/h1&gt;
+
+&lt;p&gt;Mi nombre es Moisés Vilar. Soy desarrollador desde los 12 años y desde hace 9 me pagan por ello.&lt;/p&gt;
+
+&lt;p&gt;En este blog intentaré escribir sobre las cosas que fui aprendiendo durante mi carrera profesional pero también sobre temas
+que estoy empezando a descubrir ahora.&lt;/p&gt;
+
+&lt;p&gt;En definitiva, hablaremos sobre desarrollo web, Javascript, HTML5, NodeJS, MongoDB, Docker&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Cualquier consulta, duda, sugerencia, molestia, queja, dolor&amp;hellip; no te cortes en dejarme un comentario en este blog
+o contactar conmigo a través de Twitter.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Bienvenidos!&lt;/strong&gt;&lt;/p&gt;
 </description>
     </item>
     
