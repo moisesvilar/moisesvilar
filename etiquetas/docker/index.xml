@@ -1,22 +1,183 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Docker on Moisés Vilar</title>
+    <title>Docker on Developer!</title>
     <link>https://moisesvilar.github.io/etiquetas/docker/index.xml</link>
-    <description>Recent content in Docker on Moisés Vilar</description>
+    <description>Recent content in Docker on Developer!</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-ES</language>
+    <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
     <atom:link href="https://moisesvilar.github.io/etiquetas/docker/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>test</title>
-      <link>https://moisesvilar.github.io/post/test/</link>
-      <pubDate>Sat, 04 Mar 2017 13:43:24 +0100</pubDate>
+      <title>docker I - lo básico</title>
+      <link>https://moisesvilar.github.io/post/docker-basics-1/</link>
+      <pubDate>Thu, 05 Jan 2017 09:53:15 +0100</pubDate>
       
-      <guid>https://moisesvilar.github.io/post/test/</guid>
-      <description>&lt;p&gt;I read &lt;strong&gt;Good to Great in January 2016&lt;/strong&gt;. An awesome read sharing detailed analysis on how good companies became great. Although this book is about how companies became great but we could apply a lot of the learnings on ourselves. Concepts like level 5 leader, hedgehog concept, the stockdale paradox are equally applicable to individuals.&lt;/p&gt;
+      <guid>https://moisesvilar.github.io/post/docker-basics-1/</guid>
+      <description>
 
-&lt;p&gt;In a new era the light and the dark will be so close that the sun bleh bleh bleh&lt;/p&gt;
+&lt;p&gt;Hace un par de años, cuando trabajaba en el &lt;a href=&#34;https://citius.usc.es/&#34;&gt;CITIUS&lt;/a&gt;,
+&lt;a href=&#34;https://twitter.com/jety_fr&#34;&gt;David Martínez&lt;/a&gt; nos impartió un pequeño seminario de una
+herramienta con la que había empezado a trastear hacía poco y lo tenía entusiasmado.&lt;/p&gt;
+
+&lt;p&gt;O bien porque no le presté mucha atención (lo siento, David, no eres tú, soy yo) o bien
+porque no supe entender su potencial en aquel momento, pero dejé aquello a un lado y me
+desentendí un poco de todo ese &amp;ldquo;nuevo&amp;rdquo; mundo.&lt;/p&gt;
+
+&lt;p&gt;Pero hace un año, más o menos, me llamó la atención el curso de &lt;a href=&#34;http://capside-academy.usefedora.com/p/docker-devops&#34;&gt;Docker Essentials&lt;/a&gt;
+alojado en &lt;a href=&#34;http://capside-academy.usefedora.com/&#34;&gt;Capside Academy&lt;/a&gt;. Además, lo impartía el
+señor Javi Moreno, un verdadero crack del que tuve el honor de dar mis primeros pasos con Javascript
+a partir de un curso que también impartió en el &lt;a href=&#34;https://cntg.xunta.es/web/cnt/home&#34;&gt;CNTG&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Si a Javi le apasionaba Docker, entonces la cosa tenía que ser interesante.&lt;/p&gt;
+
+&lt;p&gt;Cuando pude sacar algo de tiempo (en realidad, pasaron muchos meses desde que descubrí el curso),
+me lo devoré de cabo a rabo. Además, en paralelo, en el podcast de &lt;a href=&#34;http://wedevelopers.com/&#34;&gt;WeDevelopers&lt;/a&gt;
+emitieron un capítulo de, exacto&amp;hellip; &lt;a href=&#34;http://wedevelopers.com/2016/11/12/we-developers-046-docker/&#34;&gt;Javi Moreno hablando de Docker!&lt;/a&gt;.
+El universo me estaba enviando una señal, no cabía duda.&lt;/p&gt;
+
+&lt;p&gt;Puedo afirmar con una mano en el corazón que desde el primer momento en el que empecé a cacharrear con Docker ya tenía claro que lo
+iba a implantar en el trabajo. Ahora mismo lo estamos utilizando para nuestros entornos de desarrollo
+y pronto lo tendremos listo para los entornos de preproducción.&lt;/p&gt;
+
+&lt;p&gt;Aunque mi experiencia con Docker no es exhaustiva, ni larga, creo que los conceptos básicos
+me han quedado bastante claros, así que voy a intentar plasmarlos aquí con el objetivo de ahorrarle
+un par de horas a cualquiera que quiera comenzar con ello.&lt;/p&gt;
+
+&lt;p&gt;Por otro lado, si eres un experto y ves que estoy metiendo la pata hasta el fondo&amp;hellip; vapuléame
+en los comentarios! Sin piedad, en serio.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Empezamos!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;para-qué-se-usa-docker&#34;&gt;¿Para qué se usa Docker?&lt;/h1&gt;
+
+&lt;p&gt;En el 2010, la persona que había gestionado durante trece años el mantenimiento y evolución de
+un importante sistema de información de la Xunta de Galicia decidió que era un buen momento
+para cambiar de aires. Así que pidió la cuenta y se fué. Y como yo pasaba por allí, me cayó el
+marrón, digo, me pasaron la responsabilidad.&lt;/p&gt;
+
+&lt;p&gt;Repito: un sistema desarrollado durante trece años. Cuando se picó su primera línea de código,
+no existía Google. Cuando yo lo cogí, el iPhone llevaba tres añitos entre nosotros. Os podéis hacer
+una idea.&lt;/p&gt;
+
+&lt;p&gt;El caso es que el entorno de desarrollo de dicho sistema era, cuanto menos&amp;hellip; caótico. Mil
+dependencias en forma de librerías, algunas open source, otras código propietario, algunas obsoletas,
+otras directamente demasiado exóticas o desconocidas&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Ignorando temas de mantenibilidad, (que es decir mucho, ya lo sé, pero sólo tenía un añito
+de experiencia laboral!), el primer problema con el que me encontré es que dicho entorno de desarrollo
+estaba perfectamente instalado y configurado&amp;hellip; en un único equipo. Como en los años 50, cuando
+queríamos/necesitábamos realizar una mejora, implementar un cambio, corregir un bug&amp;hellip; un compañero
+se movía físicamente a dicho equipo durante los días que hiciese falta (es decir, dejaba su
+puesto de trabajo habitual durante días para irse a picar código a otro equipo que no era el suyo, a unas oficinas
+que no eran de su empresa y con unos compañeros que no eran los suyos) para implementar la nueva
+versión del sistema. Lo compilaba allí mismo, y enviaba los ejecutables por FTP al cabecilla de
+turno para que los desplegase.&lt;/p&gt;
+
+&lt;p&gt;Y procurábamos no pensar, por nuestra salud mental, qué pasaría si por alguna razón dicho
+equipo ardía o era zapateado escaleras abajo. Todavía se me ponen los pelos de punta.&lt;/p&gt;
+
+&lt;p&gt;Una locura.&lt;/p&gt;
+
+&lt;p&gt;Como comentaba, era un sistema bastante importante (aunque no lo parezca) así que las presiones
+por tener implementadas mejoras y correcciones eran prácticamente constantes todo el año. Estaba
+descartada la idea de hacer un trabajo &amp;ldquo;forense&amp;rdquo; e intentar replicar el estado de dicho equipo de
+desarrollo en otra máquina. Así que opté por utilizar una herramienta de VMWare
+(el &lt;a href=&#34;http://www.vmware.com/products/converter.html&#34;&gt;vCenter Converter&lt;/a&gt;) que, básicamente,
+escaneaba un sistema de ficheros entero alojado en una máquina física y lo convertía en una máquina
+virtual. De esta manera, virtualicé (a cañonazos) el equipo de desarrollo, me lo metí en una memoria
+externa y, oye, por lo menos podíamos dormir tranquilos: ya teníamos una copia virtual del entorno
+de desarrollo, que podíamos ejecutar donde quisiéramos (siempre y cuando el equipo anfitrión
+fuera lo suficientemente potente) y los desarrolladores ya no tenían que estar trabajando entre dos
+sitios distintos. Quiero pensar que su calidad de vida incrementó enteros en aquel momento.&lt;/p&gt;
+
+&lt;p&gt;¿Por qué os cuento esta historia? Porque Docker te permite, entre otras cosas,
+&lt;strong&gt;replicar exactamente&lt;/strong&gt; el entorno de ejecución de un proyecto, de una manera muchísimo más
+eficiente y rápida que la que buenamente implementé yo con el vCenter Converter. Eso sí, con matices
+que iremos viendo paulatinamente.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;En realidad, si no empiezas tu proyecto usando docker, puede ser bastante complicado replicar su
+ entorno de producción a posteriori. Es más, en la historia que os cuento, sería prácticamente imposible.
+ Pero estas cosas las comentaremos más adelante en posts futuros.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Imaginad que puedo desplegar un entorno de ejecución de cualquier sistema/aplicación en un tiempo
+ridículo (del orden de milisegundos) y siendo lo más eficiente posible en el uso de recursos
+(o como mínimo, siendo extremadamente eficiente). Pues eso es Docker.&lt;/p&gt;
+
+&lt;p&gt;Partiendo de esto, podéis intuir que el paso de desarrollo a producción es indoloro (adiós a
+aquello de &lt;em&gt;en mi máquina funcionaba!&lt;/em&gt;). Tanto en desarrollo como en producción tenemos exactamente
+el mismo entorno (el mismo sistema operativo, la misma base de datos, las mismas librerías&amp;hellip; todo
+en las versiones exactas en ambos casos). El margen para los problemas se estrecha bastante.&lt;/p&gt;
+
+&lt;h1 id=&#34;todo-eso-está-muy-bien-pero-cómo-funciona&#34;&gt;Todo eso está muy bien, pero ¿cómo funciona?&lt;/h1&gt;
+
+&lt;p&gt;En realidad, la tecnología que está en las tripas de Docker no es el último grito precisamente.
+Emplea herramientas que llevan con nosotros muchos, muchos años. Si eres un experto en entornos
+Unix, seguramente te suenen. Yo no lo soy, así que me sonaban vagamente cuando empecé con Docker.&lt;/p&gt;
+
+&lt;p&gt;En Unix teníamos:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.wikipedia.org/wiki/Chroot&#34;&gt;chroot&lt;/a&gt;: básicamente le indica a un proceso que su
+sistema de ficheros empieza donde tú le digas. Es decir, cambias la raíz del sistema de ficheros
+del proceso (de ahí su nombre, &lt;em&gt;change root&lt;/em&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Cgroups&#34;&gt;cgroups&lt;/a&gt;: se utiliza para limitar en recursos la
+ejecución de un proceso: memoria, ancho de banda, núcleos etc.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://man7.org/linux/man-pages/man7/namespaces.7.html&#34;&gt;namespaces&lt;/a&gt;: útiles para aislar un proceso
+del resto de procesos. Es decir, poder hacerle creer a un proceso que es el único que se está
+ejecutando en toda la máquina.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Pues perfecto, si ejecutamos un proceso aislado, limitado en recursos y le decimos que la raíz
+de su sistema de ficheros está en un directorio donde tenemos almacenados casualmente los binarios de nuestro
+entorno de ejecución (sistema operativo, base de datos, servidor de aplicaciones etc), &lt;em&gt;alehop!&lt;/em&gt;,
+&lt;strong&gt;acabamos de virtualizar dicho entorno a nivel de sistema operativo&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Y esto es la idea principal de Docker: virtualización ligera a nivel de sistema operativo.
+Usando procesos pequeños y rápidos en vez de pesadas máquinas virtuales. Y siendo muy eficientes
+en los binarios que componen nuestro entorno de ejecución, como veremos en futuros posts.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Estas son las tripas de Docker. La verdad detrás del truco. Que necesitamos saber para no
+caer en lo que comentaba el bueno de Arthur C. Clarke: &lt;em&gt;cualquier tecnología lo suficientemente
+avanzada es indistinguible de la magia&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Pero para nuestro día a día, lo único que tenemos que tener claro es que Docker maneja la siguiente
+arquitectura:&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;img src=&#34;https://moisesvilar.github.io//images/docker-architecture.png&#34; alt=&#34;docker I - lo básico /images/docker-architecture.png&#34;&gt;
+  
+&lt;/figure&gt;
+
+
+&lt;p&gt;Es decir, tenemos un &lt;strong&gt;intérprete de Docker&lt;/strong&gt;, el &lt;em&gt;docker client&lt;/em&gt;, que se comunica con el sistema Docker
+(el &lt;em&gt;docker server&lt;/em&gt;) a través de una API REST bajo HTTPS cuyo punto de acceso está implementado
+en el proceso &lt;em&gt;docker agent&lt;/em&gt; que se ejecuta en background.&lt;/p&gt;
+
+&lt;p&gt;Con cada comando que ejecutamos en Docker:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -ti alpine /bin/sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;en realidad estamos invocando una o varias peticiones HTTPS a dicha API REST. ¡Incluso podríamos
+comunicarnos con ella directamente empleando cURL por ejemplo!&lt;/p&gt;
+
+&lt;p&gt;Es el &lt;em&gt;docker agent&lt;/em&gt; el encargado de gestionar todos los procesos que virtualizan nuestros entornos.&lt;/p&gt;
+
+&lt;p&gt;Por último, decir que la máquina anfitrión, desde el punto de vista de Docker, es aquella que ejecuta
+directamente el &lt;em&gt;docker server&lt;/em&gt;. Y para ello, el sistema operativo anfitrión debe &lt;strong&gt;soportar Docker de forma
+nativa&lt;/strong&gt;. ¿Esto qué significa? Pues sencillamente, que tiene que implementar algo parecido a los &lt;em&gt;chroots&lt;/em&gt;,
+&lt;em&gt;cgroups&lt;/em&gt; y &lt;em&gt;namespaces&lt;/em&gt; que veíamos más arriba. Es decir, tiene que darle las herramientas necesarias a Docker
+para que éste haga su magia.&lt;/p&gt;
+
+&lt;p&gt;Cualquier sistema basado en Unix (Linux, MacOS) tiene soporte nativo de Docker. Y Windows 10 lo tiene en su versión
+Professional, aunque he de decir que mi experiencia por el momento me dice que está bastante verde. Para el resto de
+sistemas operativos habrá que utilizar un pequeño atajo para poder trabajar con Docker. ¡Pero no adelantemos acontecimientos!&lt;/p&gt;
 </description>
     </item>
     
