@@ -7,8 +7,214 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-ES</language>
     <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
-    <lastBuildDate>Thu, 05 Jan 2017 09:53:15 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 10 Jan 2017 19:51:45 +0100</lastBuildDate>
     <atom:link href="https://moisesvilar.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>docker II - capas e imágenes</title>
+      <link>https://moisesvilar.github.io/post/docker-layers-2/</link>
+      <pubDate>Tue, 10 Jan 2017 19:51:45 +0100</pubDate>
+      
+      <guid>https://moisesvilar.github.io/post/docker-layers-2/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://moisesvilar.github.io/post/docker-basics-1/&#34;&gt;En el anterior post&lt;/a&gt; vimos que una de las herramientas heredadas de Unix que utilizaba Docker eran los chroot.
+Con ellos, podíamos establecer para un proceso &lt;strong&gt;en qué directorio comenzaba su sistema de ficheros&lt;/strong&gt;, su &lt;em&gt;carpeta raíz&lt;/em&gt;. También dijimos que, en la gestión de dicho sistema de ficheros,
+Docker era bastante eficiente.&lt;/p&gt;
+
+&lt;p&gt;En este post veremos en qué consiste esta eficiencia y cómo la consigue Docker.&lt;/p&gt;
+
+&lt;h1 id=&#34;las-capas&#34;&gt;Las capas&lt;/h1&gt;
+
+&lt;p&gt;Imaginémonos que tenemos dos entornos de ejecución para dos aplicaciones.
+Ambos se ejecutan sobre el sistema operativo CentOS 7. Pero la primera,
+es una aplicación basada en la API 6 de Java. Porque somos tipos duros. Y la segunda es
+una aplicación NodeJS 6.9.&lt;/p&gt;
+
+&lt;p&gt;Vamos a hacer el ejercicio mental de montar sendos entornos de ejecución en dos máquinas virtuales.&lt;/p&gt;
+
+&lt;p&gt;Para la &lt;strong&gt;primera máquina virtual&lt;/strong&gt;, la que reproduce el entorno de ejecución de la aplicación Java,
+tendremos que instalar:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;El sistema operativo CentOS 7.&lt;/li&gt;
+&lt;li&gt;La máquina virtual de Java para la versión 6 de su API.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Para la &lt;strong&gt;segunda máquina virtual&lt;/strong&gt;, la de la aplicación NodeJS:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;El sistema operativo CentOS 7 &lt;em&gt;again&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;El servidor NodeJS en su versión 6.9.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Fijaos en el primer punto de ambas máquinas, el sistema operativo CentOS 7.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;¿Todos los ficheros binarios que componen dicho sistema operativo están duplicados en ambas máquinas?&lt;/strong&gt;
+Por supuesto que sí.&lt;/p&gt;
+
+&lt;p&gt;Tendríamos algo como esto:&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;img src=&#34;https://moisesvilar.github.io//images/docker-2-vm-1.png&#34; alt=&#34;docker II - capas e imágenes /images/docker-2-vm-1.png&#34;&gt;
+  
+&lt;/figure&gt;
+
+
+&lt;p&gt;Esto no parece que sea muy eficiente. Es decir, ambas máquinas duplican &lt;strong&gt;exactamente&lt;/strong&gt; los mismos
+binarios para el sistema operativo.&lt;/p&gt;
+
+&lt;p&gt;¿Qué pasaría si dichos binarios se pudiesen &lt;strong&gt;reutilizar&lt;/strong&gt; entre ambas máquinas? En este escenario,
+ganaríamos eficiencia, ya que ambas máquinas compartirían los ficheros del sistema operativo
+(al fin y al cabo, es el mismo para ambos entornos). La única condición que necesitaríamos es que
+dichos binarios fueran de &lt;strong&gt;sólo lectura&lt;/strong&gt;, para evitar que una escritura de la primera máquina
+cambiase el entorno de la segunda y ésta se fuese al garete.&lt;/p&gt;
+
+&lt;p&gt;En este segundo caso tendríamos:&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;img src=&#34;https://moisesvilar.github.io//images/docker-2-vm-2.png&#34; alt=&#34;docker II - capas e imágenes /images/docker-2-vm-2.png&#34;&gt;
+  
+&lt;/figure&gt;
+
+
+&lt;p&gt;Bien, ahora bauticemos las cosas. Resulta que a un conjunto de binarios (por ejemplo, los que
+componen el sistema operativo CentOS 7) se le denomina &lt;strong&gt;una capa&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Este concepto de &lt;strong&gt;capas reutilizables&lt;/strong&gt; es lo que emplea Docker para ganar eficiencia entre
+las &amp;ldquo;máquinas virtuales&amp;rdquo; (con todas las comillas que queráis) que gestiona. Es decir, la arquitectura
+de capas que emplearía Docker para modelizar los entornos del ejemplo sería la de la segunda figura,
+reutilizando la capa del sistema operativo. Y sí, sería de sólo lectura, y aunque parezca un
+impedimento grande, no lo es tanto, como veremos más adelante.&lt;/p&gt;
+
+&lt;p&gt;Si resulta que ahora necesitamos un tercer entorno, por ejemplo una aplicación web sobre CentOS 7 y
+NodeJS 6.9 pero empleando el framework Express 4, podríamos reutilizar las capas anteriores y
+nuestra nueva arquitectura quedaría de la siguiente forma:&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;img src=&#34;https://moisesvilar.github.io//images/docker-2-vm-3.png&#34; alt=&#34;docker II - capas e imágenes /images/docker-2-vm-3.png&#34;&gt;
+  
+&lt;/figure&gt;
+
+
+&lt;p&gt;¿Vemos la idea?&lt;/p&gt;
+
+&lt;p&gt;¿Y cómo se llama el chico que gestiona todo esto de reutilización de capas en Docker para que no se descontrole
+entre distintos entornos virtualizados? El &lt;strong&gt;Union File System&lt;/strong&gt; (UFS). Y no me voy a meter a fondo
+con esto, más que nada, porque no lo controlo y no quiero meter la pata. Pero también porque, por el momento,
+no me ha hecho falta saber cómo funciona exactamente el UFS para entender Docker y poder trabajar con él.&lt;/p&gt;
+
+&lt;p&gt;Aunque, si estás leyendo esto y eres un experto en este tema, ¡no te cortes! Déjanos algo en los comentarios.&lt;/p&gt;
+
+&lt;p&gt;Por el momento continuamos con el siguiente concepto.&lt;/p&gt;
+
+&lt;h1 id=&#34;las-imágenes&#34;&gt;Las imágenes&lt;/h1&gt;
+
+&lt;p&gt;Una imagen en Docker es &lt;strong&gt;cualquier conjunto vertical y adyacente de capas&lt;/strong&gt;. Es decir, en
+la arquitectura de la figura anterior podríamos definir las siguientes imágenes:&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;img src=&#34;https://moisesvilar.github.io//images/docker-2-im-1.png&#34; alt=&#34;docker II - capas e imágenes /images/docker-2-im-1.png&#34;&gt;
+  
+&lt;/figure&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;Una imagen con la capa de CentOS 7.&lt;/li&gt;
+&lt;li&gt;Una imagen con la capa de JRE 6 sobre la de CentOS 7.&lt;/li&gt;
+&lt;li&gt;Una imagen con la capa de NodeJS 6.9 sobre la de CentOS 7.&lt;/li&gt;
+&lt;li&gt;Una imagen con la capa de Express 4, sobre la de NodeJS 6.9, ésta a su vez sobre la de CentOS 7.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Cada una de estas imágenes &lt;strong&gt;servirá como sistema de directorios de nuestras &amp;ldquo;máquinas virtuales&amp;rdquo;&lt;/strong&gt;,
+teniendo en cuenta que:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Las imágenes son de &lt;strong&gt;solo lectura&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;El UFS controla, para cada &amp;ldquo;máquina virtual&amp;rdquo;, si alguna de las capas de su imagen está siendo usada por
+otra &amp;ldquo;máquina virtual&amp;rdquo;, y si es el caso, &lt;strong&gt;la reutiliza&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;¿Y si ahora queremos ejecutar una aplicación en alguno de nuestros entornos? Fácil: simplemente será
+una capa más a añadir encima de nuestra arquitectura. Es decir, los ficheros del aplicación componen
+una nueva capa que es gestionada por el UFS. Por ejemplo, para nuestra aplicación Express sobre NodeJS:&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;img src=&#34;https://moisesvilar.github.io//images/docker-2-im-2.png&#34; alt=&#34;docker II - capas e imágenes /images/docker-2-im-2.png&#34;&gt;
+  
+&lt;/figure&gt;
+
+
+&lt;p&gt;Pero habíamos dicho que nuestras imágenes son de sólo lectura. Entonces, ¿qué pasa cuando nuestra
+aplicación realiza una escritura a disco (en un fichero, o en una base de datos)?&lt;/p&gt;
+
+&lt;p&gt;Para responder a esta pregunta hay que introducir el siguiente concepto (y último, por hoy).&lt;/p&gt;
+
+&lt;h1 id=&#34;los-contenedores&#34;&gt;Los contenedores&lt;/h1&gt;
+
+&lt;p&gt;Os habréis dado cuenta del uso de las comillas cuando escribo &amp;ldquo;máquina virtual&amp;rdquo;. Además de porque ya
+sabemos que en Docker no existe este concepto exactamente, ya que se trata de una virtualización ligera,
+el otro motivo es que en Docker el término que se utiliza es el de &lt;strong&gt;contenedor&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Un contenedor es uno de esos procesos aislados y limitados en recursos de los que hablábamos
+&lt;a href=&#34;https://moisesvilar.github.io/post/docker-basics-1/&#34;&gt;en el anterior post&lt;/a&gt; y cuyo sistema de ficheros también
+le indicábamos. Como adelantamos arriba, el sistema de ficheros que va a utilizar ese proceso
+(o ya podemos llamarlo &lt;em&gt;contenedor&lt;/em&gt;) será la imagen que le indiquemos: la de CentOS 7, la de
+CentOS 7 + Java etc.&lt;/p&gt;
+
+&lt;p&gt;Cuando lanzamos un contenedor en Docker, ademas de crear dicho proceso, le añade a su imagen
+&lt;strong&gt;una nueva capa de lectura/escritura&lt;/strong&gt; que es donde realizará las modificaciones que se
+realicen durante la ejecución del contenedor. Por último, también le asigna una interfaz de
+red virtual, para que el contenedor se pueda comunicar con el resto del mundo.&lt;/p&gt;
+
+&lt;p&gt;En esa capa de lectura/escritura es donde el proceso ve una versión concreta de los ficheros
+que son modificados. De esta manera, el estado de ejecución entre distintos contenedores que
+usen la misma imagen se mantiene independiente entre ambos, y esto permite al UFS poder reutilizar
+el resto de capas entre el resto de contenedores que las usen en sus imágenes.&lt;/p&gt;
+
+&lt;p&gt;¿Más o menos queda claro?&lt;/p&gt;
+
+&lt;p&gt;Un contenedor no es más que un proceso aislado y limitado en recursos que sólo ve como
+sistema de ficheros lo que la imagen le proporciona, más esa capa de lectura/escritura que
+guarda su estado actual.&lt;/p&gt;
+
+&lt;p&gt;Y fijaos: &lt;strong&gt;es un proceso&lt;/strong&gt;. No es una máquina virtual. El lanzamiento de un contenedor es
+&lt;strong&gt;rapidísimo&lt;/strong&gt;. Del orden de milisegundos. ¿Cuánto tiempo tardas en iniciar una máquina virtual
+con Virtualbox o VMWare? ¿Un par de minutos? ¿Unas cuantas decenas de segundos si tu máquina es potente?
+Pues eso.&lt;/p&gt;
+
+&lt;p&gt;Como todos los procesos se pueden pausar, se puede reiniciar y se pueden &lt;em&gt;matar&lt;/em&gt; definitivamente.
+Si los pausamos/reiniciamos, la capa de lectura/escritura permanece intacta entre ambos estados. Pero,
+si &lt;em&gt;matamos&lt;/em&gt; un contenedor y volvemos a lanzar uno nueva a partir de la misma imagen, la capa
+de lectura/escritura habrá desaparecido. ¡Claro, es un contenedor nuevo!&lt;/p&gt;
+
+&lt;p&gt;Así que esta no es la manera adecuada de crear una capa de persistencia usando contenedores Docker.
+Pero esto lo veremos en posts futuros cuando presentemos el concepto de volúmenes.&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusiones&#34;&gt;Conclusiones&lt;/h1&gt;
+
+&lt;p&gt;Bueno, la cosa ya se empieza a poner interesante. Hemos visto:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Que Docker usa un sistema de capas, gobernado por el UFS, de tal manera que es capaz de
+reutilizarlas si varios contenedores hacen uso de las mismas.&lt;/li&gt;
+&lt;li&gt;Que un conjunto de esas capas componen una imagen, que es lo que utilizará Docker para
+indicarle qué sistema de ficheros puede ver un determinado contenedor.&lt;/li&gt;
+&lt;li&gt;Que los contenedores en Docker no son más que procesos aislados, limitados, con un sistema
+de ficheros basado en una imagen, con una capa extra de lectura/escritura que guarda su estado y
+con su propia interfaz de red para comunicarse con el resto del mundo.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Ya queda poco para que empecemos a picar comandos, que sé que lo estáis deseando:
+crearemos imágenes y lanzaremos contenedores. Pero antes vendrá otro post para definir
+unos cuantos conceptos sueltos que me han quedado en el tintero junto con un pequeño tutorial
+de cómo instalar Docker en máquinas sin soporte nativo para él.&lt;/p&gt;
+
+&lt;p&gt;¡Nos vemos dentro de nada!&lt;/p&gt;
+
+&lt;p&gt;P.S. Resulta que la imagen de cabecera de este post es el reflejo de un &lt;a href=&#34;http://www.lavozdegalicia.es/noticia/carballo/camarinas/2017/01/10/adios-coidos-costa-da-morte/0003_201701C10C7994.htm&#34;&gt;delito contra el patrimonio natural&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>docker I - lo básico</title>
