@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Developer!</title>
+    <title>Write some code!</title>
     <link>https://moisesvilar.github.io/index.xml</link>
-    <description>Recent content on Developer!</description>
+    <description>Recent content on Write some code!</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es-ES</language>
     <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
@@ -417,6 +417,12 @@ microservicios, testing&amp;hellip; y un montón de cosas interesantes.&lt;/p&gt
 
 &lt;h1 id=&#34;quién-soy&#34;&gt;Quién soy&lt;/h1&gt;
 
+&lt;figure&gt;
+  &lt;img src=&#34;https://moisesvilar.github.io//images/me.jpg#small-image&#34; alt=&#34;bienvenida /images/me.jpg#small-image&#34;&gt;
+  
+&lt;/figure&gt;
+
+
 &lt;p&gt;Mi nombre es Moisés Vilar. Soy desarrollador desde los 12 años y desde hace 9 me pagan por ello.&lt;/p&gt;
 
 &lt;p&gt;En este blog intentaré escribir sobre las cosas que fui aprendiendo durante mi carrera profesional pero también sobre temas
@@ -426,6 +432,15 @@ que estoy empezando a descubrir ahora.&lt;/p&gt;
 
 &lt;p&gt;Cualquier consulta, duda, sugerencia, molestia, queja, dolor&amp;hellip; no te cortes en dejarme un comentario en este blog
 o contactar conmigo a través de Twitter.&lt;/p&gt;
+
+&lt;p&gt;
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/keep-calm-and-write-some-code.png#medium-image&#34; alt=&#34;Keep calm and write some code&#34; /&gt;
+    
+    
+&lt;/figure&gt;
+&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Bienvenidos!&lt;/strong&gt;&lt;/p&gt;
 </description>

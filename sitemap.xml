@@ -17,12 +17,6 @@
   </url>
   
   <url>
-    <loc>https://moisesvilar.github.io/</loc>
-    <lastmod>2017-01-10T19:51:45+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://moisesvilar.github.io/etiquetas/docker/</loc>
     <lastmod>2017-01-10T19:51:45+01:00</lastmod>
     <priority>0</priority>
@@ -35,6 +29,12 @@
   
   <url>
     <loc>https://moisesvilar.github.io/post/</loc>
+    <lastmod>2017-01-10T19:51:45+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://moisesvilar.github.io/</loc>
     <lastmod>2017-01-10T19:51:45+01:00</lastmod>
     <priority>0</priority>
   </url>
