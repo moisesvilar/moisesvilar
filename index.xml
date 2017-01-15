@@ -61,6 +61,11 @@ Por supuesto que sí.&lt;/p&gt;
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-1.png&#34; alt=&#34;Entorno en cada máquina virtual&#34; /&gt;
     
     
+    &lt;figcaption&gt;
+        &lt;h4&gt;Entornos independientes (y dupicados) en dos máquinas virtuales&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
 &lt;/figure&gt;
 
 
@@ -80,6 +85,11 @@ cambiase el entorno de la segunda y ésta se fuese al garete.&lt;/p&gt;
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-2.png&#34; alt=&#34;Entorno compartido en dos máquinas virtuales&#34; /&gt;
     
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Entorno teórico de dos máquinas virtuales que comparten y reutilizan partes del mismo, en este caso, el sistema operativo&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
     
 &lt;/figure&gt;
 
@@ -102,6 +112,11 @@ nuestra nueva arquitectura quedaría de la siguiente forma:&lt;/p&gt;
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-3.png&#34; alt=&#34;Entorno compartido en dos máquinas virtuales&#34; /&gt;
     
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Entornos de tres máquinas virtuales que comparten y reutilizan partes: sistema operativo, servidor de aplicaciones etc.&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
     
 &lt;/figure&gt;
 
@@ -127,6 +142,11 @@ la arquitectura de la figura anterior podríamos definir las siguientes imágene
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-im-1.png&#34; alt=&#34;Imágenes posibles en la arquitectura de capas anterior&#34; /&gt;
     
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Imágenes posibles en una arquitectura de capas&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
     
 &lt;/figure&gt;
 
@@ -156,6 +176,11 @@ una nueva capa que es gestionada por el UFS. Por ejemplo, para nuestra aplicaci�
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-im-2.png&#34; alt=&#34;Imagen de una aplicación Express sobre NodeJS&#34; /&gt;
     
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Imagen de una aplicación Express sobre NodeJS&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
     
 &lt;/figure&gt;
 
@@ -374,6 +399,11 @@ arquitectura:&lt;/p&gt;
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-architecture.png&#34; alt=&#34;arquitectura de docker&#34; /&gt;
     
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Modelo de componentes (muy simplificado) de Docker&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
     
 &lt;/figure&gt;
 
