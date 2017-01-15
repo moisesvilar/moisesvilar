@@ -55,9 +55,12 @@ Por supuesto que sí.&lt;/p&gt;
 
 &lt;p&gt;Tendríamos algo como esto:&lt;/p&gt;
 
-&lt;figure&gt;
-  &lt;img src=&#34;https://moisesvilar.github.io//images/docker-2-vm-1.png&#34; alt=&#34;docker II - capas e imágenes /images/docker-2-vm-1.png&#34;&gt;
-  
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-1.png&#34; alt=&#34;Entorno en cada máquina virtual&#34; /&gt;
+    
+    
 &lt;/figure&gt;
 
 
@@ -72,9 +75,12 @@ cambiase el entorno de la segunda y ésta se fuese al garete.&lt;/p&gt;
 
 &lt;p&gt;En este segundo caso tendríamos:&lt;/p&gt;
 
-&lt;figure&gt;
-  &lt;img src=&#34;https://moisesvilar.github.io//images/docker-2-vm-2.png&#34; alt=&#34;docker II - capas e imágenes /images/docker-2-vm-2.png&#34;&gt;
-  
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-2.png&#34; alt=&#34;Entorno compartido en dos máquinas virtuales&#34; /&gt;
+    
+    
 &lt;/figure&gt;
 
 
@@ -91,9 +97,12 @@ impedimento grande, no lo es tanto, como veremos más adelante.&lt;/p&gt;
 NodeJS 6.9 pero empleando el framework Express 4, podríamos reutilizar las capas anteriores y
 nuestra nueva arquitectura quedaría de la siguiente forma:&lt;/p&gt;
 
-&lt;figure&gt;
-  &lt;img src=&#34;https://moisesvilar.github.io//images/docker-2-vm-3.png&#34; alt=&#34;docker II - capas e imágenes /images/docker-2-vm-3.png&#34;&gt;
-  
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-3.png&#34; alt=&#34;Entorno compartido en dos máquinas virtuales&#34; /&gt;
+    
+    
 &lt;/figure&gt;
 
 
@@ -113,9 +122,12 @@ no me ha hecho falta saber cómo funciona exactamente el UFS para entender Docke
 &lt;p&gt;Una imagen en Docker es &lt;strong&gt;cualquier conjunto vertical y adyacente de capas&lt;/strong&gt;. Es decir, en
 la arquitectura de la figura anterior podríamos definir las siguientes imágenes:&lt;/p&gt;
 
-&lt;figure&gt;
-  &lt;img src=&#34;https://moisesvilar.github.io//images/docker-2-im-1.png&#34; alt=&#34;docker II - capas e imágenes /images/docker-2-im-1.png&#34;&gt;
-  
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-im-1.png&#34; alt=&#34;Imágenes posibles en la arquitectura de capas anterior&#34; /&gt;
+    
+    
 &lt;/figure&gt;
 
 
@@ -139,9 +151,12 @@ otra &amp;ldquo;máquina virtual&amp;rdquo;, y si es el caso, &lt;strong&gt;la r
 una capa más a añadir encima de nuestra arquitectura. Es decir, los ficheros del aplicación componen
 una nueva capa que es gestionada por el UFS. Por ejemplo, para nuestra aplicación Express sobre NodeJS:&lt;/p&gt;
 
-&lt;figure&gt;
-  &lt;img src=&#34;https://moisesvilar.github.io//images/docker-2-im-2.png&#34; alt=&#34;docker II - capas e imágenes /images/docker-2-im-2.png&#34;&gt;
-  
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-im-2.png&#34; alt=&#34;Imagen de una aplicación Express sobre NodeJS&#34; /&gt;
+    
+    
 &lt;/figure&gt;
 
 
@@ -354,9 +369,12 @@ avanzada es indistinguible de la magia&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Pero para nuestro día a día, lo único que tenemos que tener claro es que Docker maneja la siguiente
 arquitectura:&lt;/p&gt;
 
-&lt;figure&gt;
-  &lt;img src=&#34;https://moisesvilar.github.io//images/docker-architecture.png&#34; alt=&#34;docker I - lo básico /images/docker-architecture.png&#34;&gt;
-  
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-architecture.png&#34; alt=&#34;arquitectura de docker&#34; /&gt;
+    
+    
 &lt;/figure&gt;
 
 
