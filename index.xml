@@ -7,8 +7,197 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-ES</language>
     <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
-    <lastBuildDate>Tue, 10 Jan 2017 19:51:45 +0100</lastBuildDate>
+    <lastBuildDate>Thu, 12 Jan 2017 20:49:11 +0100</lastBuildDate>
     <atom:link href="https://moisesvilar.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>docker III - docker hub, docker machine</title>
+      <link>https://moisesvilar.github.io/post/docker-concepts-3/</link>
+      <pubDate>Thu, 12 Jan 2017 20:49:11 +0100</pubDate>
+      
+      <guid>https://moisesvilar.github.io/post/docker-concepts-3/</guid>
+      <description>
+
+&lt;p&gt;En este post veremos los últimos acordes antes de ponernos a tocar la sinfonía. Lo dividiré en dos partes.
+En la primera, describiremos dos conceptos que nos serán útiles a la hora de trabajar con Docker.
+En la segunda, haremos un pequeño tutorial de cómo instalar Docker en sistemas sin soporte nativo.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Vamos allá!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;últimos-conceptos-por-ahora&#34;&gt;Últimos conceptos&amp;hellip; por ahora&lt;/h1&gt;
+
+&lt;p&gt;Veremos dos de ellos: el Docker Hub y la Docker machine.&lt;/p&gt;
+
+&lt;h2 id=&#34;docker-hub&#34;&gt;Docker Hub&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://moisesvilar.github.io/post/docker-layers-2/&#34;&gt;En el anterior post&lt;/a&gt; vimos el concepto de &lt;strong&gt;imágenes&lt;/strong&gt;
+como un conjunto de capas que forman los binarios de nuestros entornos (por ejemplo, CentOS 7 +
+NodeJS 6.9). Pues bien, estas imágenes pueden ser subidas a un repositorio gestionado por
+los chicos de Docker. Esto es el Docker Hub.&lt;/p&gt;
+
+&lt;p&gt;Allí encontrarás una enorme (muy enorme) cantidad de imágenes ya creadas por otras personas
+alrededor del mundo. Algunas de ellas tienen la etiqueta de &lt;em&gt;oficial&lt;/em&gt;: han sido creadas y son
+mantenidas por los chicos que están detrás del desarrollo de dichos binarios. Por ejemplo,
+puedes encontrar imágenes oficiales para entornos con NodeJS.&lt;/p&gt;
+
+&lt;p&gt;Al Docker Hub se puede acceder a través de la siguiente URL: &lt;a href=&#34;https://hub.docker.com/&#34;&gt;https://hub.docker.com/&lt;/a&gt;.
+Hace falta registrarse, pero es gratuíto y no tardarás más de un minuto.&lt;/p&gt;
+
+&lt;p&gt;Una vez lo hayas hecho, en el cuadro de búsqueda puedes probar a introducir &amp;ldquo;node&amp;rdquo;. El primer resultado
+está catalogado como &lt;em&gt;oficial&lt;/em&gt;. Si lo inspeccionamos, veremos que esta imagen está disponible
+con varios &lt;em&gt;tags&lt;/em&gt;: para la versión 7.4, 6.9, 4.7&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Fijaos en aquellos &lt;em&gt;tags&lt;/em&gt; que terminan con &lt;em&gt;alpine&lt;/em&gt; y buscad dicha imagen en el buscador. Alpine
+es una distribución de Linux que viene con lo básico y que ocupa la friolera de &lt;strong&gt;2 MB&lt;/strong&gt;. Comparadlo
+con el peso de la imagen de CentOS (70MB): si montamos nuestros entornos a partir de Alpine
+(siempre y cuando una decisión de diseño nos impida hacerlo), montando sobre él todo lo que necesitemos
+(un Apache, una JVM etc.) nos acabamos de librar de 68MB de &lt;em&gt;overhead&lt;/em&gt; y nuestras imágenes serán
+muy livianas.&lt;/p&gt;
+
+&lt;p&gt;Fijaos ahora, entrando en cualquier imagen, en el recuadro de la derecha, titulado &lt;em&gt;Docker Pull Command&lt;/em&gt;:
+exacto, el Docker Hub está implementado como un SaaS y podremos descargar imágenes a través de su API.
+Concretamente, el comando &lt;em&gt;docker pull&lt;/em&gt; nos permitirá hacer esto sobre línea de comandos.&lt;/p&gt;
+
+&lt;p&gt;Docker Hub, como hemos dicho, es gratuíto y su modelo de negocio es muy parecido a Github: con tu
+cuenta gratuíta, todas tus imágenes serán públicas. Si deseas que sean privadas, tienes que pasar
+por caja.&lt;/p&gt;
+
+&lt;h2 id=&#34;docker-machine&#34;&gt;Docker machine&lt;/h2&gt;
+
+&lt;p&gt;Como hemos dicho anteriormente, Docker necesita que el sistema operativo de la máquina anfitrión
+tenga la capacidad de utilizar chroot, cgroups y namespaces. Esto lo cumple cualquier sistema operativo
+basado en Unix (Linux o MacOS), Windows Server y Windows 10 Professional.&lt;/p&gt;
+
+&lt;p&gt;Pero para versiones anteriores hay que instalar el paquete conocido como &lt;em&gt;Docker Toolbox&lt;/em&gt;
+(lo veremos en la siguiente sección).&lt;/p&gt;
+
+&lt;p&gt;Dentro de este paquete se encuentra la &lt;em&gt;Docker machine&lt;/em&gt;: es una máquina virtual ligera (~20MB)
+basada en Linux. Una vez arrancada, dentro de ella tendremos soporte nativo para Docker y podremos
+ejecutar nuestros comandos para descargar imágenes, lanzar contenedores etc.&lt;/p&gt;
+
+&lt;p&gt;Fijaos que, en este escenario, para Docker el &lt;em&gt;host&lt;/em&gt; ya no será nuestra máquina física, sino
+la Docker machine.&lt;/p&gt;
+
+&lt;h1 id=&#34;instalación-de-docker-en-sistemas-sin-soporte-nativo&#34;&gt;Instalación de Docker en sistemas sin soporte nativo&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Un consejo: a partir de aquí os recomendiendo que leais esto desde un PC y que intentéis seguir los pasos a medida que vayáis leyendo.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;En primer lugar, necesitamos descargarnos el paquete &lt;a href=&#34;https://www.docker.com/products/docker-toolbox&#34;&gt;Docker Toolbox&lt;/a&gt;.
+Con él, entre otras herramientas, nos vendrá la Docker machine y Virtualbox, que es el motor de virtualización
+que utilizaremos para crear nuestra pequeña máquina virtual Linux que &lt;strong&gt;sí&lt;/strong&gt; tenga soporte nativo para Docker.&lt;/p&gt;
+
+&lt;p&gt;Ahora, tenemos dos caminos. El más fácil, es hacer doble click en el acceso directo que tendremos en el escritorio
+(si así lo hemos marcado durante la instalación) y esto nos creará la máquina virtual de la que hablamos.&lt;/p&gt;
+
+&lt;p&gt;Pero como sé que os gusta el picar comandos y el terminal, lo haremos de esta manera.&lt;/p&gt;
+
+&lt;p&gt;Abrid un terminal, cmd o como queráis llamarle. Y por favor, no uséis el nativo de Windows. Descargaros algo como
+&lt;a href=&#34;https://conemu.github.io/&#34;&gt;ConEmu&lt;/a&gt; o &lt;a href=&#34;http://cmder.net/&#34;&gt;cmder&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Si picamos&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker-machine create -d virtualbox default
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;crearemos una máquina virtual de nombre &lt;em&gt;default&lt;/em&gt; utilizando el driver para &lt;em&gt;Virtualbox&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Una vez finalizada la ejecución de este comando, si picamos&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker-machine ls
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;veremos un listado de nuestras máquinas virtuales creadas:&lt;/p&gt;
+
+
+&lt;figure class=&#34;w70 text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-3-commands-1.png&#34; alt=&#34;Resultados de docker-machine ls&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Resultados de docker-machine ls&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Por el momento, sólo fijaos en la columna &lt;em&gt;STATE&lt;/em&gt;, que nos indica que la máquina está ejecutándose.&lt;/p&gt;
+
+&lt;p&gt;Si ahora hacemos:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker-machine ssh default
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;estableceremos una conexión SSH con nuestra máquina. Ahora ya estamos dentro de una máquina con soporte nativo para Docker. Concretamente, una distribución
+Linux (llamada &lt;em&gt;Boot2Docker&lt;/em&gt;) superligera para que el impacto en nuestro equipo sea mínimo.&lt;/p&gt;
+
+&lt;p&gt;Antes de terminar, vamos a ejecutar un par de comandos más:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker login
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Esta es la primera vez que vamos a ejecutar el programa &lt;em&gt;docker&lt;/em&gt;. Tened siempre presente que lo que hace este ejecutable es conectarse a través de
+HTTPS al docker-agent e invocar los métodos de su API REST.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Con este comando podemos hacer login en el &lt;em&gt;Docker hub&lt;/em&gt; para poder descargar nuevas imágenes. Nos pedirá nuestro nombre de usuario y contraseña, y ya
+los tendremos porque ya hemos creado la cuenta al comienzo de este post, ¿verdad? ¿VERDAD? ;)&lt;/p&gt;
+
+&lt;p&gt;Ahora vamos a buscar imágenes a través del SaaS que proporciona &lt;em&gt;Docker hub&lt;/em&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker search alpine
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Nos devolverá el listado de imágenes cuyo nombre, descripción&amp;hellip; contenga la cadena &lt;em&gt;alpine&lt;/em&gt;. Podéis comprobar que son los mismos resultados que obtuvimos
+en la primera parte de este post, cuando lo buscamos manualmente a través de la interfaz web del &lt;em&gt;Docker hub&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Muy bien, pues vamos a descargarnos la imagen oficial para alpine:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker pull alpine:latest
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Con &lt;em&gt;:latest&lt;/em&gt;, le estamos indicando que se descargue la imagen cuya &lt;strong&gt;etiqueta&lt;/strong&gt; sea &lt;em&gt;latest&lt;/em&gt;. Este es el comportamiento por defecto si no especificamos
+etiqueta.&lt;/p&gt;
+
+&lt;p&gt;Tardará como cosa de dos pestañeos (ocupa 4MB, ¿recordáis?), así que tendréis que estar atentos para daros cuenta de que en algún momento la salida por pantalla nos pone algo como
+&lt;em&gt;Pulling layer&lt;/em&gt;. ¡Exacto! Al descargar la imagen, nos estamos descargando todas las capas que la componen. En este caso, la imagen de alpine sólo cuenta con
+una capa, la que contiene los binarios de este sistema operativo.&lt;/p&gt;
+
+&lt;p&gt;Para listar las imágenes que tenemos descargadas en nuestro sistema:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker images
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Veremos aquí nuestra imagen alpine recién descargada. Fijaos en la columna &lt;em&gt;SIZE&lt;/em&gt;. 3.984MB. Veis que no os mentía: todo un Linux funcional en menos de 4MB.&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-3-commands-2.png&#34; alt=&#34;Salida del comando docker images, con nuestra imagen alpine de apenas 4MB :)&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Salida del comando docker images, con nuestra imagen alpine de apenas 4MB :)&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;h1 id=&#34;conclusiones&#34;&gt;Conclusiones&lt;/h1&gt;
+
+&lt;p&gt;En este pequeño post hemos visto los conceptos de &lt;em&gt;Docker hub&lt;/em&gt; y &lt;em&gt;Docker machine&lt;/em&gt;. Hemos instalado Docker en un sistema no nativo (Windows 10 Home, por ejemplo) y ¡ole! hemos
+picado nuestros primeros comandos para &lt;em&gt;loguearnos&lt;/em&gt; en el Docker hub, buscar imágenes, descargarlas y listar las que tengamos descargadas en nuestra máquina.&lt;/p&gt;
+
+&lt;p&gt;En el siguiente post nos pondremos serios: empezamos a lanzar contenedores.&lt;/p&gt;
+
+&lt;p&gt;¡Nos vemos en nada!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>docker II - capas e imágenes</title>

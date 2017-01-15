@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="pinterest" content="nopin">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="theme-color" content="#263238">
+
+<meta name="generator" content="Hugo 0.18.1" />
+
+<link rel="apple-touch-icon" href="https://moisesvilar.github.io/images/logo.png">
+
+
+<link rel="canonical" href="https://moisesvilar.github.io/post/docker-concepts-3/">
+
+
+    
+    <link href="//fonts.googleapis.com/css?family=Noto+Sans:400,700|Montserrat" rel="stylesheet">
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    <title>docker III - docker hub, docker machine - Write some code!</title>
+    
+<meta name="description" content="Docker Hub, Docker machine y cómo instalar Docker en sistemas sin soporte nativo">
+
+<meta property="og:title" content="docker III - docker hub, docker machine - Write some code!">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://moisesvilar.github.io/post/docker-concepts-3/">
+<meta property="og:image" content="https://moisesvilar.github.io/images/cover-docker-concepts-3.jpg">
+<meta property="og:site_name" content="Write some code!">
+<meta property="og:description" content="Docker Hub, Docker machine y cómo instalar Docker en sistemas sin soporte nativo">
+<meta property="og:locale" content="ja_JP">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="Write some code!">
+<meta name="twitter:url" content="https://moisesvilar.github.io/post/docker-concepts-3/">
+<meta name="twitter:title" content="docker III - docker hub, docker machine - Write some code!">
+<meta name="twitter:description" content="Docker Hub, Docker machine y cómo instalar Docker en sistemas sin soporte nativo">
+<meta name="twitter:image" content="https://moisesvilar.github.io/images/cover-docker-concepts-3.jpg">
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "NewsArticle",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id":"https:\/\/moisesvilar.github.io\/"
+    },
+    "headline": "docker III - docker hub, docker machine - Write some code!",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https:\/\/moisesvilar.github.io\/images\/cover-docker-concepts-3.jpg",
+      "height": 800,
+      "width": 800
+    },
+    "datePublished": "2017-01-12T20:49:11JST",
+    "dateModified": "2017-01-12T20:49:11JST",
+    "author": {
+      "@type": "Person",
+      "name": "Write some code!"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Write some code!",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https:\/\/moisesvilar.github.io\/images/logo.png",
+        "width": 600,
+        "height": 60
+      }
+    },
+    "description": "Docker Hub, Docker machine y cómo instalar Docker en sistemas sin soporte nativo"
+  }
+</script>
+
+
+    <style>
+      html { font-size: 18px;}@media (max-width: 768px) { html { font-size: 15px; }}body { font-family: 'Noto Sans','Hiragino Kaku Gothic Pro',メイリオ,Meiryo,sans-serif; font-size: inherit; font-weight: 300; line-height: 1rem; background-color: #eceff1;}p { margin: 0;}a { color: #4caf50;}a:hover { text-decoration: none; color: #388e3c;}ul,ol { margin: 0; padding: 0;}h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: 700;}h1 { font-size: 1.8rem; line-height: 2rem; margin: 1.5rem 0; }h2 { font-size: 1.4rem; line-height: 2rem; margin: 1.5rem 0; }h3 { font-size: 1.2rem; line-height: 1.5rem; margin: 1.5rem 0; }h4, h5, h6 { font-size: 1rem; line-height: 1.5rem; margin: 1.5rem 0; }main { display: block;}.content-inner { padding: 1rem 2rem;}.content-inner.thin { padding: .5rem 1rem;}@media (max-width: 768px) { .content-inner { padding: 1rem; }}/* Override */.container { position: relative;}/* Parts:layouts */.l-header { background-color: #fff; margin-bottom: 1rem; padding: 1rem 0; text-align: center;}.l-footer { font-size: .8rem; padding: 1.5rem 0;}/* Parts:menu */.p-menu { position: absolute; right: 15px; top: 0;}/* Parts:terms */.p-terms { list-style: none;}.p-terms .terms-title { margin: 0;}.p-terms a { display: inline-block; padding: .25rem 0;}.p-terms.inline li { display: inline-block; font-size: .8rem;}.p-terms.inline li::after { content: ',';}.p-terms.inline li:last-child::after { content: '';}/* Parts:paging */.p-paging { margin-bottom: 1.5rem; text-align: center;}.p-paging a { display: inline-block; padding: 1rem 1.5rem; margin: 0 .5rem; background-color: #cfd8dc; color: #263238;}/* Parts:section */section { margin-bottom: 1.5rem;}section>header { font-size: .8rem; font-weight: 700; margin-bottom: .5rem; text-transform: uppercase;}section>header a { color: #333; text-decoration: underline;}section.article-footer { margin-bottom: 1rem;}section.article-footer>header { margin-bottom: 0;}/* Parts:share */.p-share { min-width: 100%; margin-bottom: 1.5rem;}.p-share .share-inner { display: table; table-layout: fixed; width: 100%; border-spacing: .25rem;}.p-share a { display: table-cell; text-align: center; font-weight: 700; font-size: .7rem; padding: .5rem 0; color: #fff; border-radius: 5px;}.p-share a.ht { background-color: #00a4de; border-bottom: 2px solid #0083b1; }.p-share a.fb { background-color: #3b5998; border-bottom: 2px solid #2f4779; }.p-share a.tw { background-color: #1da1f2; border-bottom: 2px solid #1780c1; }.p-share a.gp { background-color: #dd4b39; border-bottom: 2px solid #b03c2d; }.p-share a.ln { background-color: #00c300; border-bottom: 2px solid #009c00; }.p-share a.ht::before { content: 'Hatena'; }.p-share a.fb::before { content: 'Facebook'; }.p-share a.tw::before { content: 'Twitter'; }.p-share a.gp::before { content: 'Google+'; }.p-share a.ln::before { content: 'LINE'; }/* Parts:logo */.h-logo { font-family: 'Montserrat', sans-serif;}.p-logo { display: inline-block; text-transform: uppercase;}.p-logo a { display: inline-block; font-size: 1.4rem; line-height: 2rem; color: #000;}/* Parts:crumb */.p-crumb ol { list-style: none; margin-bottom: 1rem;}.p-crumb li { display: inline; margin-right: .25rem; font-size: .8rem; color: #607d8b;}.p-crumb li::after { content: '/'; margin-left: .25rem;}.p-crumb li:last-child::after { content: '';}/* Parts:facts */.p-facts { list-style: none; font-size: .8rem; margin-bottom: 1rem;}.p-facts li { display: inline-block; margin-right: .5rem; color: #90a4ae;}.p-facts li i { margin-right: .5rem; color: #cfd8dc;}/* Parts:article */article { background-color: #fff;}article .title { margin: 0; margin-bottom: .5rem; font-weight: 700;}article .title a { color: #000;}article .thumb { display: block; background-image: url(https://moisesvilar.github.io/images/default.jpg); background-position: center; background-size: cover;}article .summary { margin-bottom: .5rem; max-height: 5rem; overflow: hidden;}article.single .thumb { height: 18rem; margin-bottom: 1rem;}@media (max-width: 768px) { article.single .thumb { height: 12rem; }}article.li { margin-bottom: 1rem;}article.li .thumb { height: 7.5rem; margin-bottom: .5rem;}article.li.sm { background-color: transparent; margin-bottom: .5rem;}article.li.sm>header { padding: .5rem 0;}article.li.sm .title { font-size: .8rem; line-height: 1rem; margin-bottom: .25rem;}article.li.sm .p-facts { font-size: .6rem; margin-bottom: 0;}article.li.sm .thumb { float: left; margin-right: .5rem; height: 3rem; width: 3rem;}.article-body h2 { padding: 1rem 0; border-bottom: 2px solid #eceff1;}.article-body h2:first-child { margin-top: 0; }.article-body h3 { color: #428bca;}.article-body h4 { border-left: solid .25rem #428bca; padding: 0 .5rem;}.article-body p { margin: 1.5rem 0; line-height: 1.5rem;}.article-body a { text-decoration: underline;}.article-body ul,.article-body ol { padding-left: 1.5rem; line-height: 1.5rem;}.article-body code { display: inline-block; font-family: Menlo, consolas, monospace; font-size: .8rem; padding: 0 .5rem; line-height: 1.5rem;}.article-body pre { margin: 1.5rem 0; padding: 0; font-size: .8rem; border: none; border-radius: 0;}.article-body pre code { display: block; line-height: 1rem; padding: 1rem;}.article-body blockquote { margin: 1.5rem 0; padding: .5rem 1rem; font-size: 1rem; border-top: 1px solid #eceff1; border-bottom: 1px solid #eceff1; color: #607d8b;}.article-body blockquote p { margin: .5rem 0; line-height: 1.5rem;}.article-body em { font-style: italic;}.article-body strong { color: #03a9f4;}.article-body figure { margin: 1.5rem 0; }.article-body figure.left,.article-body figure.right { width: 15rem; height: 12rem; margin-top: 0;}.article-body figure.left { float: left; margin-right: 1rem; }.article-body figure.right { float: right; margin-left: 1rem; }@media (max-width: 768px) { .article-body figure.left, .article-body figure.right { float: none; margin: 0; width: auto; height: auto; }}.article-body figcaption { padding: .5rem 0; font-size: .8rem; text-align: center;}.article-body figcaption a { color: #263238;}li.tag-fa {	margin-right: 0;}.tags.list { margin-top: 10px; color: #388e3c; font-size: 14px;}img[src$='#small-image'] { max-width: 100px;}img[src$='#medium-image'] { max-width: 300px;}figure.w100 > img { width: 100%;}figcaption h4 { font-size: 1em; margin: 0; font-style: italic; border-left: solid transparent !important;}
+      
+      
+    </style>
+  </head>
+
+  <body>
+    
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-89820131-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+    <header class="l-header">
+      <div class="container">
+        <div class="p-logo">
+          <a href="https://moisesvilar.github.io/" class="h-logo">Write some code!</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        
+<div class="row">
+  <div class="col-md-12">
+    <article class="single">
+
+  <a href="https://moisesvilar.github.io/post/docker-concepts-3/" class="thumb" style="background-image: url(https://moisesvilar.github.io/images/cover-docker-concepts-3.jpg);"></a>
+  <div class="content-inner">
+    <h1 class="title">docker III - docker hub, docker machine</h1>
+
+    <ul class="p-facts">
+      <li>
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        <time datetime="2017-01-12T20:49:11JST">12/01/2017</time>
+      </li>
+      
+        <li>
+          <span class="tags list">
+            <i class="fa fa-bookmark"></i>
+            <a href="/directors/docker">docker</a>
+          </span>
+        </li>
+      
+    </ul>
+	
+	<aside class="p-share">
+  <div class="share-inner">
+    <a href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-concepts-3%2f&t=docker%20III%20-%20docker%20hub%2c%20docker%20machine" title="Facebookでシェア" class="fb" target="_blank" rel="nofollow"></a>
+    <a href="http://twitter.com/intent/tweet?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-concepts-3%2f&text=docker%20III%20-%20docker%20hub%2c%20docker%20machine&tw_p=tweetbutton" title="Twitterでシェア" class="tw" target="_blank" rel="nofollow"></a>
+    <a href="https://plus.google.com/share?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-concepts-3%2f" title="Google Plusでシェア" class="gp" target="_blank" rel="nofollow"></a>
+  </div>
+</aside>
+
+	
+    <div class="article-body">
+
+<p>En este post veremos los últimos acordes antes de ponernos a tocar la sinfonía. Lo dividiré en dos partes.
+En la primera, describiremos dos conceptos que nos serán útiles a la hora de trabajar con Docker.
+En la segunda, haremos un pequeño tutorial de cómo instalar Docker en sistemas sin soporte nativo.</p>
+
+<p><strong>Vamos allá!</strong></p>
+
+<h1 id="últimos-conceptos-por-ahora">Últimos conceptos&hellip; por ahora</h1>
+
+<p>Veremos dos de ellos: el Docker Hub y la Docker machine.</p>
+
+<h2 id="docker-hub">Docker Hub</h2>
+
+<p><a href="/post/docker-layers-2/">En el anterior post</a> vimos el concepto de <strong>imágenes</strong>
+como un conjunto de capas que forman los binarios de nuestros entornos (por ejemplo, CentOS 7 +
+NodeJS 6.9). Pues bien, estas imágenes pueden ser subidas a un repositorio gestionado por
+los chicos de Docker. Esto es el Docker Hub.</p>
+
+<p>Allí encontrarás una enorme (muy enorme) cantidad de imágenes ya creadas por otras personas
+alrededor del mundo. Algunas de ellas tienen la etiqueta de <em>oficial</em>: han sido creadas y son
+mantenidas por los chicos que están detrás del desarrollo de dichos binarios. Por ejemplo,
+puedes encontrar imágenes oficiales para entornos con NodeJS.</p>
+
+<p>Al Docker Hub se puede acceder a través de la siguiente URL: <a href="https://hub.docker.com/">https://hub.docker.com/</a>.
+Hace falta registrarse, pero es gratuíto y no tardarás más de un minuto.</p>
+
+<p>Una vez lo hayas hecho, en el cuadro de búsqueda puedes probar a introducir &ldquo;node&rdquo;. El primer resultado
+está catalogado como <em>oficial</em>. Si lo inspeccionamos, veremos que esta imagen está disponible
+con varios <em>tags</em>: para la versión 7.4, 6.9, 4.7&hellip;</p>
+
+<p>Fijaos en aquellos <em>tags</em> que terminan con <em>alpine</em> y buscad dicha imagen en el buscador. Alpine
+es una distribución de Linux que viene con lo básico y que ocupa la friolera de <strong>2 MB</strong>. Comparadlo
+con el peso de la imagen de CentOS (70MB): si montamos nuestros entornos a partir de Alpine
+(siempre y cuando una decisión de diseño nos impida hacerlo), montando sobre él todo lo que necesitemos
+(un Apache, una JVM etc.) nos acabamos de librar de 68MB de <em>overhead</em> y nuestras imágenes serán
+muy livianas.</p>
+
+<p>Fijaos ahora, entrando en cualquier imagen, en el recuadro de la derecha, titulado <em>Docker Pull Command</em>:
+exacto, el Docker Hub está implementado como un SaaS y podremos descargar imágenes a través de su API.
+Concretamente, el comando <em>docker pull</em> nos permitirá hacer esto sobre línea de comandos.</p>
+
+<p>Docker Hub, como hemos dicho, es gratuíto y su modelo de negocio es muy parecido a Github: con tu
+cuenta gratuíta, todas tus imágenes serán públicas. Si deseas que sean privadas, tienes que pasar
+por caja.</p>
+
+<h2 id="docker-machine">Docker machine</h2>
+
+<p>Como hemos dicho anteriormente, Docker necesita que el sistema operativo de la máquina anfitrión
+tenga la capacidad de utilizar chroot, cgroups y namespaces. Esto lo cumple cualquier sistema operativo
+basado en Unix (Linux o MacOS), Windows Server y Windows 10 Professional.</p>
+
+<p>Pero para versiones anteriores hay que instalar el paquete conocido como <em>Docker Toolbox</em>
+(lo veremos en la siguiente sección).</p>
+
+<p>Dentro de este paquete se encuentra la <em>Docker machine</em>: es una máquina virtual ligera (~20MB)
+basada en Linux. Una vez arrancada, dentro de ella tendremos soporte nativo para Docker y podremos
+ejecutar nuestros comandos para descargar imágenes, lanzar contenedores etc.</p>
+
+<p>Fijaos que, en este escenario, para Docker el <em>host</em> ya no será nuestra máquina física, sino
+la Docker machine.</p>
+
+<h1 id="instalación-de-docker-en-sistemas-sin-soporte-nativo">Instalación de Docker en sistemas sin soporte nativo</h1>
+
+<blockquote>
+<p>Un consejo: a partir de aquí os recomendiendo que leais esto desde un PC y que intentéis seguir los pasos a medida que vayáis leyendo.</p>
+</blockquote>
+
+<p>En primer lugar, necesitamos descargarnos el paquete <a href="https://www.docker.com/products/docker-toolbox">Docker Toolbox</a>.
+Con él, entre otras herramientas, nos vendrá la Docker machine y Virtualbox, que es el motor de virtualización
+que utilizaremos para crear nuestra pequeña máquina virtual Linux que <strong>sí</strong> tenga soporte nativo para Docker.</p>
+
+<p>Ahora, tenemos dos caminos. El más fácil, es hacer doble click en el acceso directo que tendremos en el escritorio
+(si así lo hemos marcado durante la instalación) y esto nos creará la máquina virtual de la que hablamos.</p>
+
+<p>Pero como sé que os gusta el picar comandos y el terminal, lo haremos de esta manera.</p>
+
+<p>Abrid un terminal, cmd o como queráis llamarle. Y por favor, no uséis el nativo de Windows. Descargaros algo como
+<a href="https://conemu.github.io/">ConEmu</a> o <a href="http://cmder.net/">cmder</a>.</p>
+
+<p>Si picamos</p>
+
+<pre><code>docker-machine create -d virtualbox default
+</code></pre>
+
+<p>crearemos una máquina virtual de nombre <em>default</em> utilizando el driver para <em>Virtualbox</em>.</p>
+
+<p>Una vez finalizada la ejecución de este comando, si picamos</p>
+
+<pre><code>docker-machine ls
+</code></pre>
+
+<p>veremos un listado de nuestras máquinas virtuales creadas:</p>
+
+
+<figure class="w70 text-center">
+    
+        <img src="/images/docker-3-commands-1.png" alt="Resultados de docker-machine ls" />
+    
+    
+    <figcaption>
+        <h4>Resultados de docker-machine ls</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Por el momento, sólo fijaos en la columna <em>STATE</em>, que nos indica que la máquina está ejecutándose.</p>
+
+<p>Si ahora hacemos:</p>
+
+<pre><code>docker-machine ssh default
+</code></pre>
+
+<p>estableceremos una conexión SSH con nuestra máquina. Ahora ya estamos dentro de una máquina con soporte nativo para Docker. Concretamente, una distribución
+Linux (llamada <em>Boot2Docker</em>) superligera para que el impacto en nuestro equipo sea mínimo.</p>
+
+<p>Antes de terminar, vamos a ejecutar un par de comandos más:</p>
+
+<pre><code>docker login
+</code></pre>
+
+<blockquote>
+<p>Esta es la primera vez que vamos a ejecutar el programa <em>docker</em>. Tened siempre presente que lo que hace este ejecutable es conectarse a través de
+HTTPS al docker-agent e invocar los métodos de su API REST.</p>
+</blockquote>
+
+<p>Con este comando podemos hacer login en el <em>Docker hub</em> para poder descargar nuevas imágenes. Nos pedirá nuestro nombre de usuario y contraseña, y ya
+los tendremos porque ya hemos creado la cuenta al comienzo de este post, ¿verdad? ¿VERDAD? ;)</p>
+
+<p>Ahora vamos a buscar imágenes a través del SaaS que proporciona <em>Docker hub</em>:</p>
+
+<pre><code>docker search alpine
+</code></pre>
+
+<p>Nos devolverá el listado de imágenes cuyo nombre, descripción&hellip; contenga la cadena <em>alpine</em>. Podéis comprobar que son los mismos resultados que obtuvimos
+en la primera parte de este post, cuando lo buscamos manualmente a través de la interfaz web del <em>Docker hub</em>.</p>
+
+<p>Muy bien, pues vamos a descargarnos la imagen oficial para alpine:</p>
+
+<pre><code>docker pull alpine:latest
+</code></pre>
+
+<p>Con <em>:latest</em>, le estamos indicando que se descargue la imagen cuya <strong>etiqueta</strong> sea <em>latest</em>. Este es el comportamiento por defecto si no especificamos
+etiqueta.</p>
+
+<p>Tardará como cosa de dos pestañeos (ocupa 4MB, ¿recordáis?), así que tendréis que estar atentos para daros cuenta de que en algún momento la salida por pantalla nos pone algo como
+<em>Pulling layer</em>. ¡Exacto! Al descargar la imagen, nos estamos descargando todas las capas que la componen. En este caso, la imagen de alpine sólo cuenta con
+una capa, la que contiene los binarios de este sistema operativo.</p>
+
+<p>Para listar las imágenes que tenemos descargadas en nuestro sistema:</p>
+
+<pre><code>docker images
+</code></pre>
+
+<p>Veremos aquí nuestra imagen alpine recién descargada. Fijaos en la columna <em>SIZE</em>. 3.984MB. Veis que no os mentía: todo un Linux funcional en menos de 4MB.</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/docker-3-commands-2.png" alt="Salida del comando docker images, con nuestra imagen alpine de apenas 4MB :)" />
+    
+    
+    <figcaption>
+        <h4>Salida del comando docker images, con nuestra imagen alpine de apenas 4MB :)</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<h1 id="conclusiones">Conclusiones</h1>
+
+<p>En este pequeño post hemos visto los conceptos de <em>Docker hub</em> y <em>Docker machine</em>. Hemos instalado Docker en un sistema no nativo (Windows 10 Home, por ejemplo) y ¡ole! hemos
+picado nuestros primeros comandos para <em>loguearnos</em> en el Docker hub, buscar imágenes, descargarlas y listar las que tengamos descargadas en nuestra máquina.</p>
+
+<p>En el siguiente post nos pondremos serios: empezamos a lanzar contenedores.</p>
+
+<p>¡Nos vemos en nada!</p>
+</div>
+  </div>
+
+  <footer class="article-footer">
+    <div class="content-inner">
+    </div>
+  </footer>
+
+</article>
+
+
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'moisesvilar';
+    var disqus_identifier = 'https:\/\/moisesvilar.github.io\/post\/docker-concepts-3\/';
+    var disqus_title = 'docker III - docker hub, docker machine';
+    var disqus_url = 'https:\/\/moisesvilar.github.io\/post\/docker-concepts-3\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  </div>
+</div>
+
+      </div>
+    </main>
+
+    <footer class="l-footer">
+      <div class="container">
+        <p>
+			<a href="https://moisesvilar.github.io//index.xml" target="_blank"><i class="fa fa-rss-square"></i>&nbsp;RSS</a>&nbsp;
+			<a href="https://twitter.com/moisvilar" target="_blank"><i class="fa fa-twitter-square"></i>&nbsp;Twitter</a>&nbsp;
+			<a href="https://github.com/moisesvilar" target="_blank"><i class="fa fa-github-square"></i>&nbsp;Github</a>&nbsp;<br/>
+			&copy; Esta obra está bajo una <a target='_blank' rel='license' href='http://creativecommons.org/licenses/by/4.0/'>Licencia Creative Commons Atribución 4.0 Internacional</a>.<br/>
+			Powered by <a href="https://gohugo.io/">Hugo</a>.&nbsp;
+		</p>
+        <aside>
+          <p></p>
+        </aside>
+      </div>
+    </footer>
+
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>
+
