@@ -7,8 +7,357 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-ES</language>
     <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
-    <lastBuildDate>Thu, 12 Jan 2017 20:49:11 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 15 Jan 2017 14:10:02 +0100</lastBuildDate>
     <atom:link href="https://moisesvilar.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>docker IV - manejando contenedores</title>
+      <link>https://moisesvilar.github.io/post/docker-4-containers/</link>
+      <pubDate>Sun, 15 Jan 2017 14:10:02 +0100</pubDate>
+      
+      <guid>https://moisesvilar.github.io/post/docker-4-containers/</guid>
+      <description>
+
+&lt;blockquote&gt;
+&lt;p&gt;Como al final del &lt;a href=&#34;https://moisesvilar.github.io/post/docker-basics-1/&#34;&gt;anterior post&lt;/a&gt;, os recomiendo que tengáis el ordenador a mano mientras
+leeis. ¡Hoy toca picar muchos comandos!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Muy bien, chic@s. Vamos a ver un par de comandos más de la Docker machine y nos pondremos
+ya de inmediato a lanzar nuestros contenedores.&lt;/p&gt;
+
+&lt;h1 id=&#34;estado-de-nuestra-vm-docker&#34;&gt;Estado de nuestra VM Docker&lt;/h1&gt;
+
+&lt;p&gt;En el &lt;a href=&#34;https://moisesvilar.github.io/post/docker-basics-1/&#34;&gt;anterior post&lt;/a&gt; lo habíamos dejado con nuestra
+máquina virtual Docker (que habíamos llamado &lt;em&gt;default&lt;/em&gt;) &lt;em&gt;up and running&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Pero entiendo que desde entonces hasta ahora, habéis apagado el equipo. Por lo que si ejecutáis&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker-machine ls
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;veremos que el estado de nuestra máquina es &lt;em&gt;stopped&lt;/em&gt;.&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-1.png&#34; alt=&#34;Nuestra VM Docker descansando de un día duro de trabajo&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Nuestra VM Docker descansando de un día duro de trabajo&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Para lanzarla basta con ejecutar:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker-machine start default
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Tardará un poco (lamentablemente, estamos lanzando toda una máquina virtual, y aunque ligera,
+lleva su tiempo). Pero finalmente tendremos nuestra máquina en estado &lt;em&gt;running&lt;/em&gt;:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-2.png&#34; alt=&#34;Nuestra VM Docker up and running&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Nuestra VM Docker up and running&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;También decir que, de una manera similar, podemos detenerla con el siguiente comando:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker-machine stop default
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Por último, nos conectamos a nuestra VM para poder operar bajo un sistema que tenga soporte
+nativo para Docker:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker-machine ssh default
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Con nuesto host Docker ya ejecutándose y conectados a él, pasamos a lanzar contenedores!&lt;/p&gt;
+
+&lt;h1 id=&#34;lanzando-nuestro-primer-contenedor&#34;&gt;Lanzando nuestro primer contenedor&lt;/h1&gt;
+
+&lt;p&gt;Lancemos nuestro primer contenedor a partir de la imagen de alpine que ya deberíamos
+tener descargada si hemos seguido lo indicado en el &lt;a href=&#34;https://moisesvilar.github.io/post/docker-basics-1/&#34;&gt;anterior post&lt;/a&gt;.
+Y antes de darle un &lt;em&gt;enter&lt;/em&gt;, poned el cronómetro:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -t -i --name bloody_mary alpine /bin/sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;¿Cuánto ha tardado en lanzar el contenedor? ¿Medio milisegundo? :)&lt;/p&gt;
+
+&lt;p&gt;Desgranemos el comando:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;docker run&lt;/em&gt;: le indicamos al intérprete de Docker que vamos a ejecutar un comando &lt;em&gt;run&lt;/em&gt;, que se
+traduce por un &amp;ldquo;lánzame un contenedor&amp;rdquo;. Esto es, se conectará vía HTTPS e invocará los métodos de la API
+REST necesarios para que el servidor Docker realice esta tarea.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;-t&lt;/em&gt;: le indicamos que nos habilite un terminal tty para ese contenedor.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;-i&lt;/em&gt;: le indicamos que queremos interactuar con el contenedor, es decir, que lo lance en modo interactivo.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&amp;ndash;name bloody_mary&lt;/em&gt;: le asignamos el nombre &lt;em&gt;bloody_mary&lt;/em&gt; a nuestro contenedor. Si no especificamos
+este parámetro, Docker escogerá uno por nosotros. Y como curiosidad, en &lt;a href=&#34;https://github.com/docker/docker/blob/master/pkg/namesgenerator/names-generator.go&#34;&gt;Github&lt;/a&gt;
+tenéis el código en Go de esta tarea.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;alpine&lt;/em&gt;: le indicamos que queremos que use la imagen alpine como sistema de directorios de nuestro
+contenedor.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;/bin/sh&lt;/em&gt;: por último, le indicamos qué proceso queremos que ejecute cuando lance nuestro contenedor.
+En este caso, que ejecute el &lt;em&gt;shell&lt;/em&gt;. Como hemos habilitado una terminal tty y estamos en modo interactivo,
+la ejecución de este comando nos devolverá un &lt;em&gt;prompt&lt;/em&gt; a nuesro contenedor, como si nos acabáramos de conectar
+por SSH.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;El apasionante resultado de la ejecución de este comando, a continuación:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-3.png&#34; alt=&#34;Un precioso prompt a nuestro contenedor alpine&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Un precioso prompt a nuestro contenedor alpine&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Ejecutad un &lt;em&gt;ls&lt;/em&gt;. Ahí lo tenéis. Los binarios de la distribución alpine.&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-8.png&#34; alt=&#34;La distribución alpine en todo su esplendor&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;La distribución alpine en todo su esplendor&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Ahora teclead &lt;em&gt;exit&lt;/em&gt; y dadle un &lt;em&gt;enter&lt;/em&gt; para salir de nuestro contenedor y volver a nuestra VM Docker.&lt;/p&gt;
+
+&lt;p&gt;Para listar los contenedores, ejecutamos:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker ps
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Un momento&amp;hellip; parece que la lista está vacía:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-4.png&#34; alt=&#34;¿Dónde está nuestro recién lanzado contenedor?&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;¿Dónde está nuestro recién lanzado contenedor?&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Lo que ha pasado aquí es sencillo de entender. Al ejecutar &lt;em&gt;exit&lt;/em&gt; no sólo hemos salido de nuestro contenedor,
+sino que &lt;strong&gt;hemos finalizado el proceso /bin/sh que se ejecutaba en él&lt;/strong&gt;. No había ningún otro proceso en
+&lt;em&gt;foreground&lt;/em&gt; ejecutándose en dicho contenedor, por lo tanto éste directamente se ha detenido.&lt;/p&gt;
+
+&lt;p&gt;Podemos verlo con la opción -a (&lt;em&gt;all&lt;/em&gt;, es decir, los que se están ejecutando y los que no) del anterior comando:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker ps -a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahí lo tenemos. Si os fijáis en la columna &lt;em&gt;STATUS&lt;/em&gt;, nos indica que hemos salido hace 24 segundos:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-5.png&#34; alt=&#34;¡Aquí estaba!&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;¡Aquí estaba!&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Otro parámetro para el comando &lt;em&gt;ps&lt;/em&gt; es &lt;em&gt;-q&lt;/em&gt;, que nos lista únicamente la columna &lt;em&gt;CONTAINER ID&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker ps -a -q
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Volvamos a lanzar nuestro contenedor a partir de nuestra imagen de alpine e insertemos una modificación en su sistema de ficheros:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; docker start bloody_mary
+&amp;gt; docker exec -t -i bloody_mary /bin/sh
+/ # echo &amp;quot;Sin tele y sin cerveza, Homer pierde la cabeza!&amp;quot; &amp;gt; sabiduria.txt
+/ # exit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Con la primera línea, &lt;strong&gt;docker start bloody_mary&lt;/strong&gt; estamos relanzando nuestro contenedor (que, recordemos, estaba detenido).&lt;/p&gt;
+
+&lt;p&gt;Pero fijaros que en esta ocasión Docker no nos devuelve el &lt;em&gt;prompt&lt;/em&gt; a nuestro contenedor.&lt;/p&gt;
+
+&lt;p&gt;Para poder abrir ahora un terminal a nuestro contenedor ejecutamos la segunda línea &lt;strong&gt;docker exec -t -i bloody_mary /bin/sh&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Es decir, ejecuta el comando &lt;em&gt;/bin/sh&lt;/em&gt; en el contenedor &lt;em&gt;bloody_mary&lt;/em&gt; con un terminal tty y en modo interactivo.&lt;/p&gt;
+
+&lt;p&gt;Ahora sí que estamos dentro de nuestro contedor.&lt;/p&gt;
+
+&lt;p&gt;Pues bien, con la tercera línea lo que hacemos es crear un fichero &lt;em&gt;sabiduria.txt&lt;/em&gt; cuyo contenido será &lt;em&gt;&amp;ldquo;Sin tele y sin cerveza, Homer pierde la cabeza!&amp;rdquo;&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Y por último, salimos del contenedor. Como hemos visto antes, esto hará que el contenedor se detenga.&lt;/p&gt;
+
+&lt;p&gt;Pero si volvemos a entrar y listamos el contenido del directorio raíz haciendo un &lt;em&gt;ls&lt;/em&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; docker exec -t -i bloody_mary /bin/sh
+/ # ls
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Veremos que nuestro fichero &lt;em&gt;sabiduria.txt&lt;/em&gt; sigue estando ahí.&lt;/p&gt;
+
+&lt;p&gt;Como habíamos dicho en post anteriores,la capa de lectura/escritura es persistente &lt;strong&gt;siempre y cuando no eliminemos el contenedor, sólo lo detengamos&lt;/strong&gt;,
+como es el caso.&lt;/p&gt;
+
+&lt;p&gt;Ahora eliminemos nuestro contenedor:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker stop bloody_mary
+docker rm 1a6b2d03fa14
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;El &lt;em&gt;numeraco&lt;/em&gt; 1a6b2d03fa14 se corresponde precisamente con el CONTAINER ID del contenedor que queremos borrar.&lt;/p&gt;
+
+&lt;p&gt;Si queremos eliminar todos nuestros contenedores, ejecutándose o no, de una tacada, podemos hacer:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker rm $(docker ps -a -q)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Es decir, al comando &lt;strong&gt;docker rm&lt;/strong&gt; le concatenamos la salida del comando &lt;strong&gt;docker ps -a -q&lt;/strong&gt; que nos devolverá
+todos los CONTAINER ID de todos nuestros contenedores.&lt;/p&gt;
+
+&lt;p&gt;Volvamos a crear un contenedor a partir de nuestra imagen de alpine, en modo iteractivo, con un
+terminal tty y ejecutando el proceso /bin/sh para que nos sitúe el &lt;em&gt;prompt&lt;/em&gt; dentro de nuestro contenedor.
+Y a continuación, hagamos un &lt;em&gt;ls&lt;/em&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; docker run -t -i --name bloody_mary alpine /bin/sh
+/ # ls
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Vemos que ahora no hay ningún fichero &lt;em&gt;sabiduria.txt&lt;/em&gt;. ¡Evidentemente! Hemos eliminado el contenedor anterior,
+eliminando a su vez su capa de lectura/escritura.&lt;/p&gt;
+
+&lt;p&gt;Al lanzar el nuevo, utiliza la imagen alpine para su sistema de ficheros&amp;hellip; ¡y crea una nueva capa de lectura/escritura
+limpia y reluciente y sin rastro del fichero &lt;em&gt;sabiduria.txt&lt;/em&gt;!&lt;/p&gt;
+
+&lt;p&gt;¿Cómo podemos incorporar esa capa? Pues convirtiendo el sistema de ficheros de ese contenedor en
+una nueva imagen, precisamente lo que vamos a hacer a continuación.&lt;/p&gt;
+
+&lt;h1 id=&#34;creando-nuevas-imágenes&#34;&gt;Creando nuevas imágenes&lt;/h1&gt;
+
+&lt;p&gt;Repetimos proceso: creamos un contenedor a partir de la imagen de alpine y modificamos su
+capa de lectura/escritura:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; docker run -t -i --name tequila_sunrise alpine /bin/sh
+/ # echo &amp;quot;Sin tele y sin cerveza, Homer pierde la cabeza!&amp;quot; &amp;gt; sabiduria.txt
+/ # exit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ahora ejecutamos el siguiente comando:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker commit -m &amp;quot;A new awesome cocktail&amp;quot; -a &amp;quot;Moises Vilar&amp;quot; tequila_sunrise moisesvilar/alpine
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Este comando crea una nueva imagen con nombre &lt;strong&gt;moisesvilar/alpine&lt;/strong&gt; (utilizad si queréis vuestro nombre de usuario en Docker hub,
+en vez de &lt;em&gt;moisesvilar&lt;/em&gt;) cuyo autor es &lt;em&gt;&amp;ldquo;Moisés Vilar&amp;rdquo;&lt;/em&gt; y con un mensaje de creación &lt;em&gt;&amp;ldquo;A new awesome cocktail&amp;rdquo;&lt;/em&gt; a partir del sistema de ficheros que
+actualmente posee el contenedor &lt;strong&gt;tequila_sunrise&lt;/strong&gt;, incluyendo su capa de lectura y escritura.&lt;/p&gt;
+
+&lt;p&gt;Si ahora ejecutamos&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker images
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;veremos que nuestra imagen se ha creado correctamente:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-6.png&#34; alt=&#34;Nuestra nueva imagen moisesvilar/alpine&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Nuestra nueva imagen moisesvilar/alpine&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Bien, pues ejecutemos un nuevo contenedor a partir de esta imagen y hagamos un &lt;em&gt;ls&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; docker run -t -i --name old_fashioned moisesvilar/alpine /bin/sh
+/ # ls
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;¡Ahí tenemos nuestro fichero &lt;em&gt;sabiduria.txt&lt;/em&gt;!&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-7.png&#34; alt=&#34;Nuestro fichero sabiduria.txt existe en el nuevo contenedor creado a partir de la imagen moisesvilar/alpine&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Nuestro fichero sabiduria.txt existe en el nuevo contenedor creado a partir de la imagen moisesvilar/alpine&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Lo que hemos hecho es &amp;ldquo;congelar&amp;rdquo; el sistema de ficheros del contenedor &lt;strong&gt;tequila_sunrise&lt;/strong&gt;, creando una nueva imagen
+que, ahora sí, incorpora una capa que contiene el fichero &lt;em&gt;sabiduria.txt&lt;/em&gt; y, a continuación, hemos creado
+el contenedor &lt;strong&gt;old_fashioned&lt;/strong&gt; a partir de dicha imagen.&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusiones&#34;&gt;Conclusiones&lt;/h1&gt;
+
+&lt;p&gt;¡Por fin tenéis comandos! En este post hemos aprendido un buen puñado de cosas:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Hemos visto cómo controlar el estado de nuestra VM Docker (nuestro &lt;em&gt;host&lt;/em&gt; para Docker) con los comandos
+&lt;strong&gt;docker-machine start&lt;/strong&gt; y &lt;strong&gt;docker-machine stop&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Hemos lanzado nuestro primer contenedor con el comando &lt;strong&gt;docker run&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Hemos listado nuestos contenedores con el comando &lt;strong&gt;docker ps&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Los hemos iniciado y detenido con los comandos &lt;strong&gt;docker start&lt;/strong&gt; y &lt;strong&gt;docker stop&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Los hemos eliminado con el comando &lt;strong&gt;docker rm&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Hemos ejecutado procesos en contenedores previamente iniciados, con el comando &lt;strong&gt;docker exec&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Hemos creado una imagen a partir del sistema de ficheros de un contenedor con el comando &lt;strong&gt;docker commit&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Si queréis bucear más a fondo en estos comandos, podéis recurrir a la &lt;a href=&#34;https://docs.docker.com/engine/reference/commandline/&#34;&gt;referencia oficial de Docker&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Por el momento, nosotros lo dejamos aquí. En el siguiente post montaremos una imagen &amp;ldquo;a mano&amp;rdquo; con
+un entorno de ejecución (quizás PHP o quizás NodeJS, aún no lo tengo decidido, si tenéis alguna
+preferencia&amp;hellip; dejadla en los comentarios!).&lt;/p&gt;
+
+&lt;p&gt;¡Nos vemos en nada!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>docker III - docker hub, docker machine</title>
@@ -35,7 +384,7 @@ como un conjunto de capas que forman los binarios de nuestros entornos (por ejem
 NodeJS 6.9). Pues bien, estas imágenes pueden ser subidas a un repositorio gestionado por
 los chicos de Docker. Esto es el Docker Hub.&lt;/p&gt;
 
-&lt;p&gt;Allí encontrarás una enorme (muy enorme) cantidad de imágenes ya creadas por otras personas
+&lt;p&gt;Allí encontrarás una gigantesca cantidad de imágenes ya creadas por otras personas
 alrededor del mundo. Algunas de ellas tienen la etiqueta de &lt;em&gt;oficial&lt;/em&gt;: han sido creadas y son
 mantenidas por los chicos que están detrás del desarrollo de dichos binarios. Por ejemplo,
 puedes encontrar imágenes oficiales para entornos con NodeJS.&lt;/p&gt;
@@ -47,11 +396,11 @@ Hace falta registrarse, pero es gratuíto y no tardarás más de un minuto.&lt;/
 está catalogado como &lt;em&gt;oficial&lt;/em&gt;. Si lo inspeccionamos, veremos que esta imagen está disponible
 con varios &lt;em&gt;tags&lt;/em&gt;: para la versión 7.4, 6.9, 4.7&amp;hellip;&lt;/p&gt;
 
-&lt;p&gt;Fijaos en aquellos &lt;em&gt;tags&lt;/em&gt; que terminan con &lt;em&gt;alpine&lt;/em&gt; y buscad dicha imagen en el buscador. Alpine
-es una distribución de Linux que viene con lo básico y que ocupa la friolera de &lt;strong&gt;2 MB&lt;/strong&gt;. Comparadlo
+&lt;p&gt;Fijaos en aquellos &lt;em&gt;tags&lt;/em&gt; que terminan con &lt;em&gt;alpine&lt;/em&gt; y buscad dicha imagen. Alpine
+es una distribución de Linux que viene con lo básico y que ocupa la friolera de &lt;strong&gt;2 MB&lt;/strong&gt; (comprimido) y &lt;strong&gt;4 MB&lt;/strong&gt; (sin comprimir). Comparadlo
 con el peso de la imagen de CentOS (70MB): si montamos nuestros entornos a partir de Alpine
-(siempre y cuando una decisión de diseño nos impida hacerlo), montando sobre él todo lo que necesitemos
-(un Apache, una JVM etc.) nos acabamos de librar de 68MB de &lt;em&gt;overhead&lt;/em&gt; y nuestras imágenes serán
+(siempre y cuando una decisión de diseño no nos impida hacerlo), montando sobre él todo lo que necesitemos
+(un Apache, una JVM etc.) nos libraremos de 68MB de &lt;em&gt;overhead&lt;/em&gt; y nuestras imágenes serán
 muy livianas.&lt;/p&gt;
 
 &lt;p&gt;Fijaos ahora, entrando en cualquier imagen, en el recuadro de la derecha, titulado &lt;em&gt;Docker Pull Command&lt;/em&gt;:
@@ -75,23 +424,27 @@ basado en Unix (Linux o MacOS), Windows Server y Windows 10 Professional.&lt;/p&
 basada en Linux. Una vez arrancada, dentro de ella tendremos soporte nativo para Docker y podremos
 ejecutar nuestros comandos para descargar imágenes, lanzar contenedores etc.&lt;/p&gt;
 
-&lt;p&gt;Fijaos que, en este escenario, para Docker el &lt;em&gt;host&lt;/em&gt; ya no será nuestra máquina física, sino
-la Docker machine.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Id pensando en una cuestión. Si estamos en Windows 10 Home y hemos instalado la Docker machine, para Docker
+¿quién es el host? ¿La máquina física con Windows 10? ¿O la VM que nos proporciona Docker machine? La respuesta, al final del post :)&lt;/p&gt;
+&lt;/blockquote&gt;
 
 &lt;h1 id=&#34;instalación-de-docker-en-sistemas-sin-soporte-nativo&#34;&gt;Instalación de Docker en sistemas sin soporte nativo&lt;/h1&gt;
 
 &lt;blockquote&gt;
-&lt;p&gt;Un consejo: a partir de aquí os recomendiendo que leais esto desde un PC y que intentéis seguir los pasos a medida que vayáis leyendo.&lt;/p&gt;
+&lt;p&gt;Un consejo: a partir de aquí os recomiendo que leais esto desde un PC y que intentéis seguir los pasos a medida que vayáis leyendo.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;En primer lugar, necesitamos descargarnos el paquete &lt;a href=&#34;https://www.docker.com/products/docker-toolbox&#34;&gt;Docker Toolbox&lt;/a&gt;.
 Con él, entre otras herramientas, nos vendrá la Docker machine y Virtualbox, que es el motor de virtualización
 que utilizaremos para crear nuestra pequeña máquina virtual Linux que &lt;strong&gt;sí&lt;/strong&gt; tenga soporte nativo para Docker.&lt;/p&gt;
 
-&lt;p&gt;Ahora, tenemos dos caminos. El más fácil, es hacer doble click en el acceso directo que tendremos en el escritorio
-(si así lo hemos marcado durante la instalación) y esto nos creará la máquina virtual de la que hablamos.&lt;/p&gt;
+&lt;p&gt;Ahora, tenemos dos caminos.&lt;/p&gt;
 
-&lt;p&gt;Pero como sé que os gusta el picar comandos y el terminal, lo haremos de esta manera.&lt;/p&gt;
+&lt;p&gt;El más fácil es hacer doble click en el acceso directo que tendremos en el escritorio
+(si así lo hemos marcado durante la instalación) y se iniciará el proceso de creación de la máquina virtual de la que hablamos.&lt;/p&gt;
+
+&lt;p&gt;Pero como sé que os gusta picar comandos, lo haremos de esta manera.&lt;/p&gt;
 
 &lt;p&gt;Abrid un terminal, cmd o como queráis llamarle. Y por favor, no uséis el nativo de Windows. Descargaros algo como
 &lt;a href=&#34;https://conemu.github.io/&#34;&gt;ConEmu&lt;/a&gt; o &lt;a href=&#34;http://cmder.net/&#34;&gt;cmder&lt;/a&gt;.&lt;/p&gt;
@@ -160,7 +513,7 @@ en la primera parte de este post, cuando lo buscamos manualmente a través de la
 &lt;pre&gt;&lt;code&gt;docker pull alpine:latest
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Con &lt;em&gt;:latest&lt;/em&gt;, le estamos indicando que se descargue la imagen cuya &lt;strong&gt;etiqueta&lt;/strong&gt; sea &lt;em&gt;latest&lt;/em&gt;. Este es el comportamiento por defecto si no especificamos
+&lt;p&gt;Con &lt;em&gt;:latest&lt;/em&gt;, le estamos indicando que se descargue la imagen cuya &lt;strong&gt;etiqueta&lt;/strong&gt; sea &lt;em&gt;latest&lt;/em&gt;. Este es el comportamiento por defecto si no especificamos ninguna
 etiqueta.&lt;/p&gt;
 
 &lt;p&gt;Tardará como cosa de dos pestañeos (ocupa 4MB, ¿recordáis?), así que tendréis que estar atentos para daros cuenta de que en algún momento la salida por pantalla nos pone algo como
@@ -196,6 +549,9 @@ picado nuestros primeros comandos para &lt;em&gt;loguearnos&lt;/em&gt; en el Doc
 &lt;p&gt;En el siguiente post nos pondremos serios: empezamos a lanzar contenedores.&lt;/p&gt;
 
 &lt;p&gt;¡Nos vemos en nada!&lt;/p&gt;
+
+&lt;p&gt;P.S. La respuesta a la pregunta que os hacía más arriba: el host en ese caso es &lt;strong&gt;la máquina virtual que proporciona Docker machine&lt;/strong&gt;, que es la que
+tiene las herramientas necesarias para que Docker funcione (chroot, cgroups y namespaces)&lt;/p&gt;
 </description>
     </item>
     
@@ -251,7 +607,7 @@ Por supuesto que sí.&lt;/p&gt;
     
     
     &lt;figcaption&gt;
-        &lt;h4&gt;Entornos independientes (y dupicados) en dos máquinas virtuales&lt;/h4&gt;
+        &lt;h4&gt;Entornos independientes (y duplicados) en dos máquinas virtuales&lt;/h4&gt;
         
     &lt;/figcaption&gt;
     
@@ -393,7 +749,7 @@ CentOS 7 + Java etc.&lt;/p&gt;
 
 &lt;p&gt;Cuando lanzamos un contenedor en Docker, ademas de crear dicho proceso, le añade a su imagen
 &lt;strong&gt;una nueva capa de lectura/escritura&lt;/strong&gt; que es donde realizará las modificaciones que se
-realicen durante la ejecución del contenedor. Por último, también le asigna una interfaz de
+efectúen durante la ejecución del contenedor. Por último, también le asigna una interfaz de
 red virtual, para que el contenedor se pueda comunicar con el resto del mundo.&lt;/p&gt;
 
 &lt;p&gt;En esa capa de lectura/escritura es donde el proceso ve una versión concreta de los ficheros
@@ -412,12 +768,12 @@ guarda su estado actual.&lt;/p&gt;
 con Virtualbox o VMWare? ¿Un par de minutos? ¿Unas cuantas decenas de segundos si tu máquina es potente?
 Pues eso.&lt;/p&gt;
 
-&lt;p&gt;Como todos los procesos se pueden pausar, se puede reiniciar y se pueden &lt;em&gt;matar&lt;/em&gt; definitivamente.
+&lt;p&gt;Como todos los procesos, los contenedores se pueden pausar, se pueden reiniciar y se pueden &lt;em&gt;matar&lt;/em&gt; definitivamente.
 Si los pausamos/reiniciamos, la capa de lectura/escritura permanece intacta entre ambos estados. Pero,
-si &lt;em&gt;matamos&lt;/em&gt; un contenedor y volvemos a lanzar uno nueva a partir de la misma imagen, la capa
+si &lt;em&gt;matamos&lt;/em&gt; un contenedor y volvemos a lanzar uno nuevo a partir de la misma imagen, la capa
 de lectura/escritura habrá desaparecido. ¡Claro, es un contenedor nuevo!&lt;/p&gt;
 
-&lt;p&gt;Así que esta no es la manera adecuada de crear una capa de persistencia usando contenedores Docker.
+&lt;p&gt;Así que ésta no es la manera adecuada de crear una capa de persistencia usando contenedores Docker.
 Pero esto lo veremos en posts futuros cuando presentemos el concepto de volúmenes.&lt;/p&gt;
 
 &lt;h1 id=&#34;conclusiones&#34;&gt;Conclusiones&lt;/h1&gt;
@@ -463,7 +819,7 @@ desentendí un poco de todo ese &amp;ldquo;nuevo&amp;rdquo; mundo.&lt;/p&gt;
 
 &lt;p&gt;Pero hace un año, más o menos, me llamó la atención el curso de &lt;a href=&#34;http://capside-academy.usefedora.com/p/docker-devops&#34;&gt;Docker Essentials&lt;/a&gt;
 alojado en &lt;a href=&#34;http://capside-academy.usefedora.com/&#34;&gt;Capside Academy&lt;/a&gt;. Además, lo impartía el
-señor Javi Moreno, un verdadero crack del que tuve el honor de dar mis primeros pasos con Javascript
+señor Javi Moreno, un verdadero crack con el que tuve el honor de dar mis primeros pasos en Javascript
 a partir de un curso que también impartió en el &lt;a href=&#34;https://cntg.xunta.es/web/cnt/home&#34;&gt;CNTG&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Si a Javi le apasionaba Docker, entonces la cosa tenía que ser interesante.&lt;/p&gt;
@@ -490,7 +846,7 @@ en los comentarios! Sin piedad, en serio.&lt;/p&gt;
 
 &lt;p&gt;En el 2010, la persona que había gestionado durante trece años el mantenimiento y evolución de
 un importante sistema de información de la Xunta de Galicia decidió que era un buen momento
-para cambiar de aires. Así que pidió la cuenta y se fué. Y como yo pasaba por allí, &lt;del&gt;me cayó el marrón&lt;/del&gt; me pasaron la responsabilidad.&lt;/p&gt;
+para cambiar de aires. Así que pidió la cuenta y se fué. Y como yo pasaba por allí, &lt;del&gt;me cayó el marrón&lt;/del&gt; me ofrecieron esa responsabilidad.&lt;/p&gt;
 
 &lt;p&gt;Repito: un sistema desarrollado durante trece años. Cuando se picó su primera línea de código,
 no existía Google. Cuando yo lo cogí, el iPhone llevaba tres añitos entre nosotros. Os podéis hacer
@@ -559,7 +915,7 @@ Unix, seguramente te suenen. Yo no lo soy, así que me sonaban vagamente cuando 
 sistema de ficheros empieza donde tú le digas. Es decir, cambias la raíz del sistema de ficheros
 del proceso (de ahí su nombre, &lt;em&gt;change root&lt;/em&gt;).&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Cgroups&#34;&gt;cgroups&lt;/a&gt;: se utiliza para limitar en recursos la
-ejecución de un proceso: memoria, ancho de banda, núcleos etc categorizando los procesos en diferentes &lt;em&gt;control groups&lt;/em&gt;.&lt;/li&gt;
+ejecución de un proceso: memoria, ancho de banda, núcleos etc. categorizando los procesos en diferentes &lt;em&gt;control groups&lt;/em&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://man7.org/linux/man-pages/man7/namespaces.7.html&#34;&gt;namespaces&lt;/a&gt;: útiles para aislar un proceso
 del resto de procesos. Es decir, poder hacerle creer a un proceso que es el único que se está
 ejecutando en toda la máquina.&lt;/li&gt;
@@ -584,7 +940,7 @@ avanzada es indistinguible de la magia&lt;/em&gt;.&lt;/p&gt;
 arquitectura:&lt;/p&gt;
 
 
-&lt;figure class=&#34;text-center w100&#34;&gt;
+&lt;figure class=&#34;text-center&#34;&gt;
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-architecture.png&#34; alt=&#34;arquitectura de docker&#34; /&gt;
     
@@ -636,8 +992,8 @@ parece interesante asentar bien los conceptos básicos para lo que viene despué
 
 &lt;p&gt;Por último, os invito de nuevo a escuchar el podcast de &lt;a href=&#34;http://wedevelopers.com/2016/11/12/we-developers-046-docker/&#34;&gt;Javi Moreno hablando de Docker!&lt;/a&gt; en WeDevelopers.
 Y a realizar su curso de &lt;a href=&#34;http://capside-academy.usefedora.com/p/docker-devops&#34;&gt;Docker Essentials&lt;/a&gt; en Capside-Academy. Son sólo 20€ y os aseguro que estarán
-bien invertidos. Así a todo, de vez en cuando escupen algún código promocional a través de &lt;a href=&#34;https://twitter.com/capside&#34;&gt;su cuenta de Twitter&lt;/a&gt;.
-También es altamente recomendable seguir a &lt;a href=&#34;https://twitter.com/ciberado&#34;&gt;Javi en Twitter&lt;/a&gt; o poner su blog &lt;a href=&#34;https://programar.cloud/&#34;&gt;Programar en Cloud&lt;/a&gt; en tu lector de RSS favorito. Habla de Docker,
+bien invertidos. Así a todo, de vez en cuando publican algún código promocional a través de &lt;a href=&#34;https://twitter.com/capside&#34;&gt;su cuenta de Twitter&lt;/a&gt;.
+También es altamente recomendable seguir a &lt;a href=&#34;https://twitter.com/ciberado&#34;&gt;Javi en Twitter&lt;/a&gt; o poner su blog &lt;a href=&#34;https://programar.cloud/&#34;&gt;Programar en Cloud&lt;/a&gt; en tu lector de RSS favorito (y de paso, el mío también!). Habla de Docker,
 microservicios, testing&amp;hellip; y un montón de cosas interesantes.&lt;/p&gt;
 
 &lt;p&gt;¡Nos vemos en el siguiente post!&lt;/p&gt;
@@ -654,12 +1010,6 @@ microservicios, testing&amp;hellip; y un montón de cosas interesantes.&lt;/p&gt
 
 &lt;h1 id=&#34;quién-soy&#34;&gt;Quién soy&lt;/h1&gt;
 
-&lt;figure&gt;
-  &lt;img src=&#34;https://moisesvilar.github.io//images/me.jpg#small-image&#34; alt=&#34;bienvenida /images/me.jpg#small-image&#34;&gt;
-  
-&lt;/figure&gt;
-
-
 &lt;p&gt;Mi nombre es Moisés Vilar. Soy desarrollador desde los 12 años y desde hace 9 me pagan por ello.&lt;/p&gt;
 
 &lt;p&gt;En este blog intentaré escribir sobre las cosas que fui aprendiendo durante mi carrera profesional pero también sobre temas
@@ -668,16 +1018,16 @@ que estoy empezando a descubrir ahora.&lt;/p&gt;
 &lt;p&gt;En definitiva, hablaremos sobre desarrollo web, Javascript, HTML5, NodeJS, MongoDB, Docker&amp;hellip;&lt;/p&gt;
 
 &lt;p&gt;Cualquier consulta, duda, sugerencia, molestia, queja, dolor&amp;hellip; no te cortes en dejarme un comentario en este blog
-o contactar conmigo a través de Twitter.&lt;/p&gt;
+o contactar conmigo a través de &lt;a href=&#34;https://twitter.com/moisvilar&#34;&gt;Twitter&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;
+
 &lt;figure class=&#34;text-center&#34;&gt;
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/keep-calm-and-write-some-code.png#medium-image&#34; alt=&#34;Keep calm and write some code&#34; /&gt;
     
     
 &lt;/figure&gt;
-&lt;/p&gt;
+
 
 &lt;p&gt;&lt;strong&gt;Bienvenidos!&lt;/strong&gt;&lt;/p&gt;
 </description>

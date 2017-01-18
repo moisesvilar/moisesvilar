@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="pinterest" content="nopin">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="theme-color" content="#263238">
+
+<meta name="generator" content="Hugo 0.18.1" />
+
+<link rel="apple-touch-icon" href="https://moisesvilar.github.io/images/logo.png">
+
+<link rel="canonical" href="https://moisesvilar.github.io/post/docker-4-containers/">
+
+
+    
+    <link href="//fonts.googleapis.com/css?family=Noto+Sans:400,700|Montserrat" rel="stylesheet">
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    
+    <title>docker IV - manejando contenedores - Write some code!</title>
+    
+<meta name="description" content="Lanzaremos, listaremos y eliminaremos contenedores. ¡Y crearemos nuestras propias imágenes!">
+
+<meta property="og:title" content="docker IV - manejando contenedores - Write some code!">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://moisesvilar.github.io/post/docker-4-containers/">
+<meta property="og:image" content="https://moisesvilar.github.io/images/cover-docker-containers.jpg">
+<meta property="og:site_name" content="Write some code!">
+<meta property="og:description" content="Lanzaremos, listaremos y eliminaremos contenedores. ¡Y crearemos nuestras propias imágenes!">
+<meta property="og:locale" content="ja_JP">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="Write some code!">
+<meta name="twitter:url" content="https://moisesvilar.github.io/post/docker-4-containers/">
+<meta name="twitter:title" content="docker IV - manejando contenedores - Write some code!">
+<meta name="twitter:description" content="Lanzaremos, listaremos y eliminaremos contenedores. ¡Y crearemos nuestras propias imágenes!">
+<meta name="twitter:image" content="https://moisesvilar.github.io/images/cover-docker-containers.jpg">
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "NewsArticle",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id":"https:\/\/moisesvilar.github.io\/"
+    },
+    "headline": "docker IV - manejando contenedores - Write some code!",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https:\/\/moisesvilar.github.io\/images\/cover-docker-containers.jpg",
+      "height": 800,
+      "width": 800
+    },
+    "datePublished": "2017-01-15T14:10:02JST",
+    "dateModified": "2017-01-15T14:10:02JST",
+    "author": {
+      "@type": "Person",
+      "name": "Write some code!"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Write some code!",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https:\/\/moisesvilar.github.io\/images/logo.png",
+        "width": 600,
+        "height": 60
+      }
+    },
+    "description": "Lanzaremos, listaremos y eliminaremos contenedores. ¡Y crearemos nuestras propias imágenes!"
+  }
+</script>
+
+
+    <style>
+      html { font-size: 18px;}@media (max-width: 768px) { html { font-size: 15px; }}body { font-family: 'Noto Sans','Hiragino Kaku Gothic Pro',メイリオ,Meiryo,sans-serif; font-size: inherit; font-weight: 300; line-height: 1rem; background-color: #eceff1;}p { margin: 0;}a { color: #4caf50;}a:hover { text-decoration: none; color: #388e3c;}ul,ol { margin: 0; padding: 0;}h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: 700;}h1 { font-size: 1.8rem; line-height: 2rem; margin: 1.5rem 0; }h2 { font-size: 1.4rem; line-height: 2rem; margin: 1.5rem 0; }h3 { font-size: 1.2rem; line-height: 1.5rem; margin: 1.5rem 0; }h4, h5, h6 { font-size: 1rem; line-height: 1.5rem; margin: 1.5rem 0; }main { display: block;}.content-inner { padding: 1rem 2rem;}.content-inner.thin { padding: .5rem 1rem;}@media (max-width: 768px) { .content-inner { padding: 1rem; }}/* Override */.container { position: relative;}/* Parts:layouts */.l-header { background-color: #fff; margin-bottom: 1rem; padding: 1rem 0; text-align: center;}.l-footer { font-size: .8rem; padding: 1.5rem 0;}/* Parts:menu */.p-menu { position: absolute; right: 15px; top: 0;}/* Parts:terms */.p-terms { list-style: none;}.p-terms .terms-title { margin: 0;}.p-terms a { display: inline-block; padding: .25rem 0;}.p-terms.inline li { display: inline-block; font-size: .8rem;}.p-terms.inline li::after { content: ',';}.p-terms.inline li:last-child::after { content: '';}/* Parts:paging */.p-paging { margin-bottom: 1.5rem; text-align: center;}.p-paging a { display: inline-block; padding: 1rem 1.5rem; margin: 0 .5rem; background-color: #cfd8dc; color: #263238;}/* Parts:section */section { margin-bottom: 1.5rem;}section>header { font-size: .8rem; font-weight: 700; margin-bottom: .5rem; text-transform: uppercase;}section>header a { color: #333; text-decoration: underline;}section.article-footer { margin-bottom: 1rem;}section.article-footer>header { margin-bottom: 0;}/* Parts:share */.p-share { min-width: 100%; margin-bottom: 1.5rem;}.p-share .share-inner { display: table; table-layout: fixed; width: 100%; border-spacing: .25rem;}.p-share a { display: table-cell; text-align: center; font-weight: 700; font-size: .7rem; padding: .5rem 0; color: #fff; border-radius: 5px;}.p-share a.ht { background-color: #00a4de; border-bottom: 2px solid #0083b1; }.p-share a.fb { background-color: #3b5998; border-bottom: 2px solid #2f4779; }.p-share a.tw { background-color: #1da1f2; border-bottom: 2px solid #1780c1; }.p-share a.gp { background-color: #dd4b39; border-bottom: 2px solid #b03c2d; }.p-share a.ln { background-color: #00c300; border-bottom: 2px solid #009c00; }.p-share a.ht::before { content: 'Hatena'; }.p-share a.fb::before { content: 'Facebook'; }.p-share a.tw::before { content: 'Twitter'; }.p-share a.gp::before { content: 'Google+'; }.p-share a.ln::before { content: 'LINE'; }/* Parts:logo */.h-logo { font-family: 'Montserrat', sans-serif;}.p-logo { display: inline-block; text-transform: uppercase;}.p-logo a { display: inline-block; font-size: 1.4rem; line-height: 2rem; color: #000;}/* Parts:crumb */.p-crumb ol { list-style: none; margin-bottom: 1rem;}.p-crumb li { display: inline; margin-right: .25rem; font-size: .8rem; color: #607d8b;}.p-crumb li::after { content: '/'; margin-left: .25rem;}.p-crumb li:last-child::after { content: '';}/* Parts:facts */.p-facts { list-style: none; font-size: .8rem; margin-bottom: 1rem;}.p-facts li { display: inline-block; margin-right: .5rem; color: #90a4ae;}.p-facts li i { margin-right: .5rem; color: #cfd8dc;}/* Parts:article */article { background-color: #fff;}article .title { margin: 0; margin-bottom: .5rem; font-weight: 700;}article .title a { color: #000;}article .thumb { display: block; background-image: url(https://moisesvilar.github.io/images/default.jpg); background-position: center; background-size: cover;}article .summary { margin-bottom: .5rem; max-height: 5rem; overflow: hidden;}article.single .thumb { height: 18rem; margin-bottom: 1rem;}@media (max-width: 768px) { article.single .thumb { height: 12rem; }}article.li { margin-bottom: 1rem;}article.li .thumb { height: 7.5rem; margin-bottom: .5rem;}article.li.sm { background-color: transparent; margin-bottom: .5rem;}article.li.sm>header { padding: .5rem 0;}article.li.sm .title { font-size: .8rem; line-height: 1rem; margin-bottom: .25rem;}article.li.sm .p-facts { font-size: .6rem; margin-bottom: 0;}article.li.sm .thumb { float: left; margin-right: .5rem; height: 3rem; width: 3rem;}.article-body h2 { padding: 1rem 0; border-bottom: 2px solid #eceff1;}.article-body h2:first-child { margin-top: 0; }.article-body h3 { color: #428bca;}.article-body h4 { border-left: solid .25rem #428bca; padding: 0 .5rem;}.article-body p { margin: 1.5rem 0; line-height: 1.5rem;}.article-body a { text-decoration: underline;}.article-body ul,.article-body ol { padding-left: 1.5rem; line-height: 1.5rem;}.article-body code { display: inline-block; font-family: Menlo, consolas, monospace; font-size: .8rem; padding: 0 .5rem; line-height: 1.5rem;}.article-body pre { margin: 1.5rem 0; padding: 0; font-size: .8rem; border: none; border-radius: 0;}.article-body pre code { display: block; line-height: 1rem; padding: 1rem;}.article-body blockquote { margin: 1.5rem 0; padding: .5rem 1rem; font-size: 1rem; border-top: 1px solid #eceff1; border-bottom: 1px solid #eceff1; color: #607d8b;}.article-body blockquote p { margin: .5rem 0; line-height: 1.5rem;}.article-body em { font-style: italic;}.article-body strong { color: #03a9f4;}.article-body figure { margin: 1.5rem 0; }.article-body figure.left,.article-body figure.right { width: 15rem; height: 12rem; margin-top: 0;}.article-body figure.left { float: left; margin-right: 1rem; }.article-body figure.right { float: right; margin-left: 1rem; }@media (max-width: 768px) { .article-body figure.left, .article-body figure.right { float: none; margin: 0; width: auto; height: auto; }}.article-body figcaption { padding: .5rem 0; font-size: .8rem; text-align: center;}.article-body figcaption a { color: #263238;}li.tag-fa {	margin-right: 0;}.tags.list { margin-top: 10px; color: #388e3c; font-size: 14px;}img[src$='#small-image'] { max-width: 100px;}img[src$='#medium-image'] { max-width: 300px;}figure.w100 > img { width: 100%;}figcaption h4 { font-size: 1em; margin: 0; font-style: italic; border-left: solid transparent !important;}.previous-post { float: left;}.next-post { float: right;}
+      
+      
+    </style>
+  </head>
+
+  <body>
+    
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-89820131-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+    <header class="l-header">
+      <div class="container">
+        <div class="p-logo">
+          <a href="https://moisesvilar.github.io/" class="h-logo">Write some code!</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        
+<div class="row">
+  <div class="col-md-12">
+    <article class="single">
+
+  <a href="https://moisesvilar.github.io/post/docker-4-containers/" class="thumb" style="background-image: url(https://moisesvilar.github.io/images/cover-docker-containers.jpg);"></a>
+  <div class="content-inner">
+    <h1 class="title">docker IV - manejando contenedores</h1>
+
+    <ul class="p-facts">
+      <li>
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        <time datetime="2017-01-15T14:10:02JST">15/01/2017</time>
+      </li>
+      
+        <li>
+          <span class="tags list">
+            <i class="fa fa-bookmark"></i>
+            <a href="/etiquetas/docker">docker</a>
+          </span>
+        </li>
+      
+    </ul>
+	
+	<aside class="p-share">
+  <div class="share-inner">
+    <a href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-4-containers%2f&t=docker%20IV%20-%20manejando%20contenedores" title="Facebookでシェア" class="fb" target="_blank" rel="nofollow"></a>
+    <a href="http://twitter.com/intent/tweet?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-4-containers%2f&text=docker%20IV%20-%20manejando%20contenedores&tw_p=tweetbutton" title="Twitterでシェア" class="tw" target="_blank" rel="nofollow"></a>
+    <a href="https://plus.google.com/share?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-4-containers%2f" title="Google Plusでシェア" class="gp" target="_blank" rel="nofollow"></a>
+  </div>
+</aside>
+
+	
+    <div class="article-body">
+
+<blockquote>
+<p>Como al final del <a href="/post/docker-basics-1/">anterior post</a>, os recomiendo que tengáis el ordenador a mano mientras
+leeis. ¡Hoy toca picar muchos comandos!</p>
+</blockquote>
+
+<p>Muy bien, chic@s. Vamos a ver un par de comandos más de la Docker machine y nos pondremos
+ya de inmediato a lanzar nuestros contenedores.</p>
+
+<h1 id="estado-de-nuestra-vm-docker">Estado de nuestra VM Docker</h1>
+
+<p>En el <a href="/post/docker-basics-1/">anterior post</a> lo habíamos dejado con nuestra
+máquina virtual Docker (que habíamos llamado <em>default</em>) <em>up and running</em>.</p>
+
+<p>Pero entiendo que desde entonces hasta ahora, habéis apagado el equipo. Por lo que si ejecutáis</p>
+
+<pre><code>docker-machine ls
+</code></pre>
+
+<p>veremos que el estado de nuestra máquina es <em>stopped</em>.</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/docker-4-commands-1.png" alt="Nuestra VM Docker descansando de un día duro de trabajo" />
+    
+    
+    <figcaption>
+        <h4>Nuestra VM Docker descansando de un día duro de trabajo</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Para lanzarla basta con ejecutar:</p>
+
+<pre><code>docker-machine start default
+</code></pre>
+
+<p>Tardará un poco (lamentablemente, estamos lanzando toda una máquina virtual, y aunque ligera,
+lleva su tiempo). Pero finalmente tendremos nuestra máquina en estado <em>running</em>:</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/docker-4-commands-2.png" alt="Nuestra VM Docker up and running" />
+    
+    
+    <figcaption>
+        <h4>Nuestra VM Docker up and running</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>También decir que, de una manera similar, podemos detenerla con el siguiente comando:</p>
+
+<pre><code>docker-machine stop default
+</code></pre>
+
+<p>Por último, nos conectamos a nuestra VM para poder operar bajo un sistema que tenga soporte
+nativo para Docker:</p>
+
+<pre><code>docker-machine ssh default
+</code></pre>
+
+<p>Con nuesto host Docker ya ejecutándose y conectados a él, pasamos a lanzar contenedores!</p>
+
+<h1 id="lanzando-nuestro-primer-contenedor">Lanzando nuestro primer contenedor</h1>
+
+<p>Lancemos nuestro primer contenedor a partir de la imagen de alpine que ya deberíamos
+tener descargada si hemos seguido lo indicado en el <a href="/post/docker-basics-1/">anterior post</a>.
+Y antes de darle un <em>enter</em>, poned el cronómetro:</p>
+
+<pre><code>docker run -t -i --name bloody_mary alpine /bin/sh
+</code></pre>
+
+<p>¿Cuánto ha tardado en lanzar el contenedor? ¿Medio milisegundo? :)</p>
+
+<p>Desgranemos el comando:</p>
+
+<ul>
+<li><em>docker run</em>: le indicamos al intérprete de Docker que vamos a ejecutar un comando <em>run</em>, que se
+traduce por un &ldquo;lánzame un contenedor&rdquo;. Esto es, se conectará vía HTTPS e invocará los métodos de la API
+REST necesarios para que el servidor Docker realice esta tarea.</li>
+<li><em>-t</em>: le indicamos que nos habilite un terminal tty para ese contenedor.</li>
+<li><em>-i</em>: le indicamos que queremos interactuar con el contenedor, es decir, que lo lance en modo interactivo.</li>
+<li><em>&ndash;name bloody_mary</em>: le asignamos el nombre <em>bloody_mary</em> a nuestro contenedor. Si no especificamos
+este parámetro, Docker escogerá uno por nosotros. Y como curiosidad, en <a href="https://github.com/docker/docker/blob/master/pkg/namesgenerator/names-generator.go">Github</a>
+tenéis el código en Go de esta tarea.</li>
+<li><em>alpine</em>: le indicamos que queremos que use la imagen alpine como sistema de directorios de nuestro
+contenedor.</li>
+<li><em>/bin/sh</em>: por último, le indicamos qué proceso queremos que ejecute cuando lance nuestro contenedor.
+En este caso, que ejecute el <em>shell</em>. Como hemos habilitado una terminal tty y estamos en modo interactivo,
+la ejecución de este comando nos devolverá un <em>prompt</em> a nuesro contenedor, como si nos acabáramos de conectar
+por SSH.</li>
+</ul>
+
+<p>El apasionante resultado de la ejecución de este comando, a continuación:</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/docker-4-commands-3.png" alt="Un precioso prompt a nuestro contenedor alpine" />
+    
+    
+    <figcaption>
+        <h4>Un precioso prompt a nuestro contenedor alpine</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Ejecutad un <em>ls</em>. Ahí lo tenéis. Los binarios de la distribución alpine.</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/docker-4-commands-8.png" alt="La distribución alpine en todo su esplendor" />
+    
+    
+    <figcaption>
+        <h4>La distribución alpine en todo su esplendor</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Ahora teclead <em>exit</em> y dadle un <em>enter</em> para salir de nuestro contenedor y volver a nuestra VM Docker.</p>
+
+<p>Para listar los contenedores, ejecutamos:</p>
+
+<pre><code>docker ps
+</code></pre>
+
+<p>Un momento&hellip; parece que la lista está vacía:</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/docker-4-commands-4.png" alt="¿Dónde está nuestro recién lanzado contenedor?" />
+    
+    
+    <figcaption>
+        <h4>¿Dónde está nuestro recién lanzado contenedor?</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Lo que ha pasado aquí es sencillo de entender. Al ejecutar <em>exit</em> no sólo hemos salido de nuestro contenedor,
+sino que <strong>hemos finalizado el proceso /bin/sh que se ejecutaba en él</strong>. No había ningún otro proceso en
+<em>foreground</em> ejecutándose en dicho contenedor, por lo tanto éste directamente se ha detenido.</p>
+
+<p>Podemos verlo con la opción -a (<em>all</em>, es decir, los que se están ejecutando y los que no) del anterior comando:</p>
+
+<pre><code>docker ps -a
+</code></pre>
+
+<p>Ahí lo tenemos. Si os fijáis en la columna <em>STATUS</em>, nos indica que hemos salido hace 24 segundos:</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/docker-4-commands-5.png" alt="¡Aquí estaba!" />
+    
+    
+    <figcaption>
+        <h4>¡Aquí estaba!</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Otro parámetro para el comando <em>ps</em> es <em>-q</em>, que nos lista únicamente la columna <em>CONTAINER ID</em></p>
+
+<pre><code>docker ps -a -q
+</code></pre>
+
+<p>Volvamos a lanzar nuestro contenedor a partir de nuestra imagen de alpine e insertemos una modificación en su sistema de ficheros:</p>
+
+<pre><code>&gt; docker start bloody_mary
+&gt; docker exec -t -i bloody_mary /bin/sh
+/ # echo &quot;Sin tele y sin cerveza, Homer pierde la cabeza!&quot; &gt; sabiduria.txt
+/ # exit
+</code></pre>
+
+<p>Con la primera línea, <strong>docker start bloody_mary</strong> estamos relanzando nuestro contenedor (que, recordemos, estaba detenido).</p>
+
+<p>Pero fijaros que en esta ocasión Docker no nos devuelve el <em>prompt</em> a nuestro contenedor.</p>
+
+<p>Para poder abrir ahora un terminal a nuestro contenedor ejecutamos la segunda línea <strong>docker exec -t -i bloody_mary /bin/sh</strong>.</p>
+
+<p>Es decir, ejecuta el comando <em>/bin/sh</em> en el contenedor <em>bloody_mary</em> con un terminal tty y en modo interactivo.</p>
+
+<p>Ahora sí que estamos dentro de nuestro contedor.</p>
+
+<p>Pues bien, con la tercera línea lo que hacemos es crear un fichero <em>sabiduria.txt</em> cuyo contenido será <em>&ldquo;Sin tele y sin cerveza, Homer pierde la cabeza!&rdquo;</em>.</p>
+
+<p>Y por último, salimos del contenedor. Como hemos visto antes, esto hará que el contenedor se detenga.</p>
+
+<p>Pero si volvemos a entrar y listamos el contenido del directorio raíz haciendo un <em>ls</em>:</p>
+
+<pre><code>&gt; docker exec -t -i bloody_mary /bin/sh
+/ # ls
+</code></pre>
+
+<p>Veremos que nuestro fichero <em>sabiduria.txt</em> sigue estando ahí.</p>
+
+<p>Como habíamos dicho en post anteriores,la capa de lectura/escritura es persistente <strong>siempre y cuando no eliminemos el contenedor, sólo lo detengamos</strong>,
+como es el caso.</p>
+
+<p>Ahora eliminemos nuestro contenedor:</p>
+
+<pre><code>docker stop bloody_mary
+docker rm 1a6b2d03fa14
+</code></pre>
+
+<p>El <em>numeraco</em> 1a6b2d03fa14 se corresponde precisamente con el CONTAINER ID del contenedor que queremos borrar.</p>
+
+<p>Si queremos eliminar todos nuestros contenedores, ejecutándose o no, de una tacada, podemos hacer:</p>
+
+<pre><code>docker rm $(docker ps -a -q)
+</code></pre>
+
+<p>Es decir, al comando <strong>docker rm</strong> le concatenamos la salida del comando <strong>docker ps -a -q</strong> que nos devolverá
+todos los CONTAINER ID de todos nuestros contenedores.</p>
+
+<p>Volvamos a crear un contenedor a partir de nuestra imagen de alpine, en modo iteractivo, con un
+terminal tty y ejecutando el proceso /bin/sh para que nos sitúe el <em>prompt</em> dentro de nuestro contenedor.
+Y a continuación, hagamos un <em>ls</em>:</p>
+
+<pre><code>&gt; docker run -t -i --name bloody_mary alpine /bin/sh
+/ # ls
+</code></pre>
+
+<p>Vemos que ahora no hay ningún fichero <em>sabiduria.txt</em>. ¡Evidentemente! Hemos eliminado el contenedor anterior,
+eliminando a su vez su capa de lectura/escritura.</p>
+
+<p>Al lanzar el nuevo, utiliza la imagen alpine para su sistema de ficheros&hellip; ¡y crea una nueva capa de lectura/escritura
+limpia y reluciente y sin rastro del fichero <em>sabiduria.txt</em>!</p>
+
+<p>¿Cómo podemos incorporar esa capa? Pues convirtiendo el sistema de ficheros de ese contenedor en
+una nueva imagen, precisamente lo que vamos a hacer a continuación.</p>
+
+<h1 id="creando-nuevas-imágenes">Creando nuevas imágenes</h1>
+
+<p>Repetimos proceso: creamos un contenedor a partir de la imagen de alpine y modificamos su
+capa de lectura/escritura:</p>
+
+<pre><code>&gt; docker run -t -i --name tequila_sunrise alpine /bin/sh
+/ # echo &quot;Sin tele y sin cerveza, Homer pierde la cabeza!&quot; &gt; sabiduria.txt
+/ # exit
+</code></pre>
+
+<p>Ahora ejecutamos el siguiente comando:</p>
+
+<pre><code>docker commit -m &quot;A new awesome cocktail&quot; -a &quot;Moises Vilar&quot; tequila_sunrise moisesvilar/alpine
+</code></pre>
+
+<p>Este comando crea una nueva imagen con nombre <strong>moisesvilar/alpine</strong> (utilizad si queréis vuestro nombre de usuario en Docker hub,
+en vez de <em>moisesvilar</em>) cuyo autor es <em>&ldquo;Moisés Vilar&rdquo;</em> y con un mensaje de creación <em>&ldquo;A new awesome cocktail&rdquo;</em> a partir del sistema de ficheros que
+actualmente posee el contenedor <strong>tequila_sunrise</strong>, incluyendo su capa de lectura y escritura.</p>
+
+<p>Si ahora ejecutamos</p>
+
+<pre><code>docker images
+</code></pre>
+
+<p>veremos que nuestra imagen se ha creado correctamente:</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/docker-4-commands-6.png" alt="Nuestra nueva imagen moisesvilar/alpine" />
+    
+    
+    <figcaption>
+        <h4>Nuestra nueva imagen moisesvilar/alpine</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Bien, pues ejecutemos un nuevo contenedor a partir de esta imagen y hagamos un <em>ls</em></p>
+
+<pre><code>&gt; docker run -t -i --name old_fashioned moisesvilar/alpine /bin/sh
+/ # ls
+</code></pre>
+
+<p>¡Ahí tenemos nuestro fichero <em>sabiduria.txt</em>!</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/docker-4-commands-7.png" alt="Nuestro fichero sabiduria.txt existe en el nuevo contenedor creado a partir de la imagen moisesvilar/alpine" />
+    
+    
+    <figcaption>
+        <h4>Nuestro fichero sabiduria.txt existe en el nuevo contenedor creado a partir de la imagen moisesvilar/alpine</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Lo que hemos hecho es &ldquo;congelar&rdquo; el sistema de ficheros del contenedor <strong>tequila_sunrise</strong>, creando una nueva imagen
+que, ahora sí, incorpora una capa que contiene el fichero <em>sabiduria.txt</em> y, a continuación, hemos creado
+el contenedor <strong>old_fashioned</strong> a partir de dicha imagen.</p>
+
+<h1 id="conclusiones">Conclusiones</h1>
+
+<p>¡Por fin tenéis comandos! En este post hemos aprendido un buen puñado de cosas:</p>
+
+<ol>
+<li>Hemos visto cómo controlar el estado de nuestra VM Docker (nuestro <em>host</em> para Docker) con los comandos
+<strong>docker-machine start</strong> y <strong>docker-machine stop</strong>.</li>
+<li>Hemos lanzado nuestro primer contenedor con el comando <strong>docker run</strong>.</li>
+<li>Hemos listado nuestos contenedores con el comando <strong>docker ps</strong></li>
+<li>Los hemos iniciado y detenido con los comandos <strong>docker start</strong> y <strong>docker stop</strong>.</li>
+<li>Los hemos eliminado con el comando <strong>docker rm</strong>.</li>
+<li>Hemos ejecutado procesos en contenedores previamente iniciados, con el comando <strong>docker exec</strong>.</li>
+<li>Hemos creado una imagen a partir del sistema de ficheros de un contenedor con el comando <strong>docker commit</strong>.</li>
+</ol>
+
+<p>Si queréis bucear más a fondo en estos comandos, podéis recurrir a la <a href="https://docs.docker.com/engine/reference/commandline/">referencia oficial de Docker</a>.</p>
+
+<p>Por el momento, nosotros lo dejamos aquí. En el siguiente post montaremos una imagen &ldquo;a mano&rdquo; con
+un entorno de ejecución (quizás PHP o quizás NodeJS, aún no lo tengo decidido, si tenéis alguna
+preferencia&hellip; dejadla en los comentarios!).</p>
+
+<p>¡Nos vemos en nada!</p>
+</div>
+  </div>
+
+  <footer class="article-footer">
+    <div class="content-inner clearfix">
+      
+        <a href="https://moisesvilar.github.io/post/docker-concepts-3/" class="previous-post btn btn-info btn-lg">Anterior</a>
+      
+      
+    </div>
+  </footer>
+
+</article>
+
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'moisesvilar';
+    var disqus_identifier = 'https:\/\/moisesvilar.github.io\/post\/docker-4-containers\/';
+    var disqus_title = 'docker IV - manejando contenedores';
+    var disqus_url = 'https:\/\/moisesvilar.github.io\/post\/docker-4-containers\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  </div>
+</div>
+
+      </div>
+    </main>
+
+    <footer class="l-footer">
+      <div class="container">
+        <p>
+			<a href="" target="_blank" type="application/rss+xml"><i class="fa fa-rss-square"></i>&nbsp;RSS</a>&nbsp;
+			<a href="https://twitter.com/moisvilar" target="_blank"><i class="fa fa-twitter-square"></i>&nbsp;Twitter</a>&nbsp;
+			<a href="https://github.com/moisesvilar" target="_blank"><i class="fa fa-github-square"></i>&nbsp;Github</a>&nbsp;<br/>
+			&copy; Esta obra está bajo una <a target='_blank' rel='license' href='http://creativecommons.org/licenses/by/4.0/'>Licencia Creative Commons Atribución 4.0 Internacional</a>.<br/>
+			Powered by <a href="https://gohugo.io/">Hugo</a>.&nbsp;
+		</p>
+        <aside>
+          <p></p>
+        </aside>
+      </div>
+    </footer>
+
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>
+
