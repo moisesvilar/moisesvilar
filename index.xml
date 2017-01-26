@@ -184,7 +184,7 @@ sino que &lt;strong&gt;hemos finalizado el proceso /bin/sh que se ejecutaba en �
 &lt;p&gt;Ahí lo tenemos. Si os fijáis en la columna &lt;em&gt;STATUS&lt;/em&gt;, nos indica que hemos salido hace 24 segundos:&lt;/p&gt;
 
 
-&lt;figure class=&#34;text-center w100&#34;&gt;
+&lt;figure class=&#34;text-center&#34;&gt;
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-5.jpg&#34; alt=&#34;¡Aquí estaba!&#34; /&gt;
     
@@ -601,7 +601,7 @@ Por supuesto que sí.&lt;/p&gt;
 &lt;p&gt;Tendríamos algo como esto:&lt;/p&gt;
 
 
-&lt;figure class=&#34;text-center&#34;&gt;
+&lt;figure class=&#34;text-center w100&#34;&gt;
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-1.jpg&#34; alt=&#34;Entorno en cada máquina virtual&#34; /&gt;
     
@@ -626,7 +626,7 @@ cambiase el entorno de la segunda y ésta se fuese al garete.&lt;/p&gt;
 &lt;p&gt;En este segundo caso tendríamos:&lt;/p&gt;
 
 
-&lt;figure class=&#34;text-center&#34;&gt;
+&lt;figure class=&#34;text-center w100&#34;&gt;
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-2.jpg&#34; alt=&#34;Entorno compartido en dos máquinas virtuales&#34; /&gt;
     
@@ -653,7 +653,7 @@ NodeJS 6.9 pero empleando el framework Express 4, podríamos reutilizar las capa
 nuestra nueva arquitectura quedaría de la siguiente forma:&lt;/p&gt;
 
 
-&lt;figure class=&#34;text-center&#34;&gt;
+&lt;figure class=&#34;text-center w100&#34;&gt;
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-3.jpg&#34; alt=&#34;Entorno compartido en dos máquinas virtuales&#34; /&gt;
     
@@ -717,7 +717,7 @@ una capa más a añadir encima de nuestra arquitectura. Es decir, los ficheros d
 una nueva capa que es gestionada por el UFS. Por ejemplo, para nuestra aplicación Express sobre NodeJS:&lt;/p&gt;
 
 
-&lt;figure class=&#34;text-center&#34;&gt;
+&lt;figure class=&#34;text-center w100&#34;&gt;
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-im-2.jpg&#34; alt=&#34;Imagen de una aplicación Express sobre NodeJS&#34; /&gt;
     
@@ -940,7 +940,7 @@ avanzada es indistinguible de la magia&lt;/em&gt;.&lt;/p&gt;
 arquitectura:&lt;/p&gt;
 
 
-&lt;figure class=&#34;text-center&#34;&gt;
+&lt;figure class=&#34;text-center w100&#34;&gt;
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/docker-architecture.jpg&#34; alt=&#34;arquitectura de docker&#34; /&gt;
     
@@ -1021,7 +1021,7 @@ que estoy empezando a descubrir ahora.&lt;/p&gt;
 o contactar conmigo a través de &lt;a href=&#34;https://twitter.com/moisvilar&#34;&gt;Twitter&lt;/a&gt;.&lt;/p&gt;
 
 
-&lt;figure class=&#34;text-center&#34;&gt;
+&lt;figure class=&#34;text-center w100&#34;&gt;
     
         &lt;img src=&#34;https://moisesvilar.github.io/images/keep-calm-and-write-some-code.jpg#medium-image&#34; alt=&#34;Keep calm and write some code&#34; /&gt;
     
