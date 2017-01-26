@@ -40,7 +40,7 @@ máquina virtual Docker (que habíamos llamado &lt;em&gt;default&lt;/em&gt;) &lt
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-1.png&#34; alt=&#34;Nuestra VM Docker descansando de un día duro de trabajo&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-1.jpg&#34; alt=&#34;Nuestra VM Docker descansando de un día duro de trabajo&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -62,7 +62,7 @@ lleva su tiempo). Pero finalmente tendremos nuestra máquina en estado &lt;em&gt
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-2.png&#34; alt=&#34;Nuestra VM Docker up and running&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-2.jpg&#34; alt=&#34;Nuestra VM Docker up and running&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -121,7 +121,7 @@ por SSH.&lt;/li&gt;
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-3.png&#34; alt=&#34;Un precioso prompt a nuestro contenedor alpine&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-3.jpg&#34; alt=&#34;Un precioso prompt a nuestro contenedor alpine&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -137,7 +137,7 @@ por SSH.&lt;/li&gt;
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-8.png&#34; alt=&#34;La distribución alpine en todo su esplendor&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-8.jpg&#34; alt=&#34;La distribución alpine en todo su esplendor&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -160,7 +160,7 @@ por SSH.&lt;/li&gt;
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-4.png&#34; alt=&#34;¿Dónde está nuestro recién lanzado contenedor?&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-4.jpg&#34; alt=&#34;¿Dónde está nuestro recién lanzado contenedor?&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -185,7 +185,7 @@ sino que &lt;strong&gt;hemos finalizado el proceso /bin/sh que se ejecutaba en �
 
 &lt;figure class=&#34;text-center w100&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-5.png&#34; alt=&#34;¡Aquí estaba!&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-5.jpg&#34; alt=&#34;¡Aquí estaba!&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -296,7 +296,7 @@ actualmente posee el contenedor &lt;strong&gt;tequila_sunrise&lt;/strong&gt;, in
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-6.png&#34; alt=&#34;Nuestra nueva imagen moisesvilar/alpine&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-6.jpg&#34; alt=&#34;Nuestra nueva imagen moisesvilar/alpine&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -318,7 +318,7 @@ actualmente posee el contenedor &lt;strong&gt;tequila_sunrise&lt;/strong&gt;, in
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-7.png&#34; alt=&#34;Nuestro fichero sabiduria.txt existe en el nuevo contenedor creado a partir de la imagen moisesvilar/alpine&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-4-commands-7.jpg&#34; alt=&#34;Nuestro fichero sabiduria.txt existe en el nuevo contenedor creado a partir de la imagen moisesvilar/alpine&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -465,7 +465,7 @@ que utilizaremos para crear nuestra pequeña máquina virtual Linux que &lt;stro
 
 &lt;figure class=&#34;w70 text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-3-commands-1.png&#34; alt=&#34;Resultados de docker-machine ls&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-3-commands-1.jpg&#34; alt=&#34;Resultados de docker-machine ls&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -529,7 +529,7 @@ una capa, la que contiene los binarios de este sistema operativo.&lt;/p&gt;
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-3-commands-2.png&#34; alt=&#34;Salida del comando docker images, con nuestra imagen alpine de apenas 4MB :)&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-3-commands-2.jpg&#34; alt=&#34;Salida del comando docker images, con nuestra imagen alpine de apenas 4MB :)&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -602,7 +602,7 @@ Por supuesto que sí.&lt;/p&gt;
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-1.png&#34; alt=&#34;Entorno en cada máquina virtual&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-1.jpg&#34; alt=&#34;Entorno en cada máquina virtual&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -627,7 +627,7 @@ cambiase el entorno de la segunda y ésta se fuese al garete.&lt;/p&gt;
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-2.png&#34; alt=&#34;Entorno compartido en dos máquinas virtuales&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-2.jpg&#34; alt=&#34;Entorno compartido en dos máquinas virtuales&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -654,7 +654,7 @@ nuestra nueva arquitectura quedaría de la siguiente forma:&lt;/p&gt;
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-3.png&#34; alt=&#34;Entorno compartido en dos máquinas virtuales&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-vm-3.jpg&#34; alt=&#34;Entorno compartido en dos máquinas virtuales&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -684,7 +684,7 @@ la arquitectura de la figura anterior podríamos definir las siguientes imágene
 
 &lt;figure class=&#34;text-center w100&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-im-1.png&#34; alt=&#34;Imágenes posibles en la arquitectura de capas anterior&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-im-1.jpg&#34; alt=&#34;Imágenes posibles en la arquitectura de capas anterior&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -718,7 +718,7 @@ una nueva capa que es gestionada por el UFS. Por ejemplo, para nuestra aplicaci�
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-im-2.png&#34; alt=&#34;Imagen de una aplicación Express sobre NodeJS&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-2-im-2.jpg&#34; alt=&#34;Imagen de una aplicación Express sobre NodeJS&#34; /&gt;
     
     
     &lt;figcaption&gt;
@@ -941,7 +941,7 @@ arquitectura:&lt;/p&gt;
 
 &lt;figure class=&#34;text-center&#34;&gt;
     
-        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-architecture.png&#34; alt=&#34;arquitectura de docker&#34; /&gt;
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-architecture.jpg&#34; alt=&#34;arquitectura de docker&#34; /&gt;
     
     
     &lt;figcaption&gt;

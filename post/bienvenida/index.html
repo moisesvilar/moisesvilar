@@ -151,7 +151,7 @@ o contactar conmigo a través de <a href="https://twitter.com/moisvilar">Twitter
 
 <figure class="text-center">
     
-        <img src="/images/keep-calm-and-write-some-code.png#medium-image" alt="Keep calm and write some code" />
+        <img src="/images/keep-calm-and-write-some-code.jpg#medium-image" alt="Keep calm and write some code" />
     
     
 </figure>
@@ -212,6 +212,11 @@ o contactar conmigo a través de <a href="https://twitter.com/moisvilar">Twitter
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+      $(document).ready(function() {
+        $('a:not([href^="https:\/\/moisesvilar.github.io\/"]):not([href^="#"]):not([href^="/"])').attr('target', '_blank');
+      });
+    </script>
   </body>
 </html>
 
