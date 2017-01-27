@@ -7,8 +7,503 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-ES</language>
     <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
-    <lastBuildDate>Sun, 15 Jan 2017 14:10:02 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 27 Jan 2017 17:18:27 +0100</lastBuildDate>
     <atom:link href="https://moisesvilar.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>docker V - preparando un entorno</title>
+      <link>https://moisesvilar.github.io/post/docker-5-environment/</link>
+      <pubDate>Fri, 27 Jan 2017 17:18:27 +0100</pubDate>
+      
+      <guid>https://moisesvilar.github.io/post/docker-5-environment/</guid>
+      <description>
+
+&lt;p&gt;El bueno y viejo PHP. Un lenguaje tan &lt;a href=&#34;https://w3techs.com/technologies/overview/programming_language/all&#34;&gt;usado&lt;/a&gt; como &lt;a href=&#34;https://www.google.es/search?q=php+sucks&#34;&gt;vilipendiado&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Pero a mi me gusta.&lt;/p&gt;
+
+&lt;p&gt;Vale que su API ha crecido sin orden ni concierto y a veces te encuentras tantas incongruencias que parece que la han diseñado durante un atracón de cerveza y marihuana.&lt;/p&gt;
+
+&lt;p&gt;Vale que ha sido usado durante años por gente sin formación, o por lo menos sin un mínimo cariño por las cosas bien hechas, y eso lo ha convertido en uno de los referentes del
+&lt;a href=&#34;https://es.wikipedia.org/wiki/C%C3%B3digo_espagueti&#34;&gt;código espagueti&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Pero recordad que no hace mucho tiempo lo mismo le pasaba a Javascript. ¡Cuántos atentados al software he visto en Javascript! Y hoy lo tenemos en todos lados e incluso en el 2014 fue nombrado
+&lt;a href=&#34;http://www.tiobe.com/tiobe-index/javascript/&#34;&gt;lenguaje del año&lt;/a&gt;. ¡Hasta Liam Neeson está un poco harto del auge de Javascript!&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/venganza_javascript_framework.jpg&#34; alt=&#34;¿Otro framework Javascript? Señor, llévanos pronto...&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;¿Otro framework Javascript? Señor, llévanos pronto...&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;PHP es un lenguaje ultra-flexible, cosa que lo convierte en un lenguaje &lt;em&gt;divertido&lt;/em&gt;&amp;hellip; pero que también puede hacer que escribas muy mal código. ¿Culpa del lenguaje o culpa
+del desarrollador? Yo la respuesta la tengo clara.&lt;/p&gt;
+
+&lt;p&gt;Y por ello, he decidido tomarlo como framework para ilustar el ejemplo de este artículo: vamos a montar un entorno de desarrollo en PHP sobre Docker.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Let&amp;rsquo;s go!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;una-pequeña-sorpresa-de-la-docker-machine&#34;&gt;Una pequeña sorpresa de la docker-machine&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Si estáis en un entorno con soporte nativo para Docker, podéis saltar a la siguiente sección.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Arrancad vuestro entorno Docker&amp;hellip;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker-machine start default
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip; conectaros a él&amp;hellip;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker-machine ssh default
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip; y ejecutad lo siguiente:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /
+ls -l
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Fijaos en esta carpeta que os marco aquí:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-5-dockermachine-8.jpg&#34; alt=&#34;Una misteriosa carpeta C...&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Una misteriosa carpeta C...&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Mmm. Entrad en ella y veréis que contiene otra carpeta llamada &lt;strong&gt;Users&lt;/strong&gt;. Entrad también en ella y haced un &lt;strong&gt;ls&lt;/strong&gt;. ¡Son vuestras carpetas personales de vuestro equipo Windows!&lt;/p&gt;
+
+&lt;p&gt;En efecto, la máquina virtual tiene una &lt;em&gt;carpeta compartida&lt;/em&gt; con vuestro host Windows que nos facilitará mucho la vida, como veremos al final de este artículo.&lt;/p&gt;
+
+&lt;p&gt;Es más, si abrís directamente la GUI de Virtualbox, podéis ver dicha carpeta seleccionando la máquina virtual, pulsando en configuración y yendo a &amp;ldquo;Carpetas compartidas&amp;rdquo;:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-5-dockermachine-2.jpg&#34; alt=&#34;Carpeta compartida entre nuestro windows y la VM Docker&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Carpeta compartida entre nuestro windows y la VM Docker&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;h1 id=&#34;la-distro-alpine&#34;&gt;La distro Alpine&lt;/h1&gt;
+
+&lt;p&gt;Como hemos dicho en posts anteriores, Alpine es una distribución Linux superligera, ocupando menos de 4MB.&lt;/p&gt;
+
+&lt;p&gt;Viene con un gestor de paquetes, llamado &lt;em&gt;apk&lt;/em&gt;, cuyo uso podéis investigar en la &lt;a href=&#34;http://wiki.alpinelinux.org/wiki/Alpine_Linux_package_management&#34;&gt;documentación oficial&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Y cuenta con &lt;a href=&#34;https://pkgs.alpinelinux.org/package/v3.3/main/x86/php-apache2&#34;&gt;paquetes para PHP&lt;/a&gt; y para &lt;a href=&#34;https://pkgs.alpinelinux.org/package/edge/main/x86/apache2&#34;&gt;Apache&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Así que supondremos que tenemos un proyecto web programado en PHP con Apache como servidor y todo sobre el sistema operativo Alpine.
+¡Montemos su entorno usando Docker!&lt;/p&gt;
+
+&lt;h1 id=&#34;instalando-apache-y-php-en-alpine&#34;&gt;Instalando Apache y PHP en Alpine&lt;/h1&gt;
+
+&lt;p&gt;Muy bien, lancemos un contenedor a partir de la imagen de Alpine en su versión 3.3:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -t -i -p 8080:80 --name tom_collins alpine:3.3 /bin/sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Todo nos debería de sonar excepto ese nuevo parámetro &lt;strong&gt;-p 8080:80&lt;/strong&gt;. Con este parámetro lo que
+estamos haciendo es &lt;strong&gt;publicar&lt;/strong&gt; el puerto 80 del contenedor en el puerto 8080 del host.
+Es decir, Docker publicará todas las peticiones entrantes en el puerto 8080 del host al puerto
+80 del contenedor, y publicará todas las respuestas salientes del puerto 80 del contenedor al
+puerto 8080 del host. ¿Recordáis como decíamos en &lt;a href=&#34;https://moisesvilar.github.io/post/docker-layers-2/&#34;&gt;este post&lt;/a&gt;
+que Docker le asignaba a cada contenedor su propia interfaz de red? Por defecto, dicha interfaz
+viene completamente aislada del mundo. Con este comando, estamos abriendo en ella una pequeña ventana.&lt;/p&gt;
+
+&lt;p&gt;Esto nos será útil para probar la instalación desde el host, como haremos en seguida.&lt;/p&gt;
+
+&lt;p&gt;Pero antes, una vez hayamos lanzado el contenedor, ejecutemos en él los siguientes comandos:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apk update
+apk add apache2 php-apache2
+mkdir /run/apache2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Con esto tendremos instalado Apache y PHP en nuestro contenedor. Finalmente, si ejecutamos:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;httpd -D FOREGROUND
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;habremos lanzado nuestro servidor Apache.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;No voy a explicar los comandos aquí expuestos, ya que está fuera del alcance
+de estos artículos, pero si hay alguna duda: ¡preguntad en los comentarios!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&#34;probando-el-entorno-desde-la-vm-docker&#34;&gt;Probando el entorno desde la VM Docker&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;En un nuevo terminal&lt;/strong&gt; hagamos una conexión a nuestra VM Docker:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker-machine ssh default
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Y ejecutemos el siguiente comando:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl localhost:8080
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Debería de mostrarnos la respuesta HTML que escupe nuestro Apache:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-5-dockermachine-3.jpg&#34; alt=&#34;It&amp;#39;s alive!&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;It&amp;#39;s alive!&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Aunque curl mola, entiendo que no lo veáis muy útil si lo que tenemos que depurar es una aplicación web. ¡Pongámosle solución!&lt;/p&gt;
+
+&lt;h1 id=&#34;configurando-el-reenvío-de-puertos-de-virtualbox&#34;&gt;Configurando el reenvío de puertos de Virtualbox&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Si vuestro sistema posee soporte nativo de Docker, podéis pasar directamente a la siguiente sección.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Abrid el GUI de Virtualbox, haced click derecho sobre la VM Docker e iros a
+&lt;strong&gt;Configuración &amp;gt; Red &amp;gt; Avanzadas &amp;gt; Reenvío de puertos&lt;/strong&gt;:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-5-virtualbox-1.jpg&#34; alt=&#34;Reenvío de puertos en Virtualbox&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Reenvío de puertos en Virtualbox&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Y estableced la regla que yo he nombrado &lt;strong&gt;8080&lt;/strong&gt;, tal y como se ve en esta imagen:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-cente w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-5-virtualbox-2.jpg&#34; alt=&#34;Reenviando el puerto 8080 de la VM Docker al puerto 80 de nuestra máquina Windows&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Reenviando el puerto 8080 de la VM Docker al puerto 80 de nuestra máquina Windows&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Es decir, reenviad todo lo que salga o entre del puerto 8080 de la VM Docker hacia el puerto 80 de la máquina Windows.&lt;/p&gt;
+
+&lt;h1 id=&#34;probando-el-entorno-desde-la-máquina-anfitrión&#34;&gt;Probando el entorno desde la máquina anfitrión&lt;/h1&gt;
+
+&lt;p&gt;Simplemente abrid un navegador e iros a la URL &lt;strong&gt;localhost&lt;/strong&gt; (o a &lt;strong&gt;localhost:8080&lt;/strong&gt; si vuestra máquina ya tiene soporte nativo
+para Docker).&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-5-windows-1.jpg&#34; alt=&#34;It&amp;#39;s still alive!&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;It&amp;#39;s still alive!&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;¡Tenemos acceso directo al apache de nuestro contenedor desde nuestra máquina anfitrión!&lt;/p&gt;
+
+&lt;p&gt;Más o menos lo que tenemos es algo parecido a esto:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-5-architecture-1.jpg&#34; alt=&#34;Si estamos utilizando Virtualbox y su reenvío de puertos porque nuestro sistema operativo no tiene soporte nativo para Docker&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Si estamos utilizando Virtualbox y su reenvío de puertos porque nuestro sistema operativo no tiene soporte nativo para Docker&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-5-architecture-2.jpg&#34; alt=&#34;Si nuestro sistema operativo tiene soporte nativo para Docker (un Linux, por ejemplo)&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Si nuestro sistema operativo tiene soporte nativo para Docker (un Linux, por ejemplo)&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Vale, esto empieza a tener mejor pinta si somos desarrolladores web y no nos llamamos &lt;a href=&#34;https://es.wikipedia.org/wiki/Neo_(Matrix)&#34;&gt;Neo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Como ya tenemos nuestro entorno montado, lo que podemos hacer ahora es &lt;em&gt;congelar&lt;/em&gt; el sistema de
+ficheros de este contenedor en una nueva imagen y así, cuando tengamos que lanzar nuevos contenedores,
+no tendremos que volver a instalar nuestro entorno Alpine + Apache + PHP.&lt;/p&gt;
+
+&lt;p&gt;Recordad que el comando para ello era:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker commit -m &amp;quot;Apache &amp;amp; PHP installed&amp;quot; -a &amp;quot;Moises Vilar&amp;quot; tom_collins moisesvilar/apache_php:alpine3.3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A nuestra nueva imagen la he bautizado como &lt;strong&gt;moisesvilar/apache_php:alpine3.3&lt;/strong&gt;. Si ejecutamos un &lt;strong&gt;docker images&lt;/strong&gt;
+veréis la nueva imagen creada.&lt;/p&gt;
+
+&lt;p&gt;Si en vez de &lt;strong&gt;moisesvilar&lt;/strong&gt; utilizáis vuestro nombre de usuario en el Docker Hub, podéis utilizar el
+siguiente comando para &lt;strong&gt;subir esta imagen a vuestro repositorio público&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker push moisesvilar/apache_php:alpine3.3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Es posible que os muestre el error &lt;strong&gt;unauthorized: authentication required&lt;/strong&gt;. En ese caso,
+basta con ejecutar el comando &lt;strong&gt;docker login&lt;/strong&gt; e introducir nuestras credenciales de Docker Hub&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Fijaros en el resultado del comando &lt;strong&gt;docker push&lt;/strong&gt;:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-5-push-1.jpg&#34; alt=&#34;Resultado de ejecutar docker push sobre nuestra imagen&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Resultado de ejecutar docker push sobre nuestra imagen&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;¿Véis que ha subido &lt;strong&gt;dos capas&lt;/strong&gt;? ¡Claro! La capa de alpine y la capa de lectura/escritura donde
+hemos instalado Apache + PHP.&lt;/p&gt;
+
+&lt;p&gt;Vamos a limpiar un poco el entorno eliminando todos nuestros contenedores:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker rm $(docker ps -aq)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;y también &lt;strong&gt;vamos a eliminar todas nuestras imagenes&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker rmi $(docker images -q)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A continuación vamos a seguir modificando nuestro entorno para poder picar nuestros
+ficheros de código desde nuestra máquina anfitrión (con nuestro IDE preferido) y que estos
+se &lt;em&gt;compartan&lt;/em&gt; directamente en el directorio correcto en el contenedor Alpine + Apache + PHP.&lt;/p&gt;
+
+&lt;h1 id=&#34;volúmenes-entre-el-host-y-los-contenedores&#34;&gt;Volúmenes entre el host y los contenedores&lt;/h1&gt;
+
+&lt;p&gt;La situación a la que queremos llegar es la siguiente:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Queremos escribir el código en nuestro equipo, donde tenemos las herramientas que más nos gusten,
+generalmente un IDE como Netbeans, WebStorm, Eclipse (si te van las drogas duras) o Notepad++ (si
+le llamamos IDE a cualquier cosa).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Queremos que dicho código esté automáticamente disponible en el interior de nuestro contenedor,
+en la carpeta correspondiente.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Queremos ver el resultado a través de un navegador instalado en nuestro equipo, porque los
+desarrolladores tenemos esa manía: nos gusta probar las cosas, ver si están rotas y en cuyo caso, arreglarlas.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;El punto 3 lo hemos solventado a partir de la publicación de puertos, tal y como hemos visto en las
+secciones anteriores.&lt;/p&gt;
+
+&lt;p&gt;Para el segundo punto, tenemos que utilizar un nuevo parámetro del comando &lt;strong&gt;docker run&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -v /c/Users/Moises/workspace:/var/www/localhost/htdocs -p 80:80 moisesvilar/apache_php:alpine3.3 httpd -D FOREGROUND
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Unos pequeños comentarios:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Veis que no he utilizado los parámetros &lt;strong&gt;-t -i&lt;/strong&gt;, sino el parámetro &lt;strong&gt;-d&lt;/strong&gt; (de &lt;em&gt;dettached&lt;/em&gt;
+o &lt;em&gt;daemon&lt;/em&gt;): quiero que el contenedor se ejecute en &lt;em&gt;background&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Veis que he publicado el puerto 80 del contenedor en el puerto 80 del host (el ejemplo anterior,
+donde utilizaba el puerto 8080 del host, sólo era ilustrativo). &lt;strong&gt;Recordad cambiar el reenvío de puertos
+en vuestro Virtualbox, si estáis utilizando la Docker machine&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Veis que no he usado el parámetro &lt;strong&gt;- -name&lt;/strong&gt;: Docker bautizará automáticamente a nuestro contenedor.&lt;/li&gt;
+&lt;li&gt;Veis que la instrucción que se va a ejecutar no es /bin/sh sino &lt;strong&gt;httpd -D FOREGROUND&lt;/strong&gt;: queremos
+que lance nuestro servidor una vez arranque el contenedor.&lt;/li&gt;
+&lt;li&gt;Cuando ejecutéis el comando, al haber eliminado todas nuestras imágenes, Docker no encontrará
+la imagen moisesvilar/apache_php:alpine3.3, pero no hay problema: ya que la hemos subido al Docker
+Hub, &lt;strong&gt;la descargará automáticamente&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ahora fijaos en el parámetro &lt;strong&gt;-v /c/Users/Moises/workspace:/var/www/localhost/htdocs&lt;/strong&gt;.
+Lo que estamos haciendo es &lt;em&gt;montar&lt;/em&gt; directamente el contenido de mi carpeta local
+C:/Users/Moises/workspace en el directorio /var/www/localhost/htdocs de mi contenedor.
+Este último directorio es a donde va a ir nuestro Apache para servir los ficheros que allí
+almacenemos.&lt;/p&gt;
+
+&lt;p&gt;A esto se le llama &lt;strong&gt;crear un volumen del contenedor&lt;/strong&gt;. En este caso, el contenido del volumen es el
+contenido de un directorio de nuestro host.&lt;/p&gt;
+
+&lt;p&gt;Para demostraros cómo funciona, lo que he hecho es irme a esa carpeta local (si no existiese, la crearía) y he creado allí
+un archivo &lt;strong&gt;index.php&lt;/strong&gt;:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-5-windows-2.jpg&#34; alt=&#34;Un archivo index.php en mi directorio workspace&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Un archivo index.php en mi directorio workspace&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;El contenido de este archivo es una sencilla aplicación web que podéis descargar
+desde &lt;a href=&#34;https://github.com/moisesvilar/docker-vi-ws&#34;&gt;su repositorio en Github&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Si ahora abrimos un navegador y vamos a la URL &lt;strong&gt;localhost/index.php&lt;/strong&gt; ¡alehop! ¡Ahí tenemos nuestra
+pequeña aplicación web &lt;em&gt;up and running&lt;/em&gt;!&lt;/p&gt;
+
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;//www.youtube.com/embed/DEhf8U8NEN0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%;&#34; allowfullscreen frameborder=&#34;0&#34;&gt;&lt;/iframe&gt;
+ &lt;/div&gt;
+
+
+&lt;p&gt;Probad a hacer una pequeña modificación en el código (añadid un elemento más HTML, por ejemplo, para mostrar algún texto),
+guardad el fichero y recargad la página: ¡los cambios debería reflejarse automáticamente en el navegador!&lt;/p&gt;
+
+&lt;h1 id=&#34;sacándole-partido&#34;&gt;Sacándole partido&lt;/h1&gt;
+
+&lt;p&gt;Haced el ejercicio mental de complicar la situación. Imaginad que estáis trabajando en varios proyectos, cada uno en distintas
+tecnologías. Por ejemplo:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Nuestro proyecto web en PHP.&lt;/li&gt;
+&lt;li&gt;Una API Rest en NodeJS.&lt;/li&gt;
+&lt;li&gt;Una página web HTML + CSS + Javascript sobre un servidor Ngix.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;¡No tenemos porqué tener instalados todos esos componentes en nuestra máquina local! Simplemente necesitamos tres contenedores
+con los entornos instalados. Incluso podríamos tener los tres ejecutándose al mismo tiempo, siempre y cuando publiquemos los
+puertos correspondientes a cada contenedor en un puerto &lt;strong&gt;distinto&lt;/strong&gt; de nuestro host.&lt;/p&gt;
+
+&lt;p&gt;Por ejemplo, podemos tener nuestro proyecto web en PHP accesible desde la URL localhost:9000, nuestro proyecto NodeJS en
+localhost:9001 y nuestro proyecto web en HTML en localhost:9002.&lt;/p&gt;
+
+&lt;p&gt;Ahora se incorpora otro programador al equipo. ¿Tienes que instalarle los tres entornos en su máquina? ¡Por supuesto que no!
+Le instalas Docker, ejecutas los tres comandos &lt;strong&gt;docker run&lt;/strong&gt; correspondientes&amp;hellip; ¡y a trabajar!&lt;/p&gt;
+
+&lt;p&gt;Por el momento, este planteamiento sólo es válido &lt;strong&gt;en desarrollo&lt;/strong&gt;. Pero veremos dentro de pocas semanas que es supersencillo
+crear una imagen con nuestro código dentro de una capa de dicha imagen. Por lo que la puesta en producción se reduce a&amp;hellip; ¡Exacto!
+¡Otra ejecución del comando &lt;strong&gt;docker run&lt;/strong&gt; correspondiente! ¡Olvídate del RedBull para las traumáticas puestas en producción!&lt;/p&gt;
+
+&lt;p&gt;Espero que le vayáis viendo las ventajas a este nuevo paradigma, porque estoy convencido de que ha llegado para quedarse. Se llame
+Docker o con otro nombre comercial, pero el planteamiento es muy, muy interesante.&lt;/p&gt;
+
+&lt;p&gt;Avisados quedáis :)&lt;/p&gt;
+
+&lt;h1 id=&#34;un-pequeño-ejercicio&#34;&gt;Un pequeño ejercicio&lt;/h1&gt;
+
+&lt;p&gt;Recordáis como en &lt;a href=&#34;https://moisesvilar.github.io/post/docker-layers-2/&#34;&gt;este post&lt;/a&gt; hablábamos del concepto de &amp;ldquo;capas reutilizables&amp;rdquo;
+y dibujábamos nuestras arquitecturas &amp;ldquo;apilando&amp;rdquo; capas (la del sistema operativo, encima de ésta la de NodeJS y encima
+de ésta la de ExpressJS).&lt;/p&gt;
+
+&lt;p&gt;Pero también hemos dicho hoy que la imagen que hemos creado sólo contiene dos capas
+(la del sistema operativo, Alpine en nuestro caso, y otra más que contiene los binarios de Apache + PHP). Lo vimos
+al subir dicha imagen al Docker Hub.&lt;/p&gt;
+
+&lt;p&gt;Si ahora creásemos otra imagen donde no necesitásemos la capa de PHP, sino únicamente la de Apache en la misma versión
+que tenemos instalada en nuestra imagen, &lt;strong&gt;¿el UFS podría reutilizarla?&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Si vuestra respuesta es &lt;em&gt;NO&lt;/em&gt;, &lt;strong&gt;¿qué procedimiento deberíamos haber seguido para que dicha capa fuese realmente reutilizable por el UFS?&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;¡Id poniendo vuestras respuestas/análisis/conjeturas en los comentarios! Si por lo menos hay un comentario sobre el tema,
+daré la respuesta la semana que viene ;)&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusiones&#34;&gt;Conclusiones&lt;/h1&gt;
+
+&lt;p&gt;¡Hey, chic@s! ¿Veis lo que hemos conseguido? ¡Tenemos un entorno de desarrollo dockerizado para nuestros proyectos Apache + PHP!&lt;/p&gt;
+
+&lt;p&gt;¿Qué pasaría si ahora un rayo cayese sobre mi equipo y éste ardiese hasta convertise en cenizas?&lt;/p&gt;
+
+&lt;p&gt;Pues lo primero, me tendría que comprar otro equipo.&lt;/p&gt;
+
+&lt;p&gt;Lo segundo, ejecutaría un &lt;strong&gt;git clone&lt;/strong&gt; para descargarme mi último &lt;em&gt;push&lt;/em&gt; del código dentro de mi carpeta /c/Users/Moises/workspace.&lt;/p&gt;
+
+&lt;p&gt;Y por último, ejecutaría:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -v /c/Users/Moises/workspace:/var/www/localhost/htdocs -p 80:80 moisesvilar/apache_php:alpine3.3 httpd -D FOREGROUND
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;¡Y listo! Mi entorno estaría perfectamente arrancado y configurado para seguir con mi proyecto.&lt;/p&gt;
+
+&lt;p&gt;Cosas que hemos visto hoy:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;La Docker machine comparte automáticamente tus carpetas personales con su VM Docker.&lt;/li&gt;
+&lt;li&gt;Cómo instalar Apache y PHP en una distro Alpine.&lt;/li&gt;
+&lt;li&gt;Cómo reenviar puertos entre Virtualbox y nuestro host (la VM Docker).&lt;/li&gt;
+&lt;li&gt;Como publicar puertos entre nuestro host y nuestro contenedor con el comando &lt;strong&gt;-p&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Cómo subir nuestras imágenes al Docker hub con el comando &lt;strong&gt;docker push&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Cómo eliminar imágenes descargadas en nuestro equipo con el comando &lt;strong&gt;docker rmi&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Cómo lanzar nuestros contenedores en modo &lt;em&gt;dettached&lt;/em&gt; con el parámetro &lt;strong&gt;-d&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Cómo montar un directorio de nuestro host automáticamente en nuestro contenedor con el parámetro &lt;strong&gt;-v&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;¡Y de bonus, un meme y chistes de Chuck Norris! ¡No os quejéis!&lt;/p&gt;
+
+&lt;p&gt;Nos vemos dentro de nada. En el siguiente post vamos a introducir los &lt;strong&gt;Dockerfiles&lt;/strong&gt;, para poder automatizar
+la prepación de entornos y convertirlos directamente en imágenes.&lt;/p&gt;
+
+&lt;p&gt;P.S. Recordad que pulsando en los botones que tenéis arriba de todo que pone &amp;ldquo;Facebook&amp;rdquo;, &amp;ldquo;Twitter&amp;rdquo; y &amp;ldquo;Google+&amp;rdquo;
+me ayudáis a difundir el blog, que seamos más por aquí y que esto sea más divertido. ¡Muchas gracias!&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>docker IV - manejando contenedores</title>

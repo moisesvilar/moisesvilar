@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="pinterest" content="nopin">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="theme-color" content="#263238">
+
+<meta name="generator" content="Hugo 0.18.1" />
+
+<link rel="apple-touch-icon" href="https://moisesvilar.github.io/images/logo.png">
+
+<link rel="canonical" href="https://moisesvilar.github.io/post/docker-5-environment/">
+
+
+    
+    <link href="//fonts.googleapis.com/css?family=Noto+Sans:400,700|Montserrat" rel="stylesheet">
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    
+    <title>docker V - preparando un entorno - Write some code!</title>
+    
+<meta name="description" content="Prepararemos un entorno de desarrollo PHP sobre Alpine">
+
+<meta property="og:title" content="docker V - preparando un entorno - Write some code!">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://moisesvilar.github.io/post/docker-5-environment/">
+<meta property="og:image" content="https://moisesvilar.github.io/images/cover-docker-5-environment.jpg">
+<meta property="og:site_name" content="Write some code!">
+<meta property="og:description" content="Prepararemos un entorno de desarrollo PHP sobre Alpine">
+<meta property="og:locale" content="ja_JP">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="Write some code!">
+<meta name="twitter:url" content="https://moisesvilar.github.io/post/docker-5-environment/">
+<meta name="twitter:title" content="docker V - preparando un entorno - Write some code!">
+<meta name="twitter:description" content="Prepararemos un entorno de desarrollo PHP sobre Alpine">
+<meta name="twitter:image" content="https://moisesvilar.github.io/images/cover-docker-5-environment.jpg">
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "NewsArticle",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id":"https:\/\/moisesvilar.github.io\/"
+    },
+    "headline": "docker V - preparando un entorno - Write some code!",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https:\/\/moisesvilar.github.io\/images\/cover-docker-5-environment.jpg",
+      "height": 800,
+      "width": 800
+    },
+    "datePublished": "2017-01-27T17:18:27JST",
+    "dateModified": "2017-01-27T17:18:27JST",
+    "author": {
+      "@type": "Person",
+      "name": "Write some code!"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Write some code!",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https:\/\/moisesvilar.github.io\/images/logo.png",
+        "width": 600,
+        "height": 60
+      }
+    },
+    "description": "Prepararemos un entorno de desarrollo PHP sobre Alpine"
+  }
+</script>
+
+
+    <style>
+      html { font-size: 18px;}@media (max-width: 768px) { html { font-size: 15px; }}body { font-family: 'Noto Sans','Hiragino Kaku Gothic Pro',メイリオ,Meiryo,sans-serif; font-size: inherit; font-weight: 300; line-height: 1rem; background-color: #eceff1;}p { margin: 0;}a { color: #4caf50;}a:hover { text-decoration: none; color: #388e3c;}ul,ol { margin: 0; padding: 0;}h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: 700;}h1 { font-size: 1.8rem; line-height: 2rem; margin: 1.5rem 0; }h2 { font-size: 1.4rem; line-height: 2rem; margin: 1.5rem 0; }h3 { font-size: 1.2rem; line-height: 1.5rem; margin: 1.5rem 0; }h4, h5, h6 { font-size: 1rem; line-height: 1.5rem; margin: 1.5rem 0; }main { display: block;}.content-inner { padding: 1rem 2rem;}.content-inner.thin { padding: .5rem 1rem;}@media (max-width: 768px) { .content-inner { padding: 1rem; }}/* Override */.container { position: relative;}/* Parts:layouts */.l-header { background-color: #fff; margin-bottom: 1rem; padding: 1rem 0; text-align: center;}.l-footer { font-size: .8rem; padding: 1.5rem 0;}/* Parts:menu */.p-menu { position: absolute; right: 15px; top: 0;}/* Parts:terms */.p-terms { list-style: none;}.p-terms .terms-title { margin: 0;}.p-terms a { display: inline-block; padding: .25rem 0;}.p-terms.inline li { display: inline-block; font-size: .8rem;}.p-terms.inline li::after { content: ',';}.p-terms.inline li:last-child::after { content: '';}/* Parts:paging */.p-paging { margin-bottom: 1.5rem; text-align: center;}.p-paging a { display: inline-block; padding: 1rem 1.5rem; margin: 0 .5rem; background-color: #cfd8dc; color: #263238;}/* Parts:section */section { margin-bottom: 1.5rem;}section>header { font-size: .8rem; font-weight: 700; margin-bottom: .5rem; text-transform: uppercase;}section>header a { color: #333; text-decoration: underline;}section.article-footer { margin-bottom: 1rem;}section.article-footer>header { margin-bottom: 0;}/* Parts:share */.p-share { min-width: 100%; margin-bottom: 1.5rem;}.p-share .share-inner { display: table; table-layout: fixed; width: 100%; border-spacing: .25rem;}.p-share a { display: table-cell; text-align: center; font-weight: 700; font-size: .7rem; padding: .5rem 0; color: #fff; border-radius: 5px;}.p-share a.ht { background-color: #00a4de; border-bottom: 2px solid #0083b1; }.p-share a.fb { background-color: #3b5998; border-bottom: 2px solid #2f4779; }.p-share a.tw { background-color: #1da1f2; border-bottom: 2px solid #1780c1; }.p-share a.gp { background-color: #dd4b39; border-bottom: 2px solid #b03c2d; }.p-share a.ln { background-color: #00c300; border-bottom: 2px solid #009c00; }.p-share a.ht::before { content: 'Hatena'; }.p-share a.fb::before { content: 'Facebook'; }.p-share a.tw::before { content: 'Twitter'; }.p-share a.gp::before { content: 'Google+'; }.p-share a.ln::before { content: 'LINE'; }/* Parts:logo */.h-logo { font-family: 'Montserrat', sans-serif;}.p-logo { display: inline-block; text-transform: uppercase;}.p-logo a { display: inline-block; font-size: 1.4rem; line-height: 2rem; color: #000;}/* Parts:crumb */.p-crumb ol { list-style: none; margin-bottom: 1rem;}.p-crumb li { display: inline; margin-right: .25rem; font-size: .8rem; color: #607d8b;}.p-crumb li::after { content: '/'; margin-left: .25rem;}.p-crumb li:last-child::after { content: '';}/* Parts:facts */.p-facts { list-style: none; font-size: .8rem; margin-bottom: 1rem;}.p-facts li { display: inline-block; margin-right: .5rem; color: #90a4ae;}.p-facts li i { margin-right: .5rem; color: #cfd8dc;}/* Parts:article */article { background-color: #fff;}article .title { margin: 0; margin-bottom: .5rem; font-weight: 700;}article .title a { color: #000;}article .thumb { display: block; background-image: url(https://moisesvilar.github.io/images/default.jpg); background-position: center; background-size: cover;}article .summary { margin-bottom: .5rem; max-height: 5rem; overflow: hidden;}article.single .thumb { height: 18rem; margin-bottom: 1rem;}@media (max-width: 768px) { article.single .thumb { height: 12rem; }}article.li { margin-bottom: 1rem;}article.li .thumb { height: 7.5rem; margin-bottom: .5rem;}article.li.sm { background-color: transparent; margin-bottom: .5rem;}article.li.sm>header { padding: .5rem 0;}article.li.sm .title { font-size: .8rem; line-height: 1rem; margin-bottom: .25rem;}article.li.sm .p-facts { font-size: .6rem; margin-bottom: 0;}article.li.sm .thumb { float: left; margin-right: .5rem; height: 3rem; width: 3rem;}.article-body h2 { padding: 1rem 0; border-bottom: 2px solid #eceff1;}.article-body h2:first-child { margin-top: 0; }.article-body h3 { color: #428bca;}.article-body h4 { border-left: solid .25rem #428bca; padding: 0 .5rem;}.article-body p { margin: 1.5rem 0; line-height: 1.5rem;}.article-body a { text-decoration: underline;}.article-body ul,.article-body ol { padding-left: 1.5rem; line-height: 1.5rem;}.article-body code { display: inline-block; font-family: Menlo, consolas, monospace; font-size: .8rem; padding: 0 .5rem; line-height: 1.5rem;}.article-body pre { margin: 1.5rem 0; padding: 0; font-size: .8rem; border: none; border-radius: 0;}.article-body pre code { display: block; line-height: 1rem; padding: 1rem;}.article-body blockquote { margin: 1.5rem 0; padding: .5rem 1rem; font-size: 1rem; border-top: 1px solid #eceff1; border-bottom: 1px solid #eceff1; color: #607d8b;}.article-body blockquote p { margin: .5rem 0; line-height: 1.5rem;}.article-body em { font-style: italic;}.article-body strong { color: #03a9f4;}.article-body figure { margin: 1.5rem 0; }.article-body figure.left,.article-body figure.right { width: 15rem; height: 12rem; margin-top: 0;}.article-body figure.left { float: left; margin-right: 1rem; }.article-body figure.right { float: right; margin-left: 1rem; }@media (max-width: 768px) { .article-body figure.left, .article-body figure.right { float: none; margin: 0; width: auto; height: auto; }}.article-body figcaption { padding: .5rem 0; font-size: .8rem; text-align: center;}.article-body figcaption a { color: #263238;}li.tag-fa {	margin-right: 0;}.tags.list { margin-top: 10px; color: #388e3c; font-size: 14px;}img[src$='#small-image'] { max-width: 100px;}img[src$='#medium-image'] { max-width: 300px;}figure.w100 > img { width: 100%;}figcaption h4 { font-size: 1em; margin: 0; font-style: italic; border-left: solid transparent !important;}.previous-post { float: left;}.next-post { float: right;}
+      
+      
+    </style>
+  </head>
+
+  <body>
+    
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-89820131-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+    <header class="l-header">
+      <div class="container">
+        <div class="p-logo">
+          <a href="https://moisesvilar.github.io/" class="h-logo"><i class="fa fa-code"></i> Write some code!</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        
+<div class="row">
+  <div class="col-md-12">
+    <article class="single">
+
+  <a href="https://moisesvilar.github.io/post/docker-5-environment/" class="thumb" style="background-image: url(https://moisesvilar.github.io/images/cover-docker-5-environment.jpg);"></a>
+  <div class="content-inner">
+    <h1 class="title">docker V - preparando un entorno</h1>
+
+    <ul class="p-facts">
+      <li>
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        <time datetime="2017-01-27T17:18:27JST">27/01/2017</time>
+      </li>
+      
+        <li>
+          <span class="tags list">
+            <i class="fa fa-bookmark"></i>
+            <a href="/etiquetas/docker">docker</a>
+          </span>
+        </li>
+      
+    </ul>
+	
+	<aside class="p-share">
+  <div class="share-inner">
+    <a href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-5-environment%2f&t=docker%20V%20-%20preparando%20un%20entorno" title="Facebookでシェア" class="fb" target="_blank" rel="nofollow"></a>
+    <a href="http://twitter.com/intent/tweet?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-5-environment%2f&text=docker%20V%20-%20preparando%20un%20entorno&tw_p=tweetbutton" title="Twitterでシェア" class="tw" target="_blank" rel="nofollow"></a>
+    <a href="https://plus.google.com/share?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-5-environment%2f" title="Google Plusでシェア" class="gp" target="_blank" rel="nofollow"></a>
+  </div>
+</aside>
+
+	
+    <div class="article-body">
+
+<p>El bueno y viejo PHP. Un lenguaje tan <a href="https://w3techs.com/technologies/overview/programming_language/all">usado</a> como <a href="https://www.google.es/search?q=php+sucks">vilipendiado</a>.</p>
+
+<p>Pero a mi me gusta.</p>
+
+<p>Vale que su API ha crecido sin orden ni concierto y a veces te encuentras tantas incongruencias que parece que la han diseñado durante un atracón de cerveza y marihuana.</p>
+
+<p>Vale que ha sido usado durante años por gente sin formación, o por lo menos sin un mínimo cariño por las cosas bien hechas, y eso lo ha convertido en uno de los referentes del
+<a href="https://es.wikipedia.org/wiki/C%C3%B3digo_espagueti">código espagueti</a>.</p>
+
+<p>Pero recordad que no hace mucho tiempo lo mismo le pasaba a Javascript. ¡Cuántos atentados al software he visto en Javascript! Y hoy lo tenemos en todos lados e incluso en el 2014 fue nombrado
+<a href="http://www.tiobe.com/tiobe-index/javascript/">lenguaje del año</a>. ¡Hasta Liam Neeson está un poco harto del auge de Javascript!</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/venganza_javascript_framework.jpg" alt="¿Otro framework Javascript? Señor, llévanos pronto..." />
+    
+    
+    <figcaption>
+        <h4>¿Otro framework Javascript? Señor, llévanos pronto...</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>PHP es un lenguaje ultra-flexible, cosa que lo convierte en un lenguaje <em>divertido</em>&hellip; pero que también puede hacer que escribas muy mal código. ¿Culpa del lenguaje o culpa
+del desarrollador? Yo la respuesta la tengo clara.</p>
+
+<p>Y por ello, he decidido tomarlo como framework para ilustar el ejemplo de este artículo: vamos a montar un entorno de desarrollo en PHP sobre Docker.</p>
+
+<p><strong>Let&rsquo;s go!</strong></p>
+
+<h1 id="una-pequeña-sorpresa-de-la-docker-machine">Una pequeña sorpresa de la docker-machine</h1>
+
+<blockquote>
+<p>Si estáis en un entorno con soporte nativo para Docker, podéis saltar a la siguiente sección.</p>
+</blockquote>
+
+<p>Arrancad vuestro entorno Docker&hellip;</p>
+
+<pre><code>docker-machine start default
+</code></pre>
+
+<p>&hellip; conectaros a él&hellip;</p>
+
+<pre><code>docker-machine ssh default
+</code></pre>
+
+<p>&hellip; y ejecutad lo siguiente:</p>
+
+<pre><code>cd /
+ls -l
+</code></pre>
+
+<p>Fijaos en esta carpeta que os marco aquí:</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/docker-5-dockermachine-8.jpg" alt="Una misteriosa carpeta C..." />
+    
+    
+    <figcaption>
+        <h4>Una misteriosa carpeta C...</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Mmm. Entrad en ella y veréis que contiene otra carpeta llamada <strong>Users</strong>. Entrad también en ella y haced un <strong>ls</strong>. ¡Son vuestras carpetas personales de vuestro equipo Windows!</p>
+
+<p>En efecto, la máquina virtual tiene una <em>carpeta compartida</em> con vuestro host Windows que nos facilitará mucho la vida, como veremos al final de este artículo.</p>
+
+<p>Es más, si abrís directamente la GUI de Virtualbox, podéis ver dicha carpeta seleccionando la máquina virtual, pulsando en configuración y yendo a &ldquo;Carpetas compartidas&rdquo;:</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/docker-5-dockermachine-2.jpg" alt="Carpeta compartida entre nuestro windows y la VM Docker" />
+    
+    
+    <figcaption>
+        <h4>Carpeta compartida entre nuestro windows y la VM Docker</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<h1 id="la-distro-alpine">La distro Alpine</h1>
+
+<p>Como hemos dicho en posts anteriores, Alpine es una distribución Linux superligera, ocupando menos de 4MB.</p>
+
+<p>Viene con un gestor de paquetes, llamado <em>apk</em>, cuyo uso podéis investigar en la <a href="http://wiki.alpinelinux.org/wiki/Alpine_Linux_package_management">documentación oficial</a>.</p>
+
+<p>Y cuenta con <a href="https://pkgs.alpinelinux.org/package/v3.3/main/x86/php-apache2">paquetes para PHP</a> y para <a href="https://pkgs.alpinelinux.org/package/edge/main/x86/apache2">Apache</a>.</p>
+
+<p>Así que supondremos que tenemos un proyecto web programado en PHP con Apache como servidor y todo sobre el sistema operativo Alpine.
+¡Montemos su entorno usando Docker!</p>
+
+<h1 id="instalando-apache-y-php-en-alpine">Instalando Apache y PHP en Alpine</h1>
+
+<p>Muy bien, lancemos un contenedor a partir de la imagen de Alpine en su versión 3.3:</p>
+
+<pre><code>docker run -t -i -p 8080:80 --name tom_collins alpine:3.3 /bin/sh
+</code></pre>
+
+<p>Todo nos debería de sonar excepto ese nuevo parámetro <strong>-p 8080:80</strong>. Con este parámetro lo que
+estamos haciendo es <strong>publicar</strong> el puerto 80 del contenedor en el puerto 8080 del host.
+Es decir, Docker publicará todas las peticiones entrantes en el puerto 8080 del host al puerto
+80 del contenedor, y publicará todas las respuestas salientes del puerto 80 del contenedor al
+puerto 8080 del host. ¿Recordáis como decíamos en <a href="/post/docker-layers-2/">este post</a>
+que Docker le asignaba a cada contenedor su propia interfaz de red? Por defecto, dicha interfaz
+viene completamente aislada del mundo. Con este comando, estamos abriendo en ella una pequeña ventana.</p>
+
+<p>Esto nos será útil para probar la instalación desde el host, como haremos en seguida.</p>
+
+<p>Pero antes, una vez hayamos lanzado el contenedor, ejecutemos en él los siguientes comandos:</p>
+
+<pre><code>apk update
+apk add apache2 php-apache2
+mkdir /run/apache2
+</code></pre>
+
+<p>Con esto tendremos instalado Apache y PHP en nuestro contenedor. Finalmente, si ejecutamos:</p>
+
+<pre><code>httpd -D FOREGROUND
+</code></pre>
+
+<p>habremos lanzado nuestro servidor Apache.</p>
+
+<blockquote>
+<p>No voy a explicar los comandos aquí expuestos, ya que está fuera del alcance
+de estos artículos, pero si hay alguna duda: ¡preguntad en los comentarios!</p>
+</blockquote>
+
+<h1 id="probando-el-entorno-desde-la-vm-docker">Probando el entorno desde la VM Docker</h1>
+
+<p><strong>En un nuevo terminal</strong> hagamos una conexión a nuestra VM Docker:</p>
+
+<pre><code>docker-machine ssh default
+</code></pre>
+
+<p>Y ejecutemos el siguiente comando:</p>
+
+<pre><code>curl localhost:8080
+</code></pre>
+
+<p>Debería de mostrarnos la respuesta HTML que escupe nuestro Apache:</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/docker-5-dockermachine-3.jpg" alt="It&#39;s alive!" />
+    
+    
+    <figcaption>
+        <h4>It&#39;s alive!</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Aunque curl mola, entiendo que no lo veáis muy útil si lo que tenemos que depurar es una aplicación web. ¡Pongámosle solución!</p>
+
+<h1 id="configurando-el-reenvío-de-puertos-de-virtualbox">Configurando el reenvío de puertos de Virtualbox</h1>
+
+<blockquote>
+<p>Si vuestro sistema posee soporte nativo de Docker, podéis pasar directamente a la siguiente sección.</p>
+</blockquote>
+
+<p>Abrid el GUI de Virtualbox, haced click derecho sobre la VM Docker e iros a
+<strong>Configuración &gt; Red &gt; Avanzadas &gt; Reenvío de puertos</strong>:</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/docker-5-virtualbox-1.jpg" alt="Reenvío de puertos en Virtualbox" />
+    
+    
+    <figcaption>
+        <h4>Reenvío de puertos en Virtualbox</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Y estableced la regla que yo he nombrado <strong>8080</strong>, tal y como se ve en esta imagen:</p>
+
+
+<figure class="text-cente w100">
+    
+        <img src="/images/docker-5-virtualbox-2.jpg" alt="Reenviando el puerto 8080 de la VM Docker al puerto 80 de nuestra máquina Windows" />
+    
+    
+    <figcaption>
+        <h4>Reenviando el puerto 8080 de la VM Docker al puerto 80 de nuestra máquina Windows</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Es decir, reenviad todo lo que salga o entre del puerto 8080 de la VM Docker hacia el puerto 80 de la máquina Windows.</p>
+
+<h1 id="probando-el-entorno-desde-la-máquina-anfitrión">Probando el entorno desde la máquina anfitrión</h1>
+
+<p>Simplemente abrid un navegador e iros a la URL <strong>localhost</strong> (o a <strong>localhost:8080</strong> si vuestra máquina ya tiene soporte nativo
+para Docker).</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/docker-5-windows-1.jpg" alt="It&#39;s still alive!" />
+    
+    
+    <figcaption>
+        <h4>It&#39;s still alive!</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>¡Tenemos acceso directo al apache de nuestro contenedor desde nuestra máquina anfitrión!</p>
+
+<p>Más o menos lo que tenemos es algo parecido a esto:</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/docker-5-architecture-1.jpg" alt="Si estamos utilizando Virtualbox y su reenvío de puertos porque nuestro sistema operativo no tiene soporte nativo para Docker" />
+    
+    
+    <figcaption>
+        <h4>Si estamos utilizando Virtualbox y su reenvío de puertos porque nuestro sistema operativo no tiene soporte nativo para Docker</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/docker-5-architecture-2.jpg" alt="Si nuestro sistema operativo tiene soporte nativo para Docker (un Linux, por ejemplo)" />
+    
+    
+    <figcaption>
+        <h4>Si nuestro sistema operativo tiene soporte nativo para Docker (un Linux, por ejemplo)</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Vale, esto empieza a tener mejor pinta si somos desarrolladores web y no nos llamamos <a href="https://es.wikipedia.org/wiki/Neo_(Matrix)">Neo</a>.</p>
+
+<p>Como ya tenemos nuestro entorno montado, lo que podemos hacer ahora es <em>congelar</em> el sistema de
+ficheros de este contenedor en una nueva imagen y así, cuando tengamos que lanzar nuevos contenedores,
+no tendremos que volver a instalar nuestro entorno Alpine + Apache + PHP.</p>
+
+<p>Recordad que el comando para ello era:</p>
+
+<pre><code>docker commit -m &quot;Apache &amp; PHP installed&quot; -a &quot;Moises Vilar&quot; tom_collins moisesvilar/apache_php:alpine3.3
+</code></pre>
+
+<p>A nuestra nueva imagen la he bautizado como <strong>moisesvilar/apache_php:alpine3.3</strong>. Si ejecutamos un <strong>docker images</strong>
+veréis la nueva imagen creada.</p>
+
+<p>Si en vez de <strong>moisesvilar</strong> utilizáis vuestro nombre de usuario en el Docker Hub, podéis utilizar el
+siguiente comando para <strong>subir esta imagen a vuestro repositorio público</strong>:</p>
+
+<pre><code>docker push moisesvilar/apache_php:alpine3.3
+</code></pre>
+
+<blockquote>
+<p>Es posible que os muestre el error <strong>unauthorized: authentication required</strong>. En ese caso,
+basta con ejecutar el comando <strong>docker login</strong> e introducir nuestras credenciales de Docker Hub</p>
+</blockquote>
+
+<p>Fijaros en el resultado del comando <strong>docker push</strong>:</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/docker-5-push-1.jpg" alt="Resultado de ejecutar docker push sobre nuestra imagen" />
+    
+    
+    <figcaption>
+        <h4>Resultado de ejecutar docker push sobre nuestra imagen</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>¿Véis que ha subido <strong>dos capas</strong>? ¡Claro! La capa de alpine y la capa de lectura/escritura donde
+hemos instalado Apache + PHP.</p>
+
+<p>Vamos a limpiar un poco el entorno eliminando todos nuestros contenedores:</p>
+
+<pre><code>docker rm $(docker ps -aq)
+</code></pre>
+
+<p>y también <strong>vamos a eliminar todas nuestras imagenes</strong>:</p>
+
+<pre><code>docker rmi $(docker images -q)
+</code></pre>
+
+<p>A continuación vamos a seguir modificando nuestro entorno para poder picar nuestros
+ficheros de código desde nuestra máquina anfitrión (con nuestro IDE preferido) y que estos
+se <em>compartan</em> directamente en el directorio correcto en el contenedor Alpine + Apache + PHP.</p>
+
+<h1 id="volúmenes-entre-el-host-y-los-contenedores">Volúmenes entre el host y los contenedores</h1>
+
+<p>La situación a la que queremos llegar es la siguiente:</p>
+
+<ol>
+<li><p>Queremos escribir el código en nuestro equipo, donde tenemos las herramientas que más nos gusten,
+generalmente un IDE como Netbeans, WebStorm, Eclipse (si te van las drogas duras) o Notepad++ (si
+le llamamos IDE a cualquier cosa).</p></li>
+
+<li><p>Queremos que dicho código esté automáticamente disponible en el interior de nuestro contenedor,
+en la carpeta correspondiente.</p></li>
+
+<li><p>Queremos ver el resultado a través de un navegador instalado en nuestro equipo, porque los
+desarrolladores tenemos esa manía: nos gusta probar las cosas, ver si están rotas y en cuyo caso, arreglarlas.</p></li>
+</ol>
+
+<p>El punto 3 lo hemos solventado a partir de la publicación de puertos, tal y como hemos visto en las
+secciones anteriores.</p>
+
+<p>Para el segundo punto, tenemos que utilizar un nuevo parámetro del comando <strong>docker run</strong>:</p>
+
+<pre><code>docker run -d -v /c/Users/Moises/workspace:/var/www/localhost/htdocs -p 80:80 moisesvilar/apache_php:alpine3.3 httpd -D FOREGROUND
+</code></pre>
+
+<p>Unos pequeños comentarios:</p>
+
+<ul>
+<li>Veis que no he utilizado los parámetros <strong>-t -i</strong>, sino el parámetro <strong>-d</strong> (de <em>dettached</em>
+o <em>daemon</em>): quiero que el contenedor se ejecute en <em>background</em>.</li>
+<li>Veis que he publicado el puerto 80 del contenedor en el puerto 80 del host (el ejemplo anterior,
+donde utilizaba el puerto 8080 del host, sólo era ilustrativo). <strong>Recordad cambiar el reenvío de puertos
+en vuestro Virtualbox, si estáis utilizando la Docker machine</strong></li>
+<li>Veis que no he usado el parámetro <strong>- -name</strong>: Docker bautizará automáticamente a nuestro contenedor.</li>
+<li>Veis que la instrucción que se va a ejecutar no es /bin/sh sino <strong>httpd -D FOREGROUND</strong>: queremos
+que lance nuestro servidor una vez arranque el contenedor.</li>
+<li>Cuando ejecutéis el comando, al haber eliminado todas nuestras imágenes, Docker no encontrará
+la imagen moisesvilar/apache_php:alpine3.3, pero no hay problema: ya que la hemos subido al Docker
+Hub, <strong>la descargará automáticamente</strong>.</li>
+</ul>
+
+<p>Ahora fijaos en el parámetro <strong>-v /c/Users/Moises/workspace:/var/www/localhost/htdocs</strong>.
+Lo que estamos haciendo es <em>montar</em> directamente el contenido de mi carpeta local
+C:/Users/Moises/workspace en el directorio /var/www/localhost/htdocs de mi contenedor.
+Este último directorio es a donde va a ir nuestro Apache para servir los ficheros que allí
+almacenemos.</p>
+
+<p>A esto se le llama <strong>crear un volumen del contenedor</strong>. En este caso, el contenido del volumen es el
+contenido de un directorio de nuestro host.</p>
+
+<p>Para demostraros cómo funciona, lo que he hecho es irme a esa carpeta local (si no existiese, la crearía) y he creado allí
+un archivo <strong>index.php</strong>:</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/docker-5-windows-2.jpg" alt="Un archivo index.php en mi directorio workspace" />
+    
+    
+    <figcaption>
+        <h4>Un archivo index.php en mi directorio workspace</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>El contenido de este archivo es una sencilla aplicación web que podéis descargar
+desde <a href="https://github.com/moisesvilar/docker-vi-ws">su repositorio en Github</a>.</p>
+
+<p>Si ahora abrimos un navegador y vamos a la URL <strong>localhost/index.php</strong> ¡alehop! ¡Ahí tenemos nuestra
+pequeña aplicación web <em>up and running</em>!</p>
+
+
+<div style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;">
+  <iframe src="//www.youtube.com/embed/DEhf8U8NEN0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" allowfullscreen frameborder="0"></iframe>
+ </div>
+
+
+<p>Probad a hacer una pequeña modificación en el código (añadid un elemento más HTML, por ejemplo, para mostrar algún texto),
+guardad el fichero y recargad la página: ¡los cambios debería reflejarse automáticamente en el navegador!</p>
+
+<h1 id="sacándole-partido">Sacándole partido</h1>
+
+<p>Haced el ejercicio mental de complicar la situación. Imaginad que estáis trabajando en varios proyectos, cada uno en distintas
+tecnologías. Por ejemplo:</p>
+
+<ol>
+<li>Nuestro proyecto web en PHP.</li>
+<li>Una API Rest en NodeJS.</li>
+<li>Una página web HTML + CSS + Javascript sobre un servidor Ngix.</li>
+</ol>
+
+<p>¡No tenemos porqué tener instalados todos esos componentes en nuestra máquina local! Simplemente necesitamos tres contenedores
+con los entornos instalados. Incluso podríamos tener los tres ejecutándose al mismo tiempo, siempre y cuando publiquemos los
+puertos correspondientes a cada contenedor en un puerto <strong>distinto</strong> de nuestro host.</p>
+
+<p>Por ejemplo, podemos tener nuestro proyecto web en PHP accesible desde la URL localhost:9000, nuestro proyecto NodeJS en
+localhost:9001 y nuestro proyecto web en HTML en localhost:9002.</p>
+
+<p>Ahora se incorpora otro programador al equipo. ¿Tienes que instalarle los tres entornos en su máquina? ¡Por supuesto que no!
+Le instalas Docker, ejecutas los tres comandos <strong>docker run</strong> correspondientes&hellip; ¡y a trabajar!</p>
+
+<p>Por el momento, este planteamiento sólo es válido <strong>en desarrollo</strong>. Pero veremos dentro de pocas semanas que es supersencillo
+crear una imagen con nuestro código dentro de una capa de dicha imagen. Por lo que la puesta en producción se reduce a&hellip; ¡Exacto!
+¡Otra ejecución del comando <strong>docker run</strong> correspondiente! ¡Olvídate del RedBull para las traumáticas puestas en producción!</p>
+
+<p>Espero que le vayáis viendo las ventajas a este nuevo paradigma, porque estoy convencido de que ha llegado para quedarse. Se llame
+Docker o con otro nombre comercial, pero el planteamiento es muy, muy interesante.</p>
+
+<p>Avisados quedáis :)</p>
+
+<h1 id="un-pequeño-ejercicio">Un pequeño ejercicio</h1>
+
+<p>Recordáis como en <a href="/post/docker-layers-2/">este post</a> hablábamos del concepto de &ldquo;capas reutilizables&rdquo;
+y dibujábamos nuestras arquitecturas &ldquo;apilando&rdquo; capas (la del sistema operativo, encima de ésta la de NodeJS y encima
+de ésta la de ExpressJS).</p>
+
+<p>Pero también hemos dicho hoy que la imagen que hemos creado sólo contiene dos capas
+(la del sistema operativo, Alpine en nuestro caso, y otra más que contiene los binarios de Apache + PHP). Lo vimos
+al subir dicha imagen al Docker Hub.</p>
+
+<p>Si ahora creásemos otra imagen donde no necesitásemos la capa de PHP, sino únicamente la de Apache en la misma versión
+que tenemos instalada en nuestra imagen, <strong>¿el UFS podría reutilizarla?</strong></p>
+
+<p>Si vuestra respuesta es <em>NO</em>, <strong>¿qué procedimiento deberíamos haber seguido para que dicha capa fuese realmente reutilizable por el UFS?</strong></p>
+
+<p>¡Id poniendo vuestras respuestas/análisis/conjeturas en los comentarios! Si por lo menos hay un comentario sobre el tema,
+daré la respuesta la semana que viene ;)</p>
+
+<h1 id="conclusiones">Conclusiones</h1>
+
+<p>¡Hey, chic@s! ¿Veis lo que hemos conseguido? ¡Tenemos un entorno de desarrollo dockerizado para nuestros proyectos Apache + PHP!</p>
+
+<p>¿Qué pasaría si ahora un rayo cayese sobre mi equipo y éste ardiese hasta convertise en cenizas?</p>
+
+<p>Pues lo primero, me tendría que comprar otro equipo.</p>
+
+<p>Lo segundo, ejecutaría un <strong>git clone</strong> para descargarme mi último <em>push</em> del código dentro de mi carpeta /c/Users/Moises/workspace.</p>
+
+<p>Y por último, ejecutaría:</p>
+
+<pre><code>docker run -d -v /c/Users/Moises/workspace:/var/www/localhost/htdocs -p 80:80 moisesvilar/apache_php:alpine3.3 httpd -D FOREGROUND
+</code></pre>
+
+<p>¡Y listo! Mi entorno estaría perfectamente arrancado y configurado para seguir con mi proyecto.</p>
+
+<p>Cosas que hemos visto hoy:</p>
+
+<ol>
+<li>La Docker machine comparte automáticamente tus carpetas personales con su VM Docker.</li>
+<li>Cómo instalar Apache y PHP en una distro Alpine.</li>
+<li>Cómo reenviar puertos entre Virtualbox y nuestro host (la VM Docker).</li>
+<li>Como publicar puertos entre nuestro host y nuestro contenedor con el comando <strong>-p</strong>.</li>
+<li>Cómo subir nuestras imágenes al Docker hub con el comando <strong>docker push</strong>.</li>
+<li>Cómo eliminar imágenes descargadas en nuestro equipo con el comando <strong>docker rmi</strong>.</li>
+<li>Cómo lanzar nuestros contenedores en modo <em>dettached</em> con el parámetro <strong>-d</strong>.</li>
+<li>Cómo montar un directorio de nuestro host automáticamente en nuestro contenedor con el parámetro <strong>-v</strong></li>
+</ol>
+
+<p>¡Y de bonus, un meme y chistes de Chuck Norris! ¡No os quejéis!</p>
+
+<p>Nos vemos dentro de nada. En el siguiente post vamos a introducir los <strong>Dockerfiles</strong>, para poder automatizar
+la prepación de entornos y convertirlos directamente en imágenes.</p>
+
+<p>P.S. Recordad que pulsando en los botones que tenéis arriba de todo que pone &ldquo;Facebook&rdquo;, &ldquo;Twitter&rdquo; y &ldquo;Google+&rdquo;
+me ayudáis a difundir el blog, que seamos más por aquí y que esto sea más divertido. ¡Muchas gracias!</p>
+</div>
+  </div>
+
+  <footer class="article-footer">
+    <div class="content-inner clearfix">
+      
+        <a href="https://moisesvilar.github.io/post/docker-4-containers/" class="previous-post btn btn-info btn-lg">Anterior</a>
+      
+      
+    </div>
+  </footer>
+
+</article>
+
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'moisesvilar';
+    var disqus_identifier = 'https:\/\/moisesvilar.github.io\/post\/docker-5-environment\/';
+    var disqus_title = 'docker V - preparando un entorno';
+    var disqus_url = 'https:\/\/moisesvilar.github.io\/post\/docker-5-environment\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  </div>
+</div>
+
+      </div>
+    </main>
+
+    <footer class="l-footer">
+      <div class="container">
+        <p>
+			<a href="" target="_blank" type="application/rss+xml"><i class="fa fa-rss-square"></i>&nbsp;RSS</a>&nbsp;
+			<a href="https://twitter.com/moisvilar" target="_blank"><i class="fa fa-twitter-square"></i>&nbsp;Twitter</a>&nbsp;
+			<a href="https://github.com/moisesvilar" target="_blank"><i class="fa fa-github-square"></i>&nbsp;Github</a>&nbsp;<br/>
+			&copy; Esta obra está bajo una <a target='_blank' rel='license' href='http://creativecommons.org/licenses/by/4.0/'>Licencia Creative Commons Atribución 4.0 Internacional</a>.<br/>
+			Powered by <a href="https://gohugo.io/">Hugo</a>.&nbsp;
+		</p>
+        <aside>
+          <p></p>
+        </aside>
+      </div>
+    </footer>
+
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+      $(document).ready(function() {
+        $('a:not([href^="https:\/\/moisesvilar.github.io\/"]):not([href^="#"]):not([href^="/"])').attr('target', '_blank');
+      });
+    </script>
+  </body>
+</html>
+
