@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="pinterest" content="nopin">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="theme-color" content="#263238">
+
+<meta name="generator" content="Hugo 0.18.1" />
+
+<link rel="apple-touch-icon" href="https://moisesvilar.github.io/images/logo.png">
+
+<link rel="canonical" href="https://moisesvilar.github.io/post/docker-dockerfiles-6/">
+
+
+    
+    <link href="//fonts.googleapis.com/css?family=Noto+Sans:400,700|Montserrat" rel="stylesheet">
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    
+    <title>docker VI - dockerfiles - Write some code!</title>
+    
+<meta name="description" content="Automatizaremos la creación de imágenes usando Dockerfiles">
+
+<meta property="og:title" content="docker VI - dockerfiles - Write some code!">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://moisesvilar.github.io/post/docker-dockerfiles-6/">
+<meta property="og:image" content="https://moisesvilar.github.io/images/cover-docker-6-dockerfiles.jpeg">
+<meta property="og:site_name" content="Write some code!">
+<meta property="og:description" content="Automatizaremos la creación de imágenes usando Dockerfiles">
+<meta property="og:locale" content="ja_JP">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="Write some code!">
+<meta name="twitter:url" content="https://moisesvilar.github.io/post/docker-dockerfiles-6/">
+<meta name="twitter:title" content="docker VI - dockerfiles - Write some code!">
+<meta name="twitter:description" content="Automatizaremos la creación de imágenes usando Dockerfiles">
+<meta name="twitter:image" content="https://moisesvilar.github.io/images/cover-docker-6-dockerfiles.jpeg">
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "NewsArticle",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id":"https:\/\/moisesvilar.github.io\/"
+    },
+    "headline": "docker VI - dockerfiles - Write some code!",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https:\/\/moisesvilar.github.io\/images\/cover-docker-6-dockerfiles.jpeg",
+      "height": 800,
+      "width": 800
+    },
+    "datePublished": "2017-02-03T19:56:56JST",
+    "dateModified": "2017-02-03T19:56:56JST",
+    "author": {
+      "@type": "Person",
+      "name": "Write some code!"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Write some code!",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https:\/\/moisesvilar.github.io\/images/logo.png",
+        "width": 600,
+        "height": 60
+      }
+    },
+    "description": "Automatizaremos la creación de imágenes usando Dockerfiles"
+  }
+</script>
+
+
+    <style>
+      html { font-size: 18px;}@media (max-width: 768px) { html { font-size: 15px; }}body { font-family: 'Noto Sans','Hiragino Kaku Gothic Pro',メイリオ,Meiryo,sans-serif; font-size: inherit; font-weight: 300; line-height: 1rem; background-color: #eceff1;}p { margin: 0;}a { color: #4caf50;}a:hover { text-decoration: none; color: #388e3c;}ul,ol { margin: 0; padding: 0;}h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: 700;}h1 { font-size: 1.8rem; line-height: 2rem; margin: 1.5rem 0; }h2 { font-size: 1.4rem; line-height: 2rem; margin: 1.5rem 0; }h3 { font-size: 1.2rem; line-height: 1.5rem; margin: 1.5rem 0; }h4, h5, h6 { font-size: 1rem; line-height: 1.5rem; margin: 1.5rem 0; }main { display: block;}.content-inner { padding: 1rem 2rem;}.content-inner.thin { padding: .5rem 1rem;}@media (max-width: 768px) { .content-inner { padding: 1rem; }}/* Override */.container { position: relative;}/* Parts:layouts */.l-header { background-color: #fff; margin-bottom: 1rem; padding: 1rem 0; text-align: center;}.l-footer { font-size: .8rem; padding: 1.5rem 0;}/* Parts:menu */.p-menu { position: absolute; right: 15px; top: 0;}/* Parts:terms */.p-terms { list-style: none;}.p-terms .terms-title { margin: 0;}.p-terms a { display: inline-block; padding: .25rem 0;}.p-terms.inline li { display: inline-block; font-size: .8rem;}.p-terms.inline li::after { content: ',';}.p-terms.inline li:last-child::after { content: '';}/* Parts:paging */.p-paging { margin-bottom: 1.5rem; text-align: center;}.p-paging a { display: inline-block; padding: 1rem 1.5rem; margin: 0 .5rem; background-color: #cfd8dc; color: #263238;}/* Parts:section */section { margin-bottom: 1.5rem;}section>header { font-size: .8rem; font-weight: 700; margin-bottom: .5rem; text-transform: uppercase;}section>header a { color: #333; text-decoration: underline;}section.article-footer { margin-bottom: 1rem;}section.article-footer>header { margin-bottom: 0;}/* Parts:share */.p-share { min-width: 100%; margin-bottom: 1.5rem;}.p-share .share-inner { display: table; table-layout: fixed; width: 100%; border-spacing: .25rem;}.p-share a { display: table-cell; text-align: center; font-weight: 700; font-size: .7rem; padding: .5rem 0; color: #fff; border-radius: 5px;}.p-share a.ht { background-color: #00a4de; border-bottom: 2px solid #0083b1; }.p-share a.fb { background-color: #3b5998; border-bottom: 2px solid #2f4779; }.p-share a.tw { background-color: #1da1f2; border-bottom: 2px solid #1780c1; }.p-share a.gp { background-color: #dd4b39; border-bottom: 2px solid #b03c2d; }.p-share a.ln { background-color: #00c300; border-bottom: 2px solid #009c00; }.p-share a.ht::before { content: 'Hatena'; }.p-share a.fb::before { content: 'Facebook'; }.p-share a.tw::before { content: 'Twitter'; }.p-share a.gp::before { content: 'Google+'; }.p-share a.ln::before { content: 'LINE'; }/* Parts:logo */.h-logo { font-family: 'Montserrat', sans-serif;}.p-logo { display: inline-block; text-transform: uppercase;}.p-logo a { display: inline-block; font-size: 1.4rem; line-height: 2rem; color: #000;}/* Parts:crumb */.p-crumb ol { list-style: none; margin-bottom: 1rem;}.p-crumb li { display: inline; margin-right: .25rem; font-size: .8rem; color: #607d8b;}.p-crumb li::after { content: '/'; margin-left: .25rem;}.p-crumb li:last-child::after { content: '';}/* Parts:facts */.p-facts { list-style: none; font-size: .8rem; margin-bottom: 1rem;}.p-facts li { display: inline-block; margin-right: .5rem; color: #90a4ae;}.p-facts li i { margin-right: .5rem; color: #cfd8dc;}/* Parts:article */article { background-color: #fff;}article .title { margin: 0; margin-bottom: .5rem; font-weight: 700;}article .title a { color: #000;}article .thumb { display: block; background-image: url(https://moisesvilar.github.io/images/default.jpg); background-position: center; background-size: cover;}article .summary { margin-bottom: .5rem; max-height: 5rem; overflow: hidden;}article.single .thumb { height: 18rem; margin-bottom: 1rem;}@media (max-width: 768px) { article.single .thumb { height: 12rem; }}article.li { margin-bottom: 1rem;}article.li .thumb { height: 7.5rem; margin-bottom: .5rem;}article.li.sm { background-color: transparent; margin-bottom: .5rem;}article.li.sm>header { padding: .5rem 0;}article.li.sm .title { font-size: .8rem; line-height: 1rem; margin-bottom: .25rem;}article.li.sm .p-facts { font-size: .6rem; margin-bottom: 0;}article.li.sm .thumb { float: left; margin-right: .5rem; height: 3rem; width: 3rem;}.article-body h2 { padding: 1rem 0; border-bottom: 2px solid #eceff1;}.article-body h2:first-child { margin-top: 0; }.article-body h3 { color: #428bca;}.article-body h4 { border-left: solid .25rem #428bca; padding: 0 .5rem;}.article-body p { margin: 1.5rem 0; line-height: 1.5rem;}.article-body a { text-decoration: underline;}.article-body ul,.article-body ol { padding-left: 1.5rem; line-height: 1.5rem;}.article-body code { display: inline-block; font-family: Menlo, consolas, monospace; font-size: .8rem; padding: 0 .5rem; line-height: 1.5rem;}.article-body pre { margin: 1.5rem 0; padding: 0; font-size: .8rem; border: none; border-radius: 0;}.article-body pre code { display: block; line-height: 1rem; padding: 1rem;}.article-body blockquote { margin: 1.5rem 0; padding: .5rem 1rem; font-size: 1rem; border-top: 1px solid #eceff1; border-bottom: 1px solid #eceff1; color: #607d8b;}.article-body blockquote p { margin: .5rem 0; line-height: 1.5rem;}.article-body em { font-style: italic;}.article-body strong { color: #03a9f4;}.article-body figure { margin: 1.5rem 0; }.article-body figure.left,.article-body figure.right { width: 15rem; height: 12rem; margin-top: 0;}.article-body figure.left { float: left; margin-right: 1rem; }.article-body figure.right { float: right; margin-left: 1rem; }@media (max-width: 768px) { .article-body figure.left, .article-body figure.right { float: none; margin: 0; width: auto; height: auto; }}.article-body figcaption { padding: .5rem 0; font-size: .8rem; text-align: center;}.article-body figcaption a { color: #263238;}li.tag-fa {	margin-right: 0;}.tags.list { margin-top: 10px; color: #388e3c; font-size: 14px;}img[src$='#small-image'] { max-width: 100px;}img[src$='#medium-image'] { max-width: 300px;}figure.w100 > img { width: 100%;}figure.w50 > img { width: 50%;}figcaption h4 { font-size: 1em; margin: 0; font-style: italic; border-left: solid transparent !important;}.previous-post { float: left;}.next-post { float: right;}
+      
+      
+    </style>
+  </head>
+
+  <body>
+    
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-89820131-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+    <header class="l-header">
+      <div class="container">
+        <div class="p-logo">
+          <a href="https://moisesvilar.github.io/" class="h-logo"><i class="fa fa-code"></i> Write some code!</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        
+<div class="row">
+  <div class="col-md-12">
+    <article class="single">
+
+  <a href="https://moisesvilar.github.io/post/docker-dockerfiles-6/" class="thumb" style="background-image: url(https://moisesvilar.github.io/images/cover-docker-6-dockerfiles.jpeg);"></a>
+  <div class="content-inner">
+    <h1 class="title">docker VI - dockerfiles</h1>
+
+    <ul class="p-facts">
+      <li>
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        <time datetime="2017-02-03T19:56:56JST">03/02/2017</time>
+      </li>
+      
+        <li>
+          <span class="tags list">
+            <i class="fa fa-bookmark"></i>
+            <a href="/etiquetas/docker">docker</a>
+          </span>
+        </li>
+      
+    </ul>
+	
+	<aside class="p-share">
+  <div class="share-inner">
+    <a href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-dockerfiles-6%2f&t=docker%20VI%20-%20dockerfiles" title="Facebookでシェア" class="fb" target="_blank" rel="nofollow"></a>
+    <a href="http://twitter.com/intent/tweet?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-dockerfiles-6%2f&text=docker%20VI%20-%20dockerfiles&tw_p=tweetbutton" title="Twitterでシェア" class="tw" target="_blank" rel="nofollow"></a>
+    <a href="https://plus.google.com/share?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-dockerfiles-6%2f" title="Google Plusでシェア" class="gp" target="_blank" rel="nofollow"></a>
+  </div>
+</aside>
+
+	
+    <div class="article-body">
+
+<p><a href="/post/docker-5-environment/">En el anterior post</a> montamos un entorno
+con Apache y PHP sobre una distribución Alpine. Pero lo hicimos &ldquo;a mano&rdquo;, es decir:</p>
+
+<ol>
+<li>Creamos un contenedor a partir de la imagen de Alpine.</li>
+<li>Instalamos en el contenedor los binarios de Apache y PHP (o lo que es lo mismo,
+modificamos la capa de lectura/escritura del contenedor con dichos binarios).</li>
+<li>Creamos una imagen a partir del contenedor modificado (o lo que es lo mismo,
+&ldquo;congelamos&rdquo; el sistema de ficheros de dicho contenedor, incluyendo su capa de
+lectura/escritura).</li>
+</ol>
+
+<p>En realidad es un proceso tedioso, que necesita de intervención humana. Y como sabéis,
+los humanos somos criaturas muy propensas a errores, sobre todo si tenemos que realizar
+tareas repetitivas. ¡En eso nos ganan las máquinas de largo!</p>
+
+<p>Por lo tanto, y como no podía ser de otra manera, Docker nos ofrece un mecanismo para
+automatizar la creación de imágenes. Dicho mecanismo se basa en unos ficheros llamados
+<strong>Dockerfiles</strong> que ejecutan, a través de un lenguaje de <em>scripting</em> muy sencillo, las
+tareas necesarias para componer nuestras imágenes.</p>
+
+<p><strong>¡Veamos cómo funciona!</strong></p>
+
+<h1 id="dockerfile-para-nuestro-entorno-alpine-apache-php">Dockerfile para nuestro entorno Alpine + Apache + PHP</h1>
+
+<pre><code>FROM alpine:3.3
+MAINTAINER Moisés Vilar
+
+RUN apk update &amp;&amp; \
+    apk add apache2 php-apache2 &amp;&amp; \
+    mkdir /run/apache2
+
+EXPOSE 80
+
+CMD httpd -D FOREGROUND
+</code></pre>
+
+<p>Lo que tenéis arriba es la pinta de nuestro Dockerfile. Copiadlo en un fichero,
+nombrarlo <em>Dockerfile</em> (sin extensión) y guardadlo en vuestro equipo (si
+estáis utilizando la Docker machine, guardadlo dentro de vuestra carpeta personal).</p>
+
+<p>Veamos punto por punto qué contiene este archivo:</p>
+
+<ol>
+<li><code>FROM alpine:3.3</code>: le estamos indicando que nuestra nueva imagen parte de la
+imagen <strong>alpine:3.3</strong>.</li>
+<li><code>MAINTAINER Moisés Vilar</code>: le indicamos quién es el responsable de mantener esta
+imagen.</li>
+<li><code>RUN apk update &amp;&amp; \...</code>: le indicamos que ejecute los comandos indicados. ¡Fijaos que
+son los mismos que los utilizados <a href="/post/docker-5-environment/">en el anterior post</a>!</li>
+<li><code>EXPOSE 80</code>: le indicamos que abra el puerto 80 del contenedor al resto del mundo.</li>
+<li><code>CMD httpd -D FOREGROUND</code>: por último, le indicamos qué comando queremos que se
+ejecute cuando se inicie un contenedor a partir de esta imagen. En nuestro caso, que
+lance el servicio Apache.</li>
+</ol>
+
+<p>Para construir una imagen de nombre <strong>moisesvilar/apache_php:alpine3.3</strong>
+usando este Dockerfile, y suponiendo que dicho fichero
+se encuentra en el <em>path</em> <code>/c/Users/Moises/</code>, el comando sería el siguiente:</p>
+
+<pre><code>docker build -t moisesvilar/apache_php:alpine3.3 /c/Users/Moises/.
+</code></pre>
+
+<p>Veréis cómo va ejecutando todos los pasos indicados: descargará la imagen alpine:3.3,
+instalará Apache y PHP usando su gestor de paquetes etc.</p>
+
+<p>Finalmente, tendremos creada nuestra imagen (podréis verla si hacéis un <code>docker images</code>).</p>
+
+<p>Y para ejecutar un contenedor a partir de esta imagen, nuestro viejo conocido:</p>
+
+<pre><code>docker run -d -v /c/Users/Moises/workspace:/var/www/localhost/htdocs -p 80:80 moisesvilar/apache_php:alpine3.3
+</code></pre>
+
+<p>Fijaos que no le estoy indicando el comando a ejecutar <code>httpd -D FOREGROUND</code>.
+¡Ya lo sabe a partir del Dockerfile que se ha usado para construir la imagen!</p>
+
+<h2 id="un-par-de-comentarios">Un par de comentarios</h2>
+
+<p>Como seguramente ya os habréis dado cuenta, en el Dockerfile no le indico en ningún
+sitio que quiero crear un volumen montando el directorio <code>/c/Users/Moises/workspace</code> de
+mi equipo local en el directorio <code>/var/www/localhost/htdocs</code> del contenedor.</p>
+
+<p><strong>¡No podemos hacer esto a través de un Dockerfile!</strong></p>
+
+<p>Y tiene todo el sentido del mundo: los Dockerfiles se usan para automatizar la creación
+de imágenes <strong>independientemente de la máquina donde se ejecute</strong>. Yo puedo ejecutar
+mi comando <code>docker build</code> allá donde tenga Docker instalado y se construirá una imagen
+idéntica en todos los casos. Si nos permitiesen crear el volumen a partir de un
+directorio de mi equipo local, <strong>estaría obligando a que en todas las máquinas
+donde construyese esa imagen exista ese directorio</strong>. Y esto no tiene sentido ninguno.</p>
+
+<p>Recordad que la creación de volúmenes de esta forma <strong>sólo es útil durante desarrollo</strong>.
+Cuando construyamos nuestro contenedor para pasarlo a producción, introduciremos
+el código final de nuestro proyecto de otra manera, como veremos en la siguiente sección.</p>
+
+<p>Otro punto a tener presente es la forma de ejecutar el comando <code>RUN</code> dentro del
+Dockerfile. Fijaos que hemos utilizado los separadores <code>&amp;&amp; \</code>, cuándo podríamos haber
+escrito cada comando en un <code>RUN</code> diferente:</p>
+
+<pre><code>RUN apk update
+RUN apk add apache2 php-apache2
+RUN mkdir /run/apache2
+</code></pre>
+
+<p>Pero ésta no es una práctica aconsejable por la siguiente razón: el comando <code>docker build</code>
+crea un <strong>contenedor temporal</strong> donde va a ejecutar cada uno de los comandos <code>RUN</code>.
+Tras la ejecución de un comando <code>RUN</code>, el sistema de ficheros del contenedor se &ldquo;congela&rdquo;
+y se crea una nueva imagen (tal y como hacíamos con el commit). Es decir, con cada
+ejecución del comando <code>RUN</code>, se crea una nueva capa en el UFS.</p>
+
+<p>Si tenemos quince comandos <code>RUN</code>, <strong>¡se habrán creado quince imágenes!</strong>, lo que convertiría
+al proceso en algo <strong>extremadamente lento</strong>.</p>
+
+<p>De la manera que lo hemos hecho, sólo se crea una imagen (al final de todo) y el
+proceso es lo más rápido posible.</p>
+
+<p>Os dejo por aquí dos enlaces de uso frecuente:</p>
+
+<ul>
+<li><a href="https://docs.docker.com/engine/reference/builder/">La referencia a Dockerfile</a>
+donde encontraréis la definición exacta de estos comandos y muchos otros más,
+haciendo de este mecanismo algo super versátil.</li>
+<li>y <a href="https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/">la guía de buenas prácticas a la hora de implementar Dockerfiles</a>,
+para cuando os enfrentéis a Dockerfiles más complicados que éste.</li>
+</ul>
+
+<h1 id="dockerfile-para-nuestro-proyecto-en-producción">Dockerfile para nuestro proyecto en producción</h1>
+
+<p>Como dijimos antes, crear un volumen montando un directorio de nuestro equipo local
+sobre un directorio del contenedor nos ayuda durante la fase de desarrollo:
+podemos trabajar en el código en nuestro equipo local usando aquellas herramientas
+que más nos gusten (como por ejemplo, nuestro IDE favorito, nuestro gestor de
+dependencias favorito etc) sin preocuparnos del entorno de ejecución, que estará
+instalado en nuestro contenedor.</p>
+
+<p>Pero también dijimos que los Dockerfiles no nos permiten especificar volúmenes
+creados de esta manera. Por lo que surge una pregunta: una vez terminada la fase
+de desarrollo ¿cómo &ldquo;publico&rdquo; el código final en una imagen?</p>
+
+<p>Es decir, al final lo que queremos es una imagen que contenga no sólo nuestro entorno
+de ejecución (en nuestro caso, Alpine + Apache + PHP) <strong>sino también el código
+final de nuestro proyecto</strong>. Una vez tengamos nuestra imagen, podemos lanzar un
+contenedor a partir de ella y tendremos nuestro proyecto ejecutándose exactamente
+en el mismo entorno en el cual lo hemos desarrollado. Lo que comúnmente se llama
+<em>paso a producción</em>.</p>
+
+<p>Una manera de hacer esto es <em>a mano</em>. Es decir, creamos un contenedor a partir
+de nuestra imagen Alpine + Apache + PHP y usando el comando <code>docker cp</code> copiamos
+en la capa de lectura/escritura de dicho contenedor los ficheros de nuestro proyecto
+en el directorio deseado. Finalmente, <em>congelamos</em> el sistema de ficheros del
+contenedor con <code>docker commit</code> en una nueva imagen y esa es la que usaríamos para
+desplegar nuestros contenedores en producción.</p>
+
+<p>Podéis trastear en la <a href="https://docs.docker.com/engine/reference/commandline/cp/">referencia del comando <code>docker cp</code></a>,
+pero nosotros no vamos a hacerlo de esta manera, sino que aprovecharemos la
+potencia de los Dockerfiles para automatizar esta tarea.</p>
+
+<p>Si le habéis echado un vistado a <a href="https://docs.docker.com/engine/reference/builder/">la referencia de Dockerfile</a>,
+seguramente habéis visto el comando <code>ADD</code>. Dicho comando <strong>copia archivos, directorios
+o archivos remotos identificados por una URL al sistema de ficheros de una imagen, en
+el directorio que le indiquemos</strong>.</p>
+
+<p>Por lo tanto, si el archivo <code>index.php</code> que utilizamos en
+<a href="/post/docker-5-environment/">el post anterior</a> se encuentra en el mismo
+directorio que el siguiente Dockerfile:</p>
+
+<pre><code>FROM alpine:3.3
+MAINTAINER Moisés Vilar
+
+RUN apk update &amp;&amp; \
+    apk add apache2 php-apache2 &amp;&amp; \
+    mkdir /run/apache2 &amp;&amp; \
+    mkdir /var/www/localhost/htdocs/chuck
+
+ADD index.php /var/www/localhost/htdocs/chuck
+	
+EXPOSE 80
+
+CMD httpd -D FOREGROUND
+</code></pre>
+
+<p>si ejecutamos un <code>docker build</code> sobre este Dockerfile, <strong>tendremos la imagen
+para nuestros contenedores en producción</strong>.</p>
+
+<p>¡Probadlo! Cread un Dockerfile como el anterior, guardadlo en la misma carpeta
+(por ejemplo, en /c/Users/Moises) que el archivo <code>index.php</code>
+(recordad que podéis descargarlo desde
+<a href="https://github.com/moisesvilar/docker-vi-ws/blob/master/index.php">mi repositorio de Github</a>)
+y ejecutad:</p>
+
+<pre><code>docker build -t moisesvilar/awesome_chuck:1.0 /c/Users/Moises/.
+</code></pre>
+
+<p>para construir la imagen y:</p>
+
+<pre><code>docker run -d -p 80:80 moisesvilar/awesome_chuck:1.0
+</code></pre>
+
+<p>para lanzar un contenedor a partir de ella, y por último abrid un navegador para
+navegar hasta la siguiente URL: <code>http://localhost/chuck/</code>. <em>Voilá!</em>
+<strong>¡Ahí tenéis nuestro contenedor en producción!</strong>.</p>
+
+<h2 id="más-comentarios">Más comentarios</h2>
+
+<p>Imaginad que tenemos todos nuestros entornos <em>dockerizados</em>: desarrollo, testing,
+preproducción y producción (por ejemplo). Voy a intentar representarlo en una
+imagen:</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/docker-6-environment.jpg" alt="Entornos de desarrollo dockerizados" />
+    
+    
+    <figcaption>
+        <h4>Entornos de desarrollo dockerizados</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<ol>
+<li>El primer paso es crear nuestra imagen con el entorno de desarrollo,
+para ello utilizamos el comando <code>docker build -t moisesvilar/apache_php:alpine3.3</code> sobre
+el primer Dockerfile que hemos visto en este post (el que está representado en azul en la figura).</li>
+<li>A continuación, lanzamos un contenedor <strong>para desarrollo</strong> a partir de la imagen
+<code>moisesvilar/apache_php:alpine3.3</code>, creando un volumen de datos donde se monte nuestro
+directorio de trabajo local en el directorio de despliegue de aplicaciones dentro del
+contenedor. Para ello, usamos el comando <code>docker run -d -p 80:80 -v /c/Users/Moises/:/var/www/localhost/htdocs blablabla</code></li>
+<li>Una vez terminemos el desarrollo, creamos el Dockerfile para nuestro entorno de
+<em>testing</em> (el que está representado en verde en la figura). Este Dockerfile es el
+segundo que hemos visto en este post, el que incluía el comando <code>ADD</code> para añadir
+los ficheros de nuestro proyecto a la imagen. Para ello, volvemos a ejecutar un
+comando <code>docker build -t moisesvilar/awesome_chuck:1.0</code> sobre dicho Dockerfile.</li>
+<li>Lanzamos nuestro contenedor, pero sin crear el volumen de datos (el código de
+nuestro proyecto ya se encuentra en la imagen). El comando es más sencillo:
+<code>docker run -d -p 80:80 moisesvilar/awesome_chuck:1.0</code></li>
+<li>Una vez realizado el testing, creamos la imagen para preproducción&hellip;
+<strong>¡Pero este paso es idéntico al tercero!</strong></li>
+<li>Lanzamos el contenedor de preproducción&hellip; <strong>¡Pero este paso es idéntico al cuarto!</strong></li>
+<li>Creamos la imagen para producción&hellip; <strong>¡Pero este paso es idéntico al tercero!</strong></li>
+<li>Lanzamos el contenedor de producción&hellip; <strong>¡Pero este paso es idéntico al cuarto!</strong></li>
+</ol>
+
+<p>¿Lo pilláis? ¡Da igual el número de entornos que tengamos! Al llegar al punto 4,
+<strong>todos ellos se montan de la misma manera</strong>.</p>
+
+<p>Comparadlo con un despliegue <em>tradicional</em>: instalar Alpine en un equipo, instalar Apache,
+instalar PHP, subir el código, ejecutar. Así para cada entorno.</p>
+
+<p>Pero es que además, Docker nos asegura que todos nuestros entornos son idénticos:
+misma versión de PHP, misma versión de Apache. Desde desarrollo a producción.</p>
+
+<p>¿Qué pasa en el enfoque tradicional si nos despistamos y desarrollamos el proyecto para
+la versión 5.6 de PHP y resulta que nuestro entorno de producción tiene instalado PHP
+versión 7.1? <strong>Pues seguramente tengamos muchos problemas si hemos usado componentes
+<em>deprecados</em> definitivamente en la versión 7.1 pero que todavía eran válidos en la
+versión 5.6</strong>.</p>
+
+<p>Y el problema no es muy grave si tenemos un entorno intermedio (testing o preproducción)
+y en dichos entornos ya nos obligan a usar PHP 7.1.</p>
+
+<p>Pero, ¿y si no es así? ¿Y si en todos los entornos tenemos la versión 5.6
+instalada <strong>excepto en producción</strong>? ¿Cuándo nos enteraremos de que algo va mal?</p>
+
+<p>¡Exactísimo! <strong>¡Cuando pasemos a producción!</strong> ¿El trailer lleno de Red Bull?
+¡Por aquí, por favor! ^^</p>
+
+<p>Podemos modificar el enfoque que vimos en la figura anterior intercambiando el papel
+que realiza los Dockerfiles por el Docker Hub.</p>
+
+<p>Es decir, tras generar la imagen podemos subirla al Docker Hub con <code>docker push</code>
+y descargarla en nuestros entornos con <code>docker pull</code>.</p>
+
+<p>Pero es mucho más molón si hacemos esto <strong>automáticamente en combinación con Github</strong>,
+tal y como veremos en la siguiente sección.</p>
+
+<h1 id="enlazando-github-y-docker-hub-a-través-de-un-dockerfile">Enlazando Github y Docker Hub a través de un Dockerfile</h1>
+
+<p>Uno de los aspectos más usados en un <em>pipeline</em> de <em>continuous delivery</em>, desde
+el punto de vista de desarrollo, es que cuando el equipo realice un <em>push</em> a la
+rama master del proyecto (si estamos usando Git como servidor de control de versiones),
+éste se despliegue automáticamente, por lo menos, en el entorno de preproducción.</p>
+
+<p>Pues bien, hacer esto con Docker Hub es extremadamente sencillo.</p>
+
+<blockquote>
+<p>Supondré que tenemos un repositorio en Github con el código de nuestro proyecto,
+y con un Dockerfile en la raíz del repositorio cuyo contenido expongo a continuación.
+Tenéis el código de ejemplo en <a href="https://github.com/moisesvilar/docker-vi-ws">mi repositorio de Github</a></p>
+</blockquote>
+
+<pre><code>FROM moisesvilar/apache_php:alpine3.3
+MAINTAINER Moisés Vilar
+
+RUN mkdir /var/www/localhost/htdocs/chuck
+ADD index.php /var/www/localhost/htdocs/chuck
+	
+EXPOSE 80
+
+CMD httpd -D FOREGROUND
+</code></pre>
+
+<blockquote>
+<p>Fijaos que estoy partiendo de la imagen moisesvilar/apache_php:alpine3.3 (que
+la tengo subida al Docker Hub, por lo que Docker la descargará si no la encuentra
+en el equipo local). Inmediatamente, creo el directorio donde se alojará la aplicación,
+copio el código del proyecto (que también está en mi repositorio), expongo el puerto 80
+y ejecuto el servidor Apache.</p>
+</blockquote>
+
+<p>Si nos vamos a nuestra cuenta en hub.docker.com, veremos arriba a la derecha
+la opción <strong>Create &gt; Create Automated Build</strong></p>
+
+
+<figure class="text-center w50">
+    
+        <img src="/images/docker-6-build1.jpg" alt="Opción Create Automated Build en Docker Hub" />
+    
+    
+    <figcaption>
+        <h4>Opción Create Automated Build en Docker Hub</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Si no tenemos todavía vinculada nuestra cuenta de Github (o Bitbucket) con Docker Hub,
+nos invitará a hacerlo:</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/docker-6-build2.jpg" alt="Aviso de vinculación de Github con Docker Hub" />
+    
+    
+    <figcaption>
+        <h4>Aviso de vinculación de Github con Docker Hub</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Yo he escogido la opción para Github (no tengo cuenta en Bitbucket) pero vosotros podéis
+escoger la que queráis, el proceso es idéntico.</p>
+
+<p>Quizás tendremos que acceder con nuestros credenciales a la cuenta de Github y a
+continuación tendremos que otorgar permisos a Docker Hub.</p>
+
+<p>Una vez hecho esto, tendremos la opción disponible de nuevo en <strong>Create &gt; Create Automated Build</strong>:</p>
+
+
+<figure class="text-center w50">
+    
+        <img src="/images/docker-6-build3.jpg" alt="Vincular Github con Docker Hub" />
+    
+    
+    <figcaption>
+        <h4>Vincular Github con Docker Hub</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>A continuación seleccionaremos si queremos escoger de entre todos nuestros repositorios
+de Github (públicos y privados) o sólo los públicos. Y en la siguiente pantalla escogemos
+de qué repositorio queremos que Docker Hub realice los <em>build</em> de nuestras imágenes: aquél
+que contiene el archivo Dockerfile del comienzo de esta sección, en mi caso, el repositorio
+<strong>docker-vi-ws</strong>.</p>
+
+
+<figure class="text-center w50">
+    
+        <img src="/images/docker-6-build6.jpg" alt="Repositorio a vincular con Docker Hub" />
+    
+    
+    <figcaption>
+        <h4>Repositorio a vincular con Docker Hub</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>En el siguiente paso, establecemos un nombre para la imagen, una pequeña descripción
+y la visibilidad de la imagen dentro de Docker Hub (recordad que si queréis que sea
+privada, tenéis que pasar por caja, que los chicos de Docker también tienen que comer).</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/docker-6-build7.jpg" alt="Configurando la imagen" />
+    
+    
+    <figcaption>
+        <h4>Configurando la imagen</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>A continuación, si nos vamos a la pestaña <em>Build Details</em> veremos que Docker Hub está
+construyendo nuestra imagen:</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/docker-6-build8.jpg" alt="Imagen en construcción" />
+    
+    
+    <figcaption>
+        <h4>Imagen en construcción</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Y en unos minutos, nuestra imagen estará lista:</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/docker-6-build9.jpg" alt="¡Imagen construida!" />
+    
+    
+    <figcaption>
+        <h4>¡Imagen construida!</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Y a partir de aquí podemos emplear el comando <code>docker run</code> contra esta nueva imagen
+para lanzar nuestros contenedores.</p>
+
+<p>Pero lo chulo viene ahora.</p>
+
+<p>Realizad cualquier modificación en el código (yo he añadido un chiste más de Chuck Norris),
+y actualizad la rama master de vuestro repositorio con un <code>git push</code>.
+Si os vais de nuevo a la pestaña <em>Build Details</em> de Docker Hub, ¡veréis que la imagen
+se está construyendo de nuevo!</p>
+
+<p>¡Docker Hub comprueba automáticamente que hay una nueva versión del código y actualiza la
+imagen en consecuencia!</p>
+
+<p><strong>¡<em>Continuous Delivery</em> modo <em>hardcore</em>!</strong></p>
+
+<h1 id="conclusiones">Conclusiones</h1>
+
+<p>¿Qué hemos aprendido hoy?</p>
+
+<ol>
+<li>Hemos visto como construir un Dockerfile para crear imágenes de nuestros entornos,
+evitando el tener que crearlas <em>a mano</em> (ejecutando un <em>shell</em> en el contenedor
+y picando los comandos a mano). Esto es útil para los chicos de desarrollo.</li>
+<li>Hemos visto como crear un Dockerfile para construir imágenes con el código ya
+insertado en el sistema de ficheros de la imagen, lista para ser
+utilizada por cualquier contenedor. Esto es útil para los chicos de sistemas,
+encargados de desplegar aplicaciones en distintos entornos.</li>
+<li>Hemos visto como crear un <em>pipeline</em> de <em>continuous delivery</em> entre Github
+y Docker Hub, de tal manera que cualquier actualización en la rama master de un
+repositorio de Github se transforma automáticamente en una imagen en el Docker Hub.</li>
+</ol>
+
+<p>¡Nada más por el momento!</p>
+
+<p>Dejadme vuestro feedback en los comentarios
+<strong>¡no sé si esto está siendo interesante o me tengo que dedicar a calcetar!</strong></p>
+
+<p>En todo caso, para la semana volveremos con un poquito más de volúmenes, y aprovecharemos
+para montar un entorno dockerizado de una base de datos.</p>
+
+<p><em>Au revoir!</em></p>
+</div>
+  </div>
+
+  <footer class="article-footer">
+    <div class="content-inner clearfix">
+      
+        <a href="https://moisesvilar.github.io/post/docker-5-environment/" class="previous-post btn btn-info btn-lg">Anterior</a>
+      
+      
+    </div>
+  </footer>
+
+</article>
+
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'moisesvilar';
+    var disqus_identifier = 'https:\/\/moisesvilar.github.io\/post\/docker-dockerfiles-6\/';
+    var disqus_title = 'docker VI - dockerfiles';
+    var disqus_url = 'https:\/\/moisesvilar.github.io\/post\/docker-dockerfiles-6\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  </div>
+</div>
+
+      </div>
+    </main>
+
+    <footer class="l-footer">
+      <div class="container">
+        <p>
+			<a href="" target="_blank" type="application/rss+xml"><i class="fa fa-rss-square"></i>&nbsp;RSS</a>&nbsp;
+			<a href="https://twitter.com/moisvilar" target="_blank"><i class="fa fa-twitter-square"></i>&nbsp;Twitter</a>&nbsp;
+			<a href="https://github.com/moisesvilar" target="_blank"><i class="fa fa-github-square"></i>&nbsp;Github</a>&nbsp;<br/>
+			&copy; Esta obra está bajo una <a target='_blank' rel='license' href='http://creativecommons.org/licenses/by/4.0/'>Licencia Creative Commons Atribución 4.0 Internacional</a>.<br/>
+			Powered by <a href="https://gohugo.io/">Hugo</a>.&nbsp;
+		</p>
+        <aside>
+          <p></p>
+        </aside>
+      </div>
+    </footer>
+
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+      $(document).ready(function() {
+        $('a:not([href^="https:\/\/moisesvilar.github.io\/"]):not([href^="#"]):not([href^="/"])').attr('target', '_blank');
+      });
+    </script>
+  </body>
+</html>
+

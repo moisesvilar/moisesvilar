@@ -7,8 +7,499 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-ES</language>
     <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
-    <lastBuildDate>Fri, 27 Jan 2017 17:18:27 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 03 Feb 2017 19:56:56 +0100</lastBuildDate>
     <atom:link href="https://moisesvilar.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>docker VI - dockerfiles</title>
+      <link>https://moisesvilar.github.io/post/docker-dockerfiles-6/</link>
+      <pubDate>Fri, 03 Feb 2017 19:56:56 +0100</pubDate>
+      
+      <guid>https://moisesvilar.github.io/post/docker-dockerfiles-6/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://moisesvilar.github.io/post/docker-5-environment/&#34;&gt;En el anterior post&lt;/a&gt; montamos un entorno
+con Apache y PHP sobre una distribución Alpine. Pero lo hicimos &amp;ldquo;a mano&amp;rdquo;, es decir:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Creamos un contenedor a partir de la imagen de Alpine.&lt;/li&gt;
+&lt;li&gt;Instalamos en el contenedor los binarios de Apache y PHP (o lo que es lo mismo,
+modificamos la capa de lectura/escritura del contenedor con dichos binarios).&lt;/li&gt;
+&lt;li&gt;Creamos una imagen a partir del contenedor modificado (o lo que es lo mismo,
+&amp;ldquo;congelamos&amp;rdquo; el sistema de ficheros de dicho contenedor, incluyendo su capa de
+lectura/escritura).&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;En realidad es un proceso tedioso, que necesita de intervención humana. Y como sabéis,
+los humanos somos criaturas muy propensas a errores, sobre todo si tenemos que realizar
+tareas repetitivas. ¡En eso nos ganan las máquinas de largo!&lt;/p&gt;
+
+&lt;p&gt;Por lo tanto, y como no podía ser de otra manera, Docker nos ofrece un mecanismo para
+automatizar la creación de imágenes. Dicho mecanismo se basa en unos ficheros llamados
+&lt;strong&gt;Dockerfiles&lt;/strong&gt; que ejecutan, a través de un lenguaje de &lt;em&gt;scripting&lt;/em&gt; muy sencillo, las
+tareas necesarias para componer nuestras imágenes.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;¡Veamos cómo funciona!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;dockerfile-para-nuestro-entorno-alpine-apache-php&#34;&gt;Dockerfile para nuestro entorno Alpine + Apache + PHP&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;FROM alpine:3.3
+MAINTAINER Moisés Vilar
+
+RUN apk update &amp;amp;&amp;amp; \
+    apk add apache2 php-apache2 &amp;amp;&amp;amp; \
+    mkdir /run/apache2
+
+EXPOSE 80
+
+CMD httpd -D FOREGROUND
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lo que tenéis arriba es la pinta de nuestro Dockerfile. Copiadlo en un fichero,
+nombrarlo &lt;em&gt;Dockerfile&lt;/em&gt; (sin extensión) y guardadlo en vuestro equipo (si
+estáis utilizando la Docker machine, guardadlo dentro de vuestra carpeta personal).&lt;/p&gt;
+
+&lt;p&gt;Veamos punto por punto qué contiene este archivo:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;FROM alpine:3.3&lt;/code&gt;: le estamos indicando que nuestra nueva imagen parte de la
+imagen &lt;strong&gt;alpine:3.3&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;MAINTAINER Moisés Vilar&lt;/code&gt;: le indicamos quién es el responsable de mantener esta
+imagen.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;RUN apk update &amp;amp;&amp;amp; \...&lt;/code&gt;: le indicamos que ejecute los comandos indicados. ¡Fijaos que
+son los mismos que los utilizados &lt;a href=&#34;https://moisesvilar.github.io/post/docker-5-environment/&#34;&gt;en el anterior post&lt;/a&gt;!&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;EXPOSE 80&lt;/code&gt;: le indicamos que abra el puerto 80 del contenedor al resto del mundo.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;CMD httpd -D FOREGROUND&lt;/code&gt;: por último, le indicamos qué comando queremos que se
+ejecute cuando se inicie un contenedor a partir de esta imagen. En nuestro caso, que
+lance el servicio Apache.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Para construir una imagen de nombre &lt;strong&gt;moisesvilar/apache_php:alpine3.3&lt;/strong&gt;
+usando este Dockerfile, y suponiendo que dicho fichero
+se encuentra en el &lt;em&gt;path&lt;/em&gt; &lt;code&gt;/c/Users/Moises/&lt;/code&gt;, el comando sería el siguiente:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker build -t moisesvilar/apache_php:alpine3.3 /c/Users/Moises/.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Veréis cómo va ejecutando todos los pasos indicados: descargará la imagen alpine:3.3,
+instalará Apache y PHP usando su gestor de paquetes etc.&lt;/p&gt;
+
+&lt;p&gt;Finalmente, tendremos creada nuestra imagen (podréis verla si hacéis un &lt;code&gt;docker images&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;Y para ejecutar un contenedor a partir de esta imagen, nuestro viejo conocido:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -v /c/Users/Moises/workspace:/var/www/localhost/htdocs -p 80:80 moisesvilar/apache_php:alpine3.3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Fijaos que no le estoy indicando el comando a ejecutar &lt;code&gt;httpd -D FOREGROUND&lt;/code&gt;.
+¡Ya lo sabe a partir del Dockerfile que se ha usado para construir la imagen!&lt;/p&gt;
+
+&lt;h2 id=&#34;un-par-de-comentarios&#34;&gt;Un par de comentarios&lt;/h2&gt;
+
+&lt;p&gt;Como seguramente ya os habréis dado cuenta, en el Dockerfile no le indico en ningún
+sitio que quiero crear un volumen montando el directorio &lt;code&gt;/c/Users/Moises/workspace&lt;/code&gt; de
+mi equipo local en el directorio &lt;code&gt;/var/www/localhost/htdocs&lt;/code&gt; del contenedor.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;¡No podemos hacer esto a través de un Dockerfile!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Y tiene todo el sentido del mundo: los Dockerfiles se usan para automatizar la creación
+de imágenes &lt;strong&gt;independientemente de la máquina donde se ejecute&lt;/strong&gt;. Yo puedo ejecutar
+mi comando &lt;code&gt;docker build&lt;/code&gt; allá donde tenga Docker instalado y se construirá una imagen
+idéntica en todos los casos. Si nos permitiesen crear el volumen a partir de un
+directorio de mi equipo local, &lt;strong&gt;estaría obligando a que en todas las máquinas
+donde construyese esa imagen exista ese directorio&lt;/strong&gt;. Y esto no tiene sentido ninguno.&lt;/p&gt;
+
+&lt;p&gt;Recordad que la creación de volúmenes de esta forma &lt;strong&gt;sólo es útil durante desarrollo&lt;/strong&gt;.
+Cuando construyamos nuestro contenedor para pasarlo a producción, introduciremos
+el código final de nuestro proyecto de otra manera, como veremos en la siguiente sección.&lt;/p&gt;
+
+&lt;p&gt;Otro punto a tener presente es la forma de ejecutar el comando &lt;code&gt;RUN&lt;/code&gt; dentro del
+Dockerfile. Fijaos que hemos utilizado los separadores &lt;code&gt;&amp;amp;&amp;amp; \&lt;/code&gt;, cuándo podríamos haber
+escrito cada comando en un &lt;code&gt;RUN&lt;/code&gt; diferente:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RUN apk update
+RUN apk add apache2 php-apache2
+RUN mkdir /run/apache2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Pero ésta no es una práctica aconsejable por la siguiente razón: el comando &lt;code&gt;docker build&lt;/code&gt;
+crea un &lt;strong&gt;contenedor temporal&lt;/strong&gt; donde va a ejecutar cada uno de los comandos &lt;code&gt;RUN&lt;/code&gt;.
+Tras la ejecución de un comando &lt;code&gt;RUN&lt;/code&gt;, el sistema de ficheros del contenedor se &amp;ldquo;congela&amp;rdquo;
+y se crea una nueva imagen (tal y como hacíamos con el commit). Es decir, con cada
+ejecución del comando &lt;code&gt;RUN&lt;/code&gt;, se crea una nueva capa en el UFS.&lt;/p&gt;
+
+&lt;p&gt;Si tenemos quince comandos &lt;code&gt;RUN&lt;/code&gt;, &lt;strong&gt;¡se habrán creado quince imágenes!&lt;/strong&gt;, lo que convertiría
+al proceso en algo &lt;strong&gt;extremadamente lento&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;De la manera que lo hemos hecho, sólo se crea una imagen (al final de todo) y el
+proceso es lo más rápido posible.&lt;/p&gt;
+
+&lt;p&gt;Os dejo por aquí dos enlaces de uso frecuente:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.docker.com/engine/reference/builder/&#34;&gt;La referencia a Dockerfile&lt;/a&gt;
+donde encontraréis la definición exacta de estos comandos y muchos otros más,
+haciendo de este mecanismo algo super versátil.&lt;/li&gt;
+&lt;li&gt;y &lt;a href=&#34;https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/&#34;&gt;la guía de buenas prácticas a la hora de implementar Dockerfiles&lt;/a&gt;,
+para cuando os enfrentéis a Dockerfiles más complicados que éste.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;dockerfile-para-nuestro-proyecto-en-producción&#34;&gt;Dockerfile para nuestro proyecto en producción&lt;/h1&gt;
+
+&lt;p&gt;Como dijimos antes, crear un volumen montando un directorio de nuestro equipo local
+sobre un directorio del contenedor nos ayuda durante la fase de desarrollo:
+podemos trabajar en el código en nuestro equipo local usando aquellas herramientas
+que más nos gusten (como por ejemplo, nuestro IDE favorito, nuestro gestor de
+dependencias favorito etc) sin preocuparnos del entorno de ejecución, que estará
+instalado en nuestro contenedor.&lt;/p&gt;
+
+&lt;p&gt;Pero también dijimos que los Dockerfiles no nos permiten especificar volúmenes
+creados de esta manera. Por lo que surge una pregunta: una vez terminada la fase
+de desarrollo ¿cómo &amp;ldquo;publico&amp;rdquo; el código final en una imagen?&lt;/p&gt;
+
+&lt;p&gt;Es decir, al final lo que queremos es una imagen que contenga no sólo nuestro entorno
+de ejecución (en nuestro caso, Alpine + Apache + PHP) &lt;strong&gt;sino también el código
+final de nuestro proyecto&lt;/strong&gt;. Una vez tengamos nuestra imagen, podemos lanzar un
+contenedor a partir de ella y tendremos nuestro proyecto ejecutándose exactamente
+en el mismo entorno en el cual lo hemos desarrollado. Lo que comúnmente se llama
+&lt;em&gt;paso a producción&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Una manera de hacer esto es &lt;em&gt;a mano&lt;/em&gt;. Es decir, creamos un contenedor a partir
+de nuestra imagen Alpine + Apache + PHP y usando el comando &lt;code&gt;docker cp&lt;/code&gt; copiamos
+en la capa de lectura/escritura de dicho contenedor los ficheros de nuestro proyecto
+en el directorio deseado. Finalmente, &lt;em&gt;congelamos&lt;/em&gt; el sistema de ficheros del
+contenedor con &lt;code&gt;docker commit&lt;/code&gt; en una nueva imagen y esa es la que usaríamos para
+desplegar nuestros contenedores en producción.&lt;/p&gt;
+
+&lt;p&gt;Podéis trastear en la &lt;a href=&#34;https://docs.docker.com/engine/reference/commandline/cp/&#34;&gt;referencia del comando &lt;code&gt;docker cp&lt;/code&gt;&lt;/a&gt;,
+pero nosotros no vamos a hacerlo de esta manera, sino que aprovecharemos la
+potencia de los Dockerfiles para automatizar esta tarea.&lt;/p&gt;
+
+&lt;p&gt;Si le habéis echado un vistado a &lt;a href=&#34;https://docs.docker.com/engine/reference/builder/&#34;&gt;la referencia de Dockerfile&lt;/a&gt;,
+seguramente habéis visto el comando &lt;code&gt;ADD&lt;/code&gt;. Dicho comando &lt;strong&gt;copia archivos, directorios
+o archivos remotos identificados por una URL al sistema de ficheros de una imagen, en
+el directorio que le indiquemos&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Por lo tanto, si el archivo &lt;code&gt;index.php&lt;/code&gt; que utilizamos en
+&lt;a href=&#34;https://moisesvilar.github.io/post/docker-5-environment/&#34;&gt;el post anterior&lt;/a&gt; se encuentra en el mismo
+directorio que el siguiente Dockerfile:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;FROM alpine:3.3
+MAINTAINER Moisés Vilar
+
+RUN apk update &amp;amp;&amp;amp; \
+    apk add apache2 php-apache2 &amp;amp;&amp;amp; \
+    mkdir /run/apache2 &amp;amp;&amp;amp; \
+    mkdir /var/www/localhost/htdocs/chuck
+
+ADD index.php /var/www/localhost/htdocs/chuck
+	
+EXPOSE 80
+
+CMD httpd -D FOREGROUND
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;si ejecutamos un &lt;code&gt;docker build&lt;/code&gt; sobre este Dockerfile, &lt;strong&gt;tendremos la imagen
+para nuestros contenedores en producción&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;¡Probadlo! Cread un Dockerfile como el anterior, guardadlo en la misma carpeta
+(por ejemplo, en /c/Users/Moises) que el archivo &lt;code&gt;index.php&lt;/code&gt;
+(recordad que podéis descargarlo desde
+&lt;a href=&#34;https://github.com/moisesvilar/docker-vi-ws/blob/master/index.php&#34;&gt;mi repositorio de Github&lt;/a&gt;)
+y ejecutad:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker build -t moisesvilar/awesome_chuck:1.0 /c/Users/Moises/.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;para construir la imagen y:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 80:80 moisesvilar/awesome_chuck:1.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;para lanzar un contenedor a partir de ella, y por último abrid un navegador para
+navegar hasta la siguiente URL: &lt;code&gt;http://localhost/chuck/&lt;/code&gt;. &lt;em&gt;Voilá!&lt;/em&gt;
+&lt;strong&gt;¡Ahí tenéis nuestro contenedor en producción!&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;más-comentarios&#34;&gt;Más comentarios&lt;/h2&gt;
+
+&lt;p&gt;Imaginad que tenemos todos nuestros entornos &lt;em&gt;dockerizados&lt;/em&gt;: desarrollo, testing,
+preproducción y producción (por ejemplo). Voy a intentar representarlo en una
+imagen:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-6-environment.jpg&#34; alt=&#34;Entornos de desarrollo dockerizados&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Entornos de desarrollo dockerizados&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;ol&gt;
+&lt;li&gt;El primer paso es crear nuestra imagen con el entorno de desarrollo,
+para ello utilizamos el comando &lt;code&gt;docker build -t moisesvilar/apache_php:alpine3.3&lt;/code&gt; sobre
+el primer Dockerfile que hemos visto en este post (el que está representado en azul en la figura).&lt;/li&gt;
+&lt;li&gt;A continuación, lanzamos un contenedor &lt;strong&gt;para desarrollo&lt;/strong&gt; a partir de la imagen
+&lt;code&gt;moisesvilar/apache_php:alpine3.3&lt;/code&gt;, creando un volumen de datos donde se monte nuestro
+directorio de trabajo local en el directorio de despliegue de aplicaciones dentro del
+contenedor. Para ello, usamos el comando &lt;code&gt;docker run -d -p 80:80 -v /c/Users/Moises/:/var/www/localhost/htdocs blablabla&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Una vez terminemos el desarrollo, creamos el Dockerfile para nuestro entorno de
+&lt;em&gt;testing&lt;/em&gt; (el que está representado en verde en la figura). Este Dockerfile es el
+segundo que hemos visto en este post, el que incluía el comando &lt;code&gt;ADD&lt;/code&gt; para añadir
+los ficheros de nuestro proyecto a la imagen. Para ello, volvemos a ejecutar un
+comando &lt;code&gt;docker build -t moisesvilar/awesome_chuck:1.0&lt;/code&gt; sobre dicho Dockerfile.&lt;/li&gt;
+&lt;li&gt;Lanzamos nuestro contenedor, pero sin crear el volumen de datos (el código de
+nuestro proyecto ya se encuentra en la imagen). El comando es más sencillo:
+&lt;code&gt;docker run -d -p 80:80 moisesvilar/awesome_chuck:1.0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Una vez realizado el testing, creamos la imagen para preproducción&amp;hellip;
+&lt;strong&gt;¡Pero este paso es idéntico al tercero!&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Lanzamos el contenedor de preproducción&amp;hellip; &lt;strong&gt;¡Pero este paso es idéntico al cuarto!&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Creamos la imagen para producción&amp;hellip; &lt;strong&gt;¡Pero este paso es idéntico al tercero!&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Lanzamos el contenedor de producción&amp;hellip; &lt;strong&gt;¡Pero este paso es idéntico al cuarto!&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;¿Lo pilláis? ¡Da igual el número de entornos que tengamos! Al llegar al punto 4,
+&lt;strong&gt;todos ellos se montan de la misma manera&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Comparadlo con un despliegue &lt;em&gt;tradicional&lt;/em&gt;: instalar Alpine en un equipo, instalar Apache,
+instalar PHP, subir el código, ejecutar. Así para cada entorno.&lt;/p&gt;
+
+&lt;p&gt;Pero es que además, Docker nos asegura que todos nuestros entornos son idénticos:
+misma versión de PHP, misma versión de Apache. Desde desarrollo a producción.&lt;/p&gt;
+
+&lt;p&gt;¿Qué pasa en el enfoque tradicional si nos despistamos y desarrollamos el proyecto para
+la versión 5.6 de PHP y resulta que nuestro entorno de producción tiene instalado PHP
+versión 7.1? &lt;strong&gt;Pues seguramente tengamos muchos problemas si hemos usado componentes
+&lt;em&gt;deprecados&lt;/em&gt; definitivamente en la versión 7.1 pero que todavía eran válidos en la
+versión 5.6&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Y el problema no es muy grave si tenemos un entorno intermedio (testing o preproducción)
+y en dichos entornos ya nos obligan a usar PHP 7.1.&lt;/p&gt;
+
+&lt;p&gt;Pero, ¿y si no es así? ¿Y si en todos los entornos tenemos la versión 5.6
+instalada &lt;strong&gt;excepto en producción&lt;/strong&gt;? ¿Cuándo nos enteraremos de que algo va mal?&lt;/p&gt;
+
+&lt;p&gt;¡Exactísimo! &lt;strong&gt;¡Cuando pasemos a producción!&lt;/strong&gt; ¿El trailer lleno de Red Bull?
+¡Por aquí, por favor! ^^&lt;/p&gt;
+
+&lt;p&gt;Podemos modificar el enfoque que vimos en la figura anterior intercambiando el papel
+que realiza los Dockerfiles por el Docker Hub.&lt;/p&gt;
+
+&lt;p&gt;Es decir, tras generar la imagen podemos subirla al Docker Hub con &lt;code&gt;docker push&lt;/code&gt;
+y descargarla en nuestros entornos con &lt;code&gt;docker pull&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Pero es mucho más molón si hacemos esto &lt;strong&gt;automáticamente en combinación con Github&lt;/strong&gt;,
+tal y como veremos en la siguiente sección.&lt;/p&gt;
+
+&lt;h1 id=&#34;enlazando-github-y-docker-hub-a-través-de-un-dockerfile&#34;&gt;Enlazando Github y Docker Hub a través de un Dockerfile&lt;/h1&gt;
+
+&lt;p&gt;Uno de los aspectos más usados en un &lt;em&gt;pipeline&lt;/em&gt; de &lt;em&gt;continuous delivery&lt;/em&gt;, desde
+el punto de vista de desarrollo, es que cuando el equipo realice un &lt;em&gt;push&lt;/em&gt; a la
+rama master del proyecto (si estamos usando Git como servidor de control de versiones),
+éste se despliegue automáticamente, por lo menos, en el entorno de preproducción.&lt;/p&gt;
+
+&lt;p&gt;Pues bien, hacer esto con Docker Hub es extremadamente sencillo.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Supondré que tenemos un repositorio en Github con el código de nuestro proyecto,
+y con un Dockerfile en la raíz del repositorio cuyo contenido expongo a continuación.
+Tenéis el código de ejemplo en &lt;a href=&#34;https://github.com/moisesvilar/docker-vi-ws&#34;&gt;mi repositorio de Github&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;FROM moisesvilar/apache_php:alpine3.3
+MAINTAINER Moisés Vilar
+
+RUN mkdir /var/www/localhost/htdocs/chuck
+ADD index.php /var/www/localhost/htdocs/chuck
+	
+EXPOSE 80
+
+CMD httpd -D FOREGROUND
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Fijaos que estoy partiendo de la imagen moisesvilar/apache_php:alpine3.3 (que
+la tengo subida al Docker Hub, por lo que Docker la descargará si no la encuentra
+en el equipo local). Inmediatamente, creo el directorio donde se alojará la aplicación,
+copio el código del proyecto (que también está en mi repositorio), expongo el puerto 80
+y ejecuto el servidor Apache.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Si nos vamos a nuestra cuenta en hub.docker.com, veremos arriba a la derecha
+la opción &lt;strong&gt;Create &amp;gt; Create Automated Build&lt;/strong&gt;&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w50&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-6-build1.jpg&#34; alt=&#34;Opción Create Automated Build en Docker Hub&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Opción Create Automated Build en Docker Hub&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Si no tenemos todavía vinculada nuestra cuenta de Github (o Bitbucket) con Docker Hub,
+nos invitará a hacerlo:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-6-build2.jpg&#34; alt=&#34;Aviso de vinculación de Github con Docker Hub&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Aviso de vinculación de Github con Docker Hub&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Yo he escogido la opción para Github (no tengo cuenta en Bitbucket) pero vosotros podéis
+escoger la que queráis, el proceso es idéntico.&lt;/p&gt;
+
+&lt;p&gt;Quizás tendremos que acceder con nuestros credenciales a la cuenta de Github y a
+continuación tendremos que otorgar permisos a Docker Hub.&lt;/p&gt;
+
+&lt;p&gt;Una vez hecho esto, tendremos la opción disponible de nuevo en &lt;strong&gt;Create &amp;gt; Create Automated Build&lt;/strong&gt;:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w50&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-6-build3.jpg&#34; alt=&#34;Vincular Github con Docker Hub&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Vincular Github con Docker Hub&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;A continuación seleccionaremos si queremos escoger de entre todos nuestros repositorios
+de Github (públicos y privados) o sólo los públicos. Y en la siguiente pantalla escogemos
+de qué repositorio queremos que Docker Hub realice los &lt;em&gt;build&lt;/em&gt; de nuestras imágenes: aquél
+que contiene el archivo Dockerfile del comienzo de esta sección, en mi caso, el repositorio
+&lt;strong&gt;docker-vi-ws&lt;/strong&gt;.&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w50&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-6-build6.jpg&#34; alt=&#34;Repositorio a vincular con Docker Hub&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Repositorio a vincular con Docker Hub&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;En el siguiente paso, establecemos un nombre para la imagen, una pequeña descripción
+y la visibilidad de la imagen dentro de Docker Hub (recordad que si queréis que sea
+privada, tenéis que pasar por caja, que los chicos de Docker también tienen que comer).&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-6-build7.jpg&#34; alt=&#34;Configurando la imagen&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Configurando la imagen&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;A continuación, si nos vamos a la pestaña &lt;em&gt;Build Details&lt;/em&gt; veremos que Docker Hub está
+construyendo nuestra imagen:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-6-build8.jpg&#34; alt=&#34;Imagen en construcción&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Imagen en construcción&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Y en unos minutos, nuestra imagen estará lista:&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-6-build9.jpg&#34; alt=&#34;¡Imagen construida!&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;¡Imagen construida!&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;Y a partir de aquí podemos emplear el comando &lt;code&gt;docker run&lt;/code&gt; contra esta nueva imagen
+para lanzar nuestros contenedores.&lt;/p&gt;
+
+&lt;p&gt;Pero lo chulo viene ahora.&lt;/p&gt;
+
+&lt;p&gt;Realizad cualquier modificación en el código (yo he añadido un chiste más de Chuck Norris),
+y actualizad la rama master de vuestro repositorio con un &lt;code&gt;git push&lt;/code&gt;.
+Si os vais de nuevo a la pestaña &lt;em&gt;Build Details&lt;/em&gt; de Docker Hub, ¡veréis que la imagen
+se está construyendo de nuevo!&lt;/p&gt;
+
+&lt;p&gt;¡Docker Hub comprueba automáticamente que hay una nueva versión del código y actualiza la
+imagen en consecuencia!&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;¡&lt;em&gt;Continuous Delivery&lt;/em&gt; modo &lt;em&gt;hardcore&lt;/em&gt;!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusiones&#34;&gt;Conclusiones&lt;/h1&gt;
+
+&lt;p&gt;¿Qué hemos aprendido hoy?&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Hemos visto como construir un Dockerfile para crear imágenes de nuestros entornos,
+evitando el tener que crearlas &lt;em&gt;a mano&lt;/em&gt; (ejecutando un &lt;em&gt;shell&lt;/em&gt; en el contenedor
+y picando los comandos a mano). Esto es útil para los chicos de desarrollo.&lt;/li&gt;
+&lt;li&gt;Hemos visto como crear un Dockerfile para construir imágenes con el código ya
+insertado en el sistema de ficheros de la imagen, lista para ser
+utilizada por cualquier contenedor. Esto es útil para los chicos de sistemas,
+encargados de desplegar aplicaciones en distintos entornos.&lt;/li&gt;
+&lt;li&gt;Hemos visto como crear un &lt;em&gt;pipeline&lt;/em&gt; de &lt;em&gt;continuous delivery&lt;/em&gt; entre Github
+y Docker Hub, de tal manera que cualquier actualización en la rama master de un
+repositorio de Github se transforma automáticamente en una imagen en el Docker Hub.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;¡Nada más por el momento!&lt;/p&gt;
+
+&lt;p&gt;Dejadme vuestro feedback en los comentarios
+&lt;strong&gt;¡no sé si esto está siendo interesante o me tengo que dedicar a calcetar!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;En todo caso, para la semana volveremos con un poquito más de volúmenes, y aprovecharemos
+para montar un entorno dockerizado de una base de datos.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Au revoir!&lt;/em&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>docker V - preparando un entorno</title>
