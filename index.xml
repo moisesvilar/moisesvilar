@@ -7,8 +7,385 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-ES</language>
     <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
-    <lastBuildDate>Fri, 03 Feb 2017 19:56:56 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 11 Feb 2017 18:51:00 +0100</lastBuildDate>
     <atom:link href="https://moisesvilar.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>docker VII - volúmenes</title>
+      <link>https://moisesvilar.github.io/post/docker-volumes-7/</link>
+      <pubDate>Sat, 11 Feb 2017 18:51:00 +0100</pubDate>
+      
+      <guid>https://moisesvilar.github.io/post/docker-volumes-7/</guid>
+      <description>
+
+&lt;p&gt;Como bien sabéis, si habéis estado atentos hasta ahora, Docker, para cada contenedor,
+crea una capa de lectura/escritura que es persistente mientras no destruyamos su contenedor.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://moisesvilar.github.io/post/docker-5-environment/&#34;&gt;En este artículo&lt;/a&gt;, mientras montábamos nuestro
+entorno de desarrollo, este problema lo solventamos creando un volumen de datos, pero un
+volumen muy particular, porque montamos un directorio de nuestro equipo local anfitrión
+en un directorio concreto dentro de nuestro contenedor. Esto nos permitía ir implementando nuestro
+código (con nuestras herramientas, preferidas, nuestro IDE, haciendo TDD si así lo quisiéramos&amp;hellip;)
+en nuestro equipo local y dichas modificaciones quedaban reflejadas automáticamente en el
+contenedor.&lt;/p&gt;
+
+&lt;p&gt;Cuando quisimos pasar de esta &lt;em&gt;fase de desarrollo&lt;/em&gt; a una publicación de nuestro proyecto
+en una fase posterior (preproducción o producción), vimos que este mecanismo no era válido
+y &lt;a href=&#34;https://moisesvilar.github.io/post/docker-dockerfiles-6/&#34;&gt;lo solventamos&lt;/a&gt; añadiendo directamente el código
+de nuestro proyecto en el sistema de ficheros de la imagen (con el comando &lt;code&gt;ADD&lt;/code&gt; de la especificación
+Dockerfile).&lt;/p&gt;
+
+&lt;p&gt;Y esto realmente está muy bien, porque el código de nuestra aplicación &lt;strong&gt;no varía&lt;/strong&gt; con el tiempo
+para una versión en concreta. Varía durante el desarrollo de una nueva versión. Una vez
+dicha versión esté implementada, creamos otra imagen añadiendo el nuevo código y lanzamos
+de nuevo el contenedor. Pan comido.&lt;/p&gt;
+
+&lt;p&gt;¿Pero qué ocurre con las bases de datos? Si tenemos un contenedor con un motor de base de
+datos ejecutándose (un MongoDB, un PostgreSQL, un MariaDB&amp;hellip;), &lt;strong&gt;sí que es susceptible de variar con el tiempo&lt;/strong&gt;.
+Es decir, si hacemos una inserción en la base de datos, el contenedor estará escribiendo
+en su capa de lectura/escritura. Y esto es extrapolable a otros sistemas de almacenamiento,
+por ejemplo, si queremos guardar las imágenes que suben los usuarios a nuestra flamante
+aplicación web.&lt;/p&gt;
+
+&lt;p&gt;Si por alguna razón el equipo anfitrión (nuestro servidor) &lt;em&gt;se va al carajo&lt;/em&gt;&amp;hellip;
+&lt;strong&gt;habremos perdido todos nuestros datos!!!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;No tiene pinta de que éste sea un buen enfoque.&lt;/p&gt;
+
+&lt;p&gt;En este artículo vamos a ampliar el concepto de volúmenes de datos para nuestros contenedores,
+de tal manera que sean persistentes incluso aunque eliminemos nuestros contenedores
+y sobre los que podamos aplicar técnicas de &lt;em&gt;backup &amp;amp; restore&lt;/em&gt; para que no nos pase como
+&lt;a href=&#34;http://www.ticbeat.com/innovacion/startup-en-crisis-porque-un-empleado-borra-los-archivos-que-no-debia/&#34;&gt;a los chicos de Gitlab&lt;/a&gt;&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w50&#34;&gt;
+    
+        &lt;img src=&#34;https://lh3.googleusercontent.com/-FFiSpXrxayE/WJyRzEEjTxI/AAAAAAAAA6c/OKHfU0pO904mx0lKqU82o-mJ9z7if3nGgCL0B/h225/2017-02-09.gif&#34; alt=&#34;Un sysadmin de gitlab.com, hasta los ***** de todo&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Un sysadmin de gitlab.com, hasta los ***** de todo (*)&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;(*)&lt;em&gt;Gracias a &lt;a href=&#34;https://twitter.com/Camilo_46&#34;&gt;Camilo&lt;/a&gt; por el GIF!!!&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Ready, steady&amp;hellip; Go!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;un-volumen-para-una-imagen-de-mariadb&#34;&gt;Un volumen para una imagen de MariaDB&lt;/h1&gt;
+
+&lt;p&gt;Los volúmenes son directorios que están alojados &lt;strong&gt;fuera&lt;/strong&gt; del sistema de ficheros de nuestros contenedores, haciéndolos
+&lt;strong&gt;independientes del ciclo de vida de los mismos&lt;/strong&gt; y permitiendo &lt;strong&gt;reutilizarlos&lt;/strong&gt; aunque los contenedores vinculados desaparezcan.&lt;/p&gt;
+
+&lt;p&gt;Os dejo un enlace &lt;a href=&#34;https://docs.docker.com/engine/tutorials/dockervolumes/&#34;&gt;a la documentación oficial de Docker&lt;/a&gt; donde explican
+todo esto, para que le echéis un vistazo.&lt;/p&gt;
+
+&lt;p&gt;Allí, usan una imagen de PostgreSQL para sus ejemplos. Yo usaré una de MariaDB, por aquello de que veais otras opciones.&lt;/p&gt;
+
+&lt;p&gt;No me voy a complicar la vida montando un entorno desde cero, como hicimos en el caso de nuestro entorno Alpine + Apache + PHP,
+sino que utilizaré &lt;a href=&#34;https://hub.docker.com/_/mariadb/&#34;&gt;la imagen oficial de MariaDB&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Si os fijáis en &lt;a href=&#34;https://github.com/docker-library/mariadb/blob/b558f64b736650b94df9a90e68ff9e3bc03d4bdb/10.1/Dockerfile#L11&#34;&gt;su Dockerfile&lt;/a&gt;
+veréis que se basa en la imagen de Debian, y por ello pesa (comprimida) alrededor de 130MB, nada que ver con los irrisorios 2MB que pesaba
+nuestra imagen Alpine. Y no, por el momento no tenemos imagen oficial de MariaDB sobre Alpine. Son así de rancios.&lt;/p&gt;
+
+&lt;p&gt;Fijaos en &lt;a href=&#34;https://github.com/docker-library/mariadb/blob/b558f64b736650b94df9a90e68ff9e3bc03d4bdb/10.1/Dockerfile#L99&#34;&gt;la línea 99&lt;/a&gt;.
+¿Veis ese comando &lt;code&gt;VOLUME /var/lib/mysql&lt;/code&gt;?&lt;/p&gt;
+
+&lt;p&gt;Según &lt;a href=&#34;https://docs.docker.com/engine/reference/builder/#/volume&#34;&gt;la documentación&lt;/a&gt;, esta línea crea un punto de montaje en el
+directorio &lt;code&gt;/var/lib/mysql&lt;/code&gt; que es precisamente donde MariaDB va a almacenar los archivos de datos. A continuación, crea un
+volumen de datos externo al UFS y lo vincula a dicho punto de montaje. El resultado:
+&lt;strong&gt;todo lo que se intente escribir en dicho directorio no se hará en la capa de lectura/escritura manejada por el UFS, sino en el volumen asociado.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;¿No me creéis? Personas de poca fe&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Abrid un terminal y picad:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker volume ls 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Este comando os listará todos los volúmenes creados en vuestro sistema. Inicialmente, debería de mostraros exactamente cero.&lt;/p&gt;
+
+&lt;p&gt;Ahora lanzamos un contenedor de nombre &lt;strong&gt;strawberry_daiquiri&lt;/strong&gt; usando la imagen oficial de MariaDB:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run --name strawberry_daiquiri -e MYSQL_ROOT_PASSWORD=secret -d mariadb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;El parámetro &lt;code&gt;-e MYSQL_ROOT_PASSWORD=secret&lt;/code&gt; establece una variable de entorno en nuestro contenedor, de clave
+&lt;strong&gt;MYSQL_ROOT_PASSWORD&lt;/strong&gt; y de valor &lt;strong&gt;secret&lt;/strong&gt;: el contenedor la usará inicialmente para establecer la contraseña
+del usuario &lt;em&gt;root&lt;/em&gt; de nuestra base de datos (esto viene explicado en la misma descripción de la imagen mariadb).&lt;/p&gt;
+
+&lt;p&gt;Tardará un poco en descargarse (132MB, ¿recordáis?) y veréis cómo inicia el proceso inicial de configuración
+de MariaDB. Tan pronto termine, volved a picar:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker volume ls
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;¡Tendríais que tener un volumen creado!&lt;/p&gt;
+
+&lt;p&gt;Fijaos en el número enorme que aparece sobre &lt;strong&gt;VOLUME NAME&lt;/strong&gt;: es el nombre de nuestro volumen. Lo usaremos dentro de nada.&lt;/p&gt;
+
+&lt;p&gt;Lo que vamos a hacer ahora es entrar en nuestro contenedor y modificar la base de datos:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; docker exec -ti strawberry_daiquiri /bin/sh
+/ # mysql -u root -psecret
+MariaDB [(none)] &amp;gt; CREATE DATABASE music;
+MariaDB [(none)] &amp;gt; USE music;
+MariaDB [(music)] &amp;gt; CREATE TABLE singers (id INT, name VARCHAR(64), PRIMARY KEY (id));
+MariaDB [(music)] &amp;gt; INSERT INTO singers VALUES (1, &#39;Eddie Vedder&#39;);
+MariaDB [(music)] &amp;gt; exit
+/ # exit
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Resumiendo: hemos creado una nueva base de datos con una nueva tabla y hemos insertado un nuevo registro en ella.&lt;/p&gt;
+
+&lt;p&gt;Ahora nos volvemos locos y nos cargamos el contenedor:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker rm -f strawberry_daiquiri
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Si volvemos a hacer un &lt;code&gt;docker volume ls&lt;/code&gt; veremos que nuestro volumen sigue ahí.&lt;/p&gt;
+
+&lt;p&gt;Bien. Ahora lancemos un nuevo contenedor &lt;strong&gt;pero indicándole explícitamente qué volumen queremos que vincule al directorio &lt;code&gt;/var/lib/mysql&lt;/code&gt;&lt;/strong&gt;.
+Por supuesto, el comando será el viejo y bueno &lt;code&gt;docker run&lt;/code&gt;, pero usando el parámetro &lt;code&gt;-v&lt;/code&gt;, cuya sintaxis es:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;-v [NOMBRE DEL VOLUMEN]:[PATH AL DIRECTORIO DONDE QUEREMOS MONTAR EL VOLUMEN]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Lo que tenemos que ejecutar es:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run --name strawberry_daiquiri -e MYSQL_ROOT_PASSWORD=secret -v 2a3c4b0abdbfba66185ed6a7c2b37b565768e3166128f6010abb2ab144440c06:/var/lib/mysql -d mariadb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;El uso de este parámetro &lt;code&gt;-v&lt;/code&gt; en el comando &lt;code&gt;docker run&lt;/code&gt; invalida el comando &lt;code&gt;VOLUME&lt;/code&gt; del Dockerfile que vimos antes,
+es decir, no crea un nuevo volumen de datos al iniciar el contenedor, sino que utiliza el que le hemos indicado.&lt;/p&gt;
+
+&lt;p&gt;Si volvemos entrar en nuestro contenedor para comprobar que todo sigue como lo habíamos dejado&amp;hellip;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; docker exec -ti strawberry_daiquiri /bin/sh
+/ # mysql -u root -psecret
+MariaDB [(none)] &amp;gt; USE music;
+MariaDB [(music)] &amp;gt; SELECT * FROM singers;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;¡Hey! ¡Ahí tenemos a nuestro buen amigo &lt;a href=&#34;https://es.wikipedia.org/wiki/Eddie_Vedder&#34;&gt;Eddie Vedder&lt;/a&gt;!&lt;/p&gt;
+
+
+&lt;figure class=&#34;text-center w50&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-7-select.jpg&#34; alt=&#34;Nuestra fila insertada sigue ahí&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Nuestra fila insertada sigue ahí&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+
+
+&lt;p&gt;¿Convencidos ahora? &lt;strong&gt;Nos hemos cargado nuestro contenedor pero nuestros datos siguen intactos&lt;/strong&gt;. Es más, también hemos comprobado
+que los volúmenes &lt;strong&gt;son reutilizables entre distintos contenedores&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Esta sí es una aproximación interesante para contenedores de almacenamiento.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Los volúmenes, además de ser persistentes y reutilizables, también pueden ser &lt;strong&gt;compartidos&lt;/strong&gt; por varios contenedores.
+En un principio iba a realizar una introducción a esto, pero lo descarté. Y la razón es que, por el momento, Docker no resuelve
+el acceso compartido a un volumen entre varios contenedores. Es decir, si nuestras aplicaciones no resuelven en código el problema
+de acceso compartido (usando cerrojos, semáforos, monitores o lo que más rabia os dé), es muy probable que al final tengamos
+un buen puñado de &lt;strong&gt;datos corruptos&lt;/strong&gt;. Mi consejo: por el momento, no utilicéis esta &lt;em&gt;posibilidad&lt;/em&gt; que ofrece Docker.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&#34;bautizando-volúmenes&#34;&gt;Bautizando volúmenes&lt;/h1&gt;
+
+&lt;p&gt;Seguramente, ávidos lectores, os habréis dado cuenta que utilizar los nombres de volúmenes que nos genera Docker es de todo menos
+legible. Por ello es interesante bautizar a nuestros volúmenes.&lt;/p&gt;
+
+&lt;p&gt;Primero tenemos que crear un volumen con el siguiente comando:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker volume create --name mariadb-data
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Con ello, habremos creado un volumen con el nombre &lt;strong&gt;mariadb-data&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Para utilizarlo, se utiliza el comando &lt;code&gt;docker run&lt;/code&gt; de nuevo con el parámetro &lt;code&gt;-v&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 3306:3306 -v mariadb-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secret mariadb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Con el anterior comando estamos lanzando un contenedor a partir de la imagen &lt;strong&gt;mariadb&lt;/strong&gt;, en modo &lt;strong&gt;detached&lt;/strong&gt;,
+estamos &lt;strong&gt;publicando&lt;/strong&gt; el puerto 3306 del contenedor en el puerto 3306 de nuestro host, establecemos la
+&lt;strong&gt;variable de entorno&lt;/strong&gt; &lt;code&gt;MYSQL_ROOT_PASSWORD&lt;/code&gt; con la contraseña de &lt;em&gt;root&lt;/em&gt; que queramos para nuestra base de datos,
+y estamos montando el volumen &lt;strong&gt;mariadb-data&lt;/strong&gt; en el directorio &lt;code&gt;/var/lib/mysql&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;A partir de aquí, todo funciona igual que en el caso anterior.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Un apunte: al montar el volumen en el directorio &lt;code&gt;/var/lib/mysql&lt;/code&gt; (tanto si optamos por Dockerfiles como si
+optamos por el comando &lt;code&gt;docker run&lt;/code&gt; con el parámetro &lt;code&gt;-v&lt;/code&gt;), si ya existen datos (ficheros, carpetas&amp;hellip;) en dicho
+directorio, &lt;strong&gt;el montar el volumen encima no hace que desaparezcan&lt;/strong&gt; sino que se trasladan al volumen.
+¡No tengáis miedo a montar volúmenes, que no os cargaréis nada de vuestros contenedores!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&#34;backup-restore&#34;&gt;Backup &amp;amp; Restore&lt;/h1&gt;
+
+&lt;p&gt;Existe &lt;a href=&#34;https://docs.docker.com/engine/reference/commandline/run/#mount-volumes-from-container---volumes-from&#34;&gt;un parámetro&lt;/a&gt;
+del comando &lt;code&gt;docker run&lt;/code&gt; que nos permite &lt;strong&gt;montar los mismos volúmenes&lt;/strong&gt; que está utilizando un contenedor en un contenedor nuevo.
+Dicho comando es &lt;code&gt;--volumes-from&lt;/code&gt; y su sintaxis es la siguiente:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;--volumes-from [NOMBRE DEL CONTENEDOR]:[OPCIONES]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Las opciones son dos:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ro&lt;/code&gt; (&lt;em&gt;read only&lt;/em&gt;) si queremos que el nuevo contenedor tenga acceso de sólo lectura a los volúmenes del otro contenedor.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rw&lt;/code&gt; (&lt;em&gt;read write&lt;/em&gt;) si queremos que el nuevo contenedor tenga acceso de lectura y escritura a los volúmenes del otro contenedor.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Si no especificamos nada, el nuevo contenedor heredará el tipo de acceso del otro contenedor. Y si tampoco hemos especificado nada
+en el otro contenedor, entonces el modo por defecto siempre será &lt;code&gt;rw&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Sabiendo esto, la estrategia que propone la gente de Docker para realizar copias de seguridad de nuestros volúmenes de datos es
+bastante artesanal, pero también sencilla de entender, implementar y automatizar. Se basa en los siguientes pasos:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Partimos de un contenedor con volúmenes montados de los que queremos realizar una copia de seguridad. En aras de una mejor explicación,
+bauticemos las cosas: llamemos a este contenedor &lt;em&gt;abraham_lincoln&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Escogemos una imagen de un sistema operativo en el que venga incluída alguna herramienta de compresión. Por ejemplo, Ubuntu con
+la aplicación tar.&lt;/li&gt;
+&lt;li&gt;Lanzamos un nuevo contenedor (que llamaremos &lt;em&gt;benjamin_franklin&lt;/em&gt;) a partir de dicha imagen, con las siguientes restricciones:
+
+&lt;ul&gt;
+&lt;li&gt;usará los mismos volúmenes que &lt;em&gt;abraham_lincoln&lt;/em&gt; (esto lo especificaremos con el parámetro &lt;code&gt;--volumes-from&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;montaremos un directorio de nuestra máquina anfitrión en un directorio específico del sistema de ficheros del contenedor, que llamaremos
+&lt;em&gt;directorio backup&lt;/em&gt; (esto lo haremos como ya sabemos, a través del parámetro &lt;code&gt;-v&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;el comando que ejecutará &lt;em&gt;benjamin_franklin&lt;/em&gt; al ser lanzado será, precisamente, uno que comprima los directorios sobre los que se han
+montado los volúmenes de &lt;em&gt;abraham_lincoln&lt;/em&gt; y que el resultado lo almacene en el &lt;em&gt;directorio backup&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Fijaos que:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Al utilizar &lt;code&gt;--volumes-from&lt;/code&gt;, &lt;em&gt;benjamin_franklin&lt;/em&gt; tendrá los mismos directorios que los vinculados a los volúmenes de &lt;em&gt;abraham_lincoln&lt;/em&gt;
+&lt;strong&gt;exactamente con el mismo contenido&lt;/strong&gt;. Por lo tanto, al comprimir el contenido de dichos directorios dentro de &lt;em&gt;benjamin_franklin&lt;/em&gt;, estamos
+comprimiendo el mismo contenido que posee &lt;em&gt;abraham_lincoln&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Al almacenar el resultado de la compresión en un directorio que está montado en la máquina anfitrión,
+&lt;strong&gt;tendremos dicho resultado ya disponible en la máquina anfitrión&lt;/strong&gt;, por lo que el contenedor &lt;em&gt;morirá&lt;/em&gt; pero nuestros archivos comprimidos
+estarán a salvo en nuestro equipo local.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Es decir, al final lo que tenemos es un procedimiento por el cual comprimimos los datos de los volúmenes de &lt;em&gt;abraham_lincoln&lt;/em&gt; y los almacenamos
+en nuestro equipo anfitrión. A partir de aquí, podemos hacer lo que queramos con ellos: moverlos a un disco externo, subirlos a un sistema
+de almacenamiento de terceros como &lt;a href=&#34;https://aws.amazon.com/es/glacier/&#34;&gt;Amazon Glacier&lt;/a&gt; o jugarnos el pescuezo y dejarlos ahí mismo,
+en nuestro equipo anfitrión.&lt;/p&gt;
+
+&lt;p&gt;Venga, que lo estáis pidiendo a gritos. ¡Vamos a por un ejemplo!&lt;/p&gt;
+
+&lt;p&gt;Creamos el contenedor &lt;em&gt;abraham_lincoln&lt;/em&gt; a partir de la imagen mariadb usando el volumen que habíamos llamado mariadb-data:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d --name abraham_lincoln -p 3306:3306 -v mariadb-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secret mariadb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Venticuatro horas y miles de inserciones después, lanzamos a &lt;em&gt;benjamin_franklin&lt;/em&gt; para que haga el trabajo sucio:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run --rm --name benjamin_franklin --volumes-from abraham_lincoln -v /c/Users/moises/backups:/backup ubuntu tar cvf /backup/backup.tar /var/lib/mysql
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;El comando &lt;code&gt;--rm&lt;/code&gt; fuerza la eliminación del contenedor una vez éste termina.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;En el directorio local &lt;code&gt;/c/Users/moises/backups&lt;/code&gt; tendremos el archivo &lt;code&gt;backup.tar&lt;/code&gt; con nuestra copia de seguridad de todas las bases de datos.&lt;/p&gt;
+
+&lt;p&gt;Si ahora ocurre un desastre y tenemos que restaurar una copia de seguridad de nuestra base de datos, simplemente ejecutamos:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run --name bill_clinton --rm --volumes-from abraham_lincoln -v /c/Users/moises/backups:/backup ubuntu tar xvf /backup/backup.tar
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Es decir, realizamos el proceso inverso: volvemos a lanzar un nuevo contenedor a partir de la imagen de ubuntu, que utilice los volúmenes de &lt;em&gt;abraham_lincoln&lt;/em&gt;
+(para tener los directorios cuyo contenido queremos restaurar), que tenga montado en el directorio &lt;em&gt;backup&lt;/em&gt; el directorio del equipo anfitrión donde tenemos
+la copia de seguridad, y que descomprima dicha copia de seguridad en los directorios de los volúmenes de &lt;em&gt;abraham_lincoln&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Por supuesto, todo esto no lo haríamos a mano, sino que tendríamos &lt;em&gt;scripts&lt;/em&gt; que ejecutasen el proceso de &lt;em&gt;backups&lt;/em&gt; de forma periódica y tendríamos nuestro &lt;em&gt;script&lt;/em&gt;
+de restauración para que podamos ejecutarlo rápida y directamente.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;En mi (pequeña) experiencia con Docker, he visto que a veces va a ser necesario &amp;ldquo;reiniciar&amp;rdquo; el contenedor &lt;em&gt;abraham_lincoln&lt;/em&gt; con &lt;code&gt;docker stop&lt;/code&gt; seguido de un &lt;code&gt;docker start&lt;/code&gt;
+para que el motor de base de datos vea los datos actualizados desde el volumen restaurado. Tenedlo en cuenta en vuestras pruebas.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&#34;eliminando-volúmenes&#34;&gt;Eliminando volúmenes&lt;/h1&gt;
+
+&lt;p&gt;Si finalmente queremos eliminar de manera definitiva nuestro volumen, simplemente tendremos que ejecutar el siguiente comando:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker volume rm mariadb-container
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;conclusiones&#34;&gt;Conclusiones&lt;/h1&gt;
+
+&lt;p&gt;Lo que hemos visto hoy:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Cómo crear volúmenes de datos en nuestros Dockerfiles con la instrucción &lt;code&gt;VOLUME&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Como listar los volúmenes creados con el comando &lt;code&gt;docker volume ls&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Cómo crear volúmenes por línea de comandos con el comando &lt;code&gt;docker volume create&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Cómo vincular volúmenes a nuesros contenedores con el parámetro &lt;code&gt;-v&lt;/code&gt; del comando &lt;code&gt;docker run&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Cómo establecer variables de entorno en nuestros contenedores con el parámetro &lt;code&gt;-e&lt;/code&gt; del comando &lt;code&gt;docker run&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Cómo realizar un proceso de &lt;em&gt;backup &amp;amp; restore&lt;/em&gt; de nuestros volúmenes.&lt;/li&gt;
+&lt;li&gt;Cómo eliminar definitivamente un volumen.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Ahora es el momento de ponerse pragmáticos.&lt;/p&gt;
+
+&lt;p&gt;Si bien el uso de Docker para la &lt;em&gt;parte estática&lt;/em&gt; de nuestros proyectos (el código) suponía un buen número de
+ventajas (nos permitía montar entornos idénticos en las distintas fases: desarrollo, testing, preproducción, producción),
+¿el hecho de &lt;em&gt;dockerizar&lt;/em&gt; bases de datos supone también una gran ventaja?&lt;/p&gt;
+
+&lt;p&gt;Pues la respuesta es que no tanto.&lt;/p&gt;
+
+&lt;p&gt;Al fin y al cabo, necesitamos un proceso de &lt;em&gt;backup &amp;amp; restore&lt;/em&gt; que sigue siendo demasiado artesanal, cuando otras
+alternativas &lt;em&gt;cloud&lt;/em&gt; como &lt;a href=&#34;https://cloud.google.com/sql/&#34;&gt;Cloud SQL&lt;/a&gt; de Google o &lt;a href=&#34;https://aws.amazon.com/es/rds/&#34;&gt;RDS&lt;/a&gt;
+de Amazon nos ofrecen múltiples herramientas de Snapshot, copias de seguridad, restauración&amp;hellip; muchísimo más potentes y
+sencillas de usar.&lt;/p&gt;
+
+&lt;p&gt;Mi consejo: &lt;em&gt;dockerizad&lt;/em&gt; bases de datos en la fase de desarrollo. Es una manera sencilla de independizar las bases de
+datos entre distintos miembros del equipo (compartir una base de datos en desarrollo
+&lt;a href=&#34;https://www.troyhunt.com/unnecessary-evil-of-shared-development/&#34;&gt;es una muy mala idea&lt;/a&gt;), sin necesidad de
+tener que instalar un motor de base de datos en cada equipo (con el consiguiente consumo de recursos) y ahorrándote los
+posibles problemas derivados de que haya distintas versiones de los mismos motores en distintos equipos de desarrollo.&lt;/p&gt;
+
+&lt;p&gt;Podéis &lt;em&gt;dockerizar&lt;/em&gt; también las bases de datos de vuestros entornos de testing, sobre todo porque se adapta muy bien a la integración contínua.
+Tened un volumen creado &lt;em&gt;ad hoc&lt;/em&gt; con vuestros datos de pruebas y cada vez que ejecutéis una batería de tests de integración realizad el siguiente
+proceso:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Realizáis un &lt;em&gt;backup&lt;/em&gt; del volumen.&lt;/li&gt;
+&lt;li&gt;Lanzáis un contenedor de base de datos vinculado a dicho volumen.&lt;/li&gt;
+&lt;li&gt;Ejecutáis el siguiente test.&lt;/li&gt;
+&lt;li&gt;Restauráis el volumen con la &lt;em&gt;backup&lt;/em&gt; del paso 1 para dejarlo en su estado inicial (porque cada test de integración debe ser idempotente, es decir,
+su estado no puede influir en el resultado de los posteriores test que ejecutéis)&lt;/li&gt;
+&lt;li&gt;Volvéis a 3.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Y esto, por supuesto, hacedlo de manera automática. Es decir, los pasos 1, 2 y 4 escribidlos en un script que pueda llamarse desde vuestro entorno
+de integración contínua.&lt;/p&gt;
+
+&lt;p&gt;Ahora bien, en vuestros entornos de preproducción y producción, no hay ninguna ventaja aparente en usar Docker para las bases de datos. Usad un servicio cloud como los
+descritos antes. O vuestras propias máquinas si los requerimientos del proyecto así lo indican. Lo único en donde debéis tener cuidado es que las
+versiones de base de datos entre vuestros entornos &lt;em&gt;dockerizados&lt;/em&gt; y los &lt;em&gt;no dockerizados&lt;/em&gt; sean perfectamente compatibles entre sí, para evitar
+sorpresas de última hora.&lt;/p&gt;
+
+&lt;p&gt;¡Por hoy nada más! La semana que viene (o quizás la siguiente más, porque a lo mejor no me da tiempo a preparar el artículo en siete días),
+usaremos todo lo aprendido hasta ahora para ver cómo montar un entorno completo perfectamente real, en lo que será el último artículo de Docker
+por el momento en Write Some Code!.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;¡Nos vemos en nada!&lt;/strong&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>docker VI - dockerfiles</title>

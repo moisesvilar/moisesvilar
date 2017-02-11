@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="pinterest" content="nopin">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="theme-color" content="#263238">
+
+<meta name="generator" content="Hugo 0.18.1" />
+
+<link rel="apple-touch-icon" href="https://moisesvilar.github.io/images/logo.png">
+
+<link rel="canonical" href="https://moisesvilar.github.io/post/docker-volumes-7/">
+
+
+    
+    <link href="//fonts.googleapis.com/css?family=Noto+Sans:400,700|Montserrat" rel="stylesheet">
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    
+    <title>docker VII - volúmenes - Write some code!</title>
+    
+<meta name="description" content="Trabajaremos con volúmenes para desacoplar la capa de datos de nuestros contenedores">
+
+<meta property="og:title" content="docker VII - volúmenes - Write some code!">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://moisesvilar.github.io/post/docker-volumes-7/">
+<meta property="og:image" content="https://moisesvilar.github.io/images/cover-docker-volumes.jpg">
+<meta property="og:site_name" content="Write some code!">
+<meta property="og:description" content="Trabajaremos con volúmenes para desacoplar la capa de datos de nuestros contenedores">
+<meta property="og:locale" content="ja_JP">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="Write some code!">
+<meta name="twitter:url" content="https://moisesvilar.github.io/post/docker-volumes-7/">
+<meta name="twitter:title" content="docker VII - volúmenes - Write some code!">
+<meta name="twitter:description" content="Trabajaremos con volúmenes para desacoplar la capa de datos de nuestros contenedores">
+<meta name="twitter:image" content="https://moisesvilar.github.io/images/cover-docker-volumes.jpg">
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "NewsArticle",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id":"https:\/\/moisesvilar.github.io\/"
+    },
+    "headline": "docker VII - volúmenes - Write some code!",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https:\/\/moisesvilar.github.io\/images\/cover-docker-volumes.jpg",
+      "height": 800,
+      "width": 800
+    },
+    "datePublished": "2017-02-11T18:51:00JST",
+    "dateModified": "2017-02-11T18:51:00JST",
+    "author": {
+      "@type": "Person",
+      "name": "Write some code!"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Write some code!",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https:\/\/moisesvilar.github.io\/images/logo.png",
+        "width": 600,
+        "height": 60
+      }
+    },
+    "description": "Trabajaremos con volúmenes para desacoplar la capa de datos de nuestros contenedores"
+  }
+</script>
+
+
+    <style>
+      html { font-size: 18px;}@media (max-width: 768px) { html { font-size: 15px; }}body { font-family: 'Noto Sans','Hiragino Kaku Gothic Pro',メイリオ,Meiryo,sans-serif; font-size: inherit; font-weight: 300; line-height: 1rem; background-color: #eceff1;}p { margin: 0;}a { color: #4caf50;}a:hover { text-decoration: none; color: #388e3c;}ul,ol { margin: 0; padding: 0;}h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: 700;}h1 { font-size: 1.8rem; line-height: 2rem; margin: 1.5rem 0; }h2 { font-size: 1.4rem; line-height: 2rem; margin: 1.5rem 0; }h3 { font-size: 1.2rem; line-height: 1.5rem; margin: 1.5rem 0; }h4, h5, h6 { font-size: 1rem; line-height: 1.5rem; margin: 1.5rem 0; }main { display: block;}.content-inner { padding: 1rem 2rem;}.content-inner.thin { padding: .5rem 1rem;}@media (max-width: 768px) { .content-inner { padding: 1rem; }}/* Override */.container { position: relative;}/* Parts:layouts */.l-header { background-color: #fff; margin-bottom: 1rem; padding: 1rem 0; text-align: center;}.l-footer { font-size: .8rem; padding: 1.5rem 0;}/* Parts:menu */.p-menu { position: absolute; right: 15px; top: 0;}/* Parts:terms */.p-terms { list-style: none;}.p-terms .terms-title { margin: 0;}.p-terms a { display: inline-block; padding: .25rem 0;}.p-terms.inline li { display: inline-block; font-size: .8rem;}.p-terms.inline li::after { content: ',';}.p-terms.inline li:last-child::after { content: '';}/* Parts:paging */.p-paging { margin-bottom: 1.5rem; text-align: center;}.p-paging a { display: inline-block; padding: 1rem 1.5rem; margin: 0 .5rem; background-color: #cfd8dc; color: #263238;}/* Parts:section */section { margin-bottom: 1.5rem;}section>header { font-size: .8rem; font-weight: 700; margin-bottom: .5rem; text-transform: uppercase;}section>header a { color: #333; text-decoration: underline;}section.article-footer { margin-bottom: 1rem;}section.article-footer>header { margin-bottom: 0;}/* Parts:share */.p-share { min-width: 100%; margin-bottom: 1.5rem;}.p-share .share-inner { display: table; table-layout: fixed; width: 100%; border-spacing: .25rem;}.p-share a { display: table-cell; text-align: center; font-weight: 700; font-size: .7rem; padding: .5rem 0; color: #fff; border-radius: 5px;}.p-share a.ht { background-color: #00a4de; border-bottom: 2px solid #0083b1; }.p-share a.fb { background-color: #3b5998; border-bottom: 2px solid #2f4779; }.p-share a.tw { background-color: #1da1f2; border-bottom: 2px solid #1780c1; }.p-share a.gp { background-color: #dd4b39; border-bottom: 2px solid #b03c2d; }.p-share a.ln { background-color: #00c300; border-bottom: 2px solid #009c00; }.p-share a.ht::before { content: 'Hatena'; }.p-share a.fb::before { content: 'Facebook'; }.p-share a.tw::before { content: 'Twitter'; }.p-share a.gp::before { content: 'Google+'; }.p-share a.ln::before { content: 'LINE'; }/* Parts:logo */.h-logo { font-family: 'Montserrat', sans-serif;}.p-logo { display: inline-block; text-transform: uppercase;}.p-logo a { display: inline-block; font-size: 1.4rem; line-height: 2rem; color: #000;}/* Parts:crumb */.p-crumb ol { list-style: none; margin-bottom: 1rem;}.p-crumb li { display: inline; margin-right: .25rem; font-size: .8rem; color: #607d8b;}.p-crumb li::after { content: '/'; margin-left: .25rem;}.p-crumb li:last-child::after { content: '';}/* Parts:facts */.p-facts { list-style: none; font-size: .8rem; margin-bottom: 1rem;}.p-facts li { display: inline-block; margin-right: .5rem; color: #90a4ae;}.p-facts li i { margin-right: .5rem; color: #cfd8dc;}/* Parts:article */article { background-color: #fff;}article .title { margin: 0; margin-bottom: .5rem; font-weight: 700;}article .title a { color: #000;}article .thumb { display: block; background-image: url(https://moisesvilar.github.io/images/default.jpg); background-position: center; background-size: cover;}article .summary { margin-bottom: .5rem; max-height: 5rem; overflow: hidden;}article.single .thumb { height: 18rem; margin-bottom: 1rem;}@media (max-width: 768px) { article.single .thumb { height: 12rem; }}article.li { margin-bottom: 1rem;}article.li .thumb { height: 7.5rem; margin-bottom: .5rem;}article.li.sm { background-color: transparent; margin-bottom: .5rem;}article.li.sm>header { padding: .5rem 0;}article.li.sm .title { font-size: .8rem; line-height: 1rem; margin-bottom: .25rem;}article.li.sm .p-facts { font-size: .6rem; margin-bottom: 0;}article.li.sm .thumb { float: left; margin-right: .5rem; height: 3rem; width: 3rem;}.article-body h2 { padding: 1rem 0; border-bottom: 2px solid #eceff1;}.article-body h2:first-child { margin-top: 0; }.article-body h3 { color: #428bca;}.article-body h4 { border-left: solid .25rem #428bca; padding: 0 .5rem;}.article-body p { margin: 1.5rem 0; line-height: 1.5rem;}.article-body a { text-decoration: underline;}.article-body ul,.article-body ol { padding-left: 1.5rem; line-height: 1.5rem;}.article-body code { display: inline-block; font-family: Menlo, consolas, monospace; font-size: .8rem; padding: 0 .5rem; line-height: 1.5rem;}.article-body pre { margin: 1.5rem 0; padding: 0; font-size: .8rem; border: none; border-radius: 0;}.article-body pre code { display: block; line-height: 1rem; padding: 1rem;}.article-body blockquote { margin: 1.5rem 0; padding: .5rem 1rem; font-size: 1rem; border-top: 1px solid #eceff1; border-bottom: 1px solid #eceff1; color: #607d8b;}.article-body blockquote p { margin: .5rem 0; line-height: 1.5rem;}.article-body em { font-style: italic;}.article-body strong { color: #03a9f4;}.article-body figure { margin: 1.5rem 0; }.article-body figure.left,.article-body figure.right { width: 15rem; height: 12rem; margin-top: 0;}.article-body figure.left { float: left; margin-right: 1rem; }.article-body figure.right { float: right; margin-left: 1rem; }@media (max-width: 768px) { .article-body figure.left, .article-body figure.right { float: none; margin: 0; width: auto; height: auto; }}.article-body figcaption { padding: .5rem 0; font-size: .8rem; text-align: center;}.article-body figcaption a { color: #263238;}li.tag-fa {	margin-right: 0;}.tags.list { margin-top: 10px; color: #388e3c; font-size: 14px;}img[src$='#small-image'] { max-width: 100px;}img[src$='#medium-image'] { max-width: 300px;}figure.w100 > img { width: 100%;}figure.w50 > img { width: 50%;}figcaption h4 { font-size: 1em; margin: 0; font-style: italic; border-left: solid transparent !important;}.previous-post { float: left;}.next-post { float: right;}
+      
+      
+    </style>
+  </head>
+
+  <body>
+    
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-89820131-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+    <header class="l-header">
+      <div class="container">
+        <div class="p-logo">
+          <a href="https://moisesvilar.github.io/" class="h-logo"><i class="fa fa-code"></i> Write some code!</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        
+<div class="row">
+  <div class="col-md-12">
+    <article class="single">
+
+  <a href="https://moisesvilar.github.io/post/docker-volumes-7/" class="thumb" style="background-image: url(https://moisesvilar.github.io/images/cover-docker-volumes.jpg);"></a>
+  <div class="content-inner">
+    <h1 class="title">docker VII - volúmenes</h1>
+
+    <ul class="p-facts">
+      <li>
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        <time datetime="2017-02-11T18:51:00JST">11/02/2017</time>
+      </li>
+      
+        <li>
+          <span class="tags list">
+            <i class="fa fa-bookmark"></i>
+            <a href="/etiquetas/docker">docker</a>
+          </span>
+        </li>
+      
+    </ul>
+	
+	<aside class="p-share">
+  <div class="share-inner">
+    <a href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-volumes-7%2f&t=docker%20VII%20-%20vol%c3%bamenes" title="Facebookでシェア" class="fb" target="_blank" rel="nofollow"></a>
+    <a href="http://twitter.com/intent/tweet?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-volumes-7%2f&text=docker%20VII%20-%20vol%c3%bamenes&tw_p=tweetbutton" title="Twitterでシェア" class="tw" target="_blank" rel="nofollow"></a>
+    <a href="https://plus.google.com/share?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-volumes-7%2f" title="Google Plusでシェア" class="gp" target="_blank" rel="nofollow"></a>
+  </div>
+</aside>
+
+	
+    <div class="article-body">
+
+<p>Como bien sabéis, si habéis estado atentos hasta ahora, Docker, para cada contenedor,
+crea una capa de lectura/escritura que es persistente mientras no destruyamos su contenedor.</p>
+
+<p><a href="/post/docker-5-environment/">En este artículo</a>, mientras montábamos nuestro
+entorno de desarrollo, este problema lo solventamos creando un volumen de datos, pero un
+volumen muy particular, porque montamos un directorio de nuestro equipo local anfitrión
+en un directorio concreto dentro de nuestro contenedor. Esto nos permitía ir implementando nuestro
+código (con nuestras herramientas, preferidas, nuestro IDE, haciendo TDD si así lo quisiéramos&hellip;)
+en nuestro equipo local y dichas modificaciones quedaban reflejadas automáticamente en el
+contenedor.</p>
+
+<p>Cuando quisimos pasar de esta <em>fase de desarrollo</em> a una publicación de nuestro proyecto
+en una fase posterior (preproducción o producción), vimos que este mecanismo no era válido
+y <a href="/post/docker-dockerfiles-6/">lo solventamos</a> añadiendo directamente el código
+de nuestro proyecto en el sistema de ficheros de la imagen (con el comando <code>ADD</code> de la especificación
+Dockerfile).</p>
+
+<p>Y esto realmente está muy bien, porque el código de nuestra aplicación <strong>no varía</strong> con el tiempo
+para una versión en concreta. Varía durante el desarrollo de una nueva versión. Una vez
+dicha versión esté implementada, creamos otra imagen añadiendo el nuevo código y lanzamos
+de nuevo el contenedor. Pan comido.</p>
+
+<p>¿Pero qué ocurre con las bases de datos? Si tenemos un contenedor con un motor de base de
+datos ejecutándose (un MongoDB, un PostgreSQL, un MariaDB&hellip;), <strong>sí que es susceptible de variar con el tiempo</strong>.
+Es decir, si hacemos una inserción en la base de datos, el contenedor estará escribiendo
+en su capa de lectura/escritura. Y esto es extrapolable a otros sistemas de almacenamiento,
+por ejemplo, si queremos guardar las imágenes que suben los usuarios a nuestra flamante
+aplicación web.</p>
+
+<p>Si por alguna razón el equipo anfitrión (nuestro servidor) <em>se va al carajo</em>&hellip;
+<strong>habremos perdido todos nuestros datos!!!</strong></p>
+
+<p>No tiene pinta de que éste sea un buen enfoque.</p>
+
+<p>En este artículo vamos a ampliar el concepto de volúmenes de datos para nuestros contenedores,
+de tal manera que sean persistentes incluso aunque eliminemos nuestros contenedores
+y sobre los que podamos aplicar técnicas de <em>backup &amp; restore</em> para que no nos pase como
+<a href="http://www.ticbeat.com/innovacion/startup-en-crisis-porque-un-empleado-borra-los-archivos-que-no-debia/">a los chicos de Gitlab</a></p>
+
+
+<figure class="text-center w50">
+    
+        <img src="https://lh3.googleusercontent.com/-FFiSpXrxayE/WJyRzEEjTxI/AAAAAAAAA6c/OKHfU0pO904mx0lKqU82o-mJ9z7if3nGgCL0B/h225/2017-02-09.gif" alt="Un sysadmin de gitlab.com, hasta los ***** de todo" />
+    
+    
+    <figcaption>
+        <h4>Un sysadmin de gitlab.com, hasta los ***** de todo (*)</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>(*)<em>Gracias a <a href="https://twitter.com/Camilo_46">Camilo</a> por el GIF!!!</em></p>
+
+<p><strong>Ready, steady&hellip; Go!</strong></p>
+
+<h1 id="un-volumen-para-una-imagen-de-mariadb">Un volumen para una imagen de MariaDB</h1>
+
+<p>Los volúmenes son directorios que están alojados <strong>fuera</strong> del sistema de ficheros de nuestros contenedores, haciéndolos
+<strong>independientes del ciclo de vida de los mismos</strong> y permitiendo <strong>reutilizarlos</strong> aunque los contenedores vinculados desaparezcan.</p>
+
+<p>Os dejo un enlace <a href="https://docs.docker.com/engine/tutorials/dockervolumes/">a la documentación oficial de Docker</a> donde explican
+todo esto, para que le echéis un vistazo.</p>
+
+<p>Allí, usan una imagen de PostgreSQL para sus ejemplos. Yo usaré una de MariaDB, por aquello de que veais otras opciones.</p>
+
+<p>No me voy a complicar la vida montando un entorno desde cero, como hicimos en el caso de nuestro entorno Alpine + Apache + PHP,
+sino que utilizaré <a href="https://hub.docker.com/_/mariadb/">la imagen oficial de MariaDB</a>.</p>
+
+<p>Si os fijáis en <a href="https://github.com/docker-library/mariadb/blob/b558f64b736650b94df9a90e68ff9e3bc03d4bdb/10.1/Dockerfile#L11">su Dockerfile</a>
+veréis que se basa en la imagen de Debian, y por ello pesa (comprimida) alrededor de 130MB, nada que ver con los irrisorios 2MB que pesaba
+nuestra imagen Alpine. Y no, por el momento no tenemos imagen oficial de MariaDB sobre Alpine. Son así de rancios.</p>
+
+<p>Fijaos en <a href="https://github.com/docker-library/mariadb/blob/b558f64b736650b94df9a90e68ff9e3bc03d4bdb/10.1/Dockerfile#L99">la línea 99</a>.
+¿Veis ese comando <code>VOLUME /var/lib/mysql</code>?</p>
+
+<p>Según <a href="https://docs.docker.com/engine/reference/builder/#/volume">la documentación</a>, esta línea crea un punto de montaje en el
+directorio <code>/var/lib/mysql</code> que es precisamente donde MariaDB va a almacenar los archivos de datos. A continuación, crea un
+volumen de datos externo al UFS y lo vincula a dicho punto de montaje. El resultado:
+<strong>todo lo que se intente escribir en dicho directorio no se hará en la capa de lectura/escritura manejada por el UFS, sino en el volumen asociado.</strong></p>
+
+<p>¿No me creéis? Personas de poca fe&hellip;</p>
+
+<p>Abrid un terminal y picad:</p>
+
+<pre><code>docker volume ls 
+</code></pre>
+
+<p>Este comando os listará todos los volúmenes creados en vuestro sistema. Inicialmente, debería de mostraros exactamente cero.</p>
+
+<p>Ahora lanzamos un contenedor de nombre <strong>strawberry_daiquiri</strong> usando la imagen oficial de MariaDB:</p>
+
+<pre><code>docker run --name strawberry_daiquiri -e MYSQL_ROOT_PASSWORD=secret -d mariadb
+</code></pre>
+
+<p>El parámetro <code>-e MYSQL_ROOT_PASSWORD=secret</code> establece una variable de entorno en nuestro contenedor, de clave
+<strong>MYSQL_ROOT_PASSWORD</strong> y de valor <strong>secret</strong>: el contenedor la usará inicialmente para establecer la contraseña
+del usuario <em>root</em> de nuestra base de datos (esto viene explicado en la misma descripción de la imagen mariadb).</p>
+
+<p>Tardará un poco en descargarse (132MB, ¿recordáis?) y veréis cómo inicia el proceso inicial de configuración
+de MariaDB. Tan pronto termine, volved a picar:</p>
+
+<pre><code>docker volume ls
+</code></pre>
+
+<p>¡Tendríais que tener un volumen creado!</p>
+
+<p>Fijaos en el número enorme que aparece sobre <strong>VOLUME NAME</strong>: es el nombre de nuestro volumen. Lo usaremos dentro de nada.</p>
+
+<p>Lo que vamos a hacer ahora es entrar en nuestro contenedor y modificar la base de datos:</p>
+
+<pre><code>&gt; docker exec -ti strawberry_daiquiri /bin/sh
+/ # mysql -u root -psecret
+MariaDB [(none)] &gt; CREATE DATABASE music;
+MariaDB [(none)] &gt; USE music;
+MariaDB [(music)] &gt; CREATE TABLE singers (id INT, name VARCHAR(64), PRIMARY KEY (id));
+MariaDB [(music)] &gt; INSERT INTO singers VALUES (1, 'Eddie Vedder');
+MariaDB [(music)] &gt; exit
+/ # exit
+</code></pre>
+
+<p>Resumiendo: hemos creado una nueva base de datos con una nueva tabla y hemos insertado un nuevo registro en ella.</p>
+
+<p>Ahora nos volvemos locos y nos cargamos el contenedor:</p>
+
+<pre><code>docker rm -f strawberry_daiquiri
+</code></pre>
+
+<p>Si volvemos a hacer un <code>docker volume ls</code> veremos que nuestro volumen sigue ahí.</p>
+
+<p>Bien. Ahora lancemos un nuevo contenedor <strong>pero indicándole explícitamente qué volumen queremos que vincule al directorio <code>/var/lib/mysql</code></strong>.
+Por supuesto, el comando será el viejo y bueno <code>docker run</code>, pero usando el parámetro <code>-v</code>, cuya sintaxis es:</p>
+
+<p><code>-v [NOMBRE DEL VOLUMEN]:[PATH AL DIRECTORIO DONDE QUEREMOS MONTAR EL VOLUMEN]</code></p>
+
+<p>Lo que tenemos que ejecutar es:</p>
+
+<pre><code>docker run --name strawberry_daiquiri -e MYSQL_ROOT_PASSWORD=secret -v 2a3c4b0abdbfba66185ed6a7c2b37b565768e3166128f6010abb2ab144440c06:/var/lib/mysql -d mariadb
+</code></pre>
+
+<p>El uso de este parámetro <code>-v</code> en el comando <code>docker run</code> invalida el comando <code>VOLUME</code> del Dockerfile que vimos antes,
+es decir, no crea un nuevo volumen de datos al iniciar el contenedor, sino que utiliza el que le hemos indicado.</p>
+
+<p>Si volvemos entrar en nuestro contenedor para comprobar que todo sigue como lo habíamos dejado&hellip;</p>
+
+<pre><code>&gt; docker exec -ti strawberry_daiquiri /bin/sh
+/ # mysql -u root -psecret
+MariaDB [(none)] &gt; USE music;
+MariaDB [(music)] &gt; SELECT * FROM singers;
+</code></pre>
+
+<p>¡Hey! ¡Ahí tenemos a nuestro buen amigo <a href="https://es.wikipedia.org/wiki/Eddie_Vedder">Eddie Vedder</a>!</p>
+
+
+<figure class="text-center w50">
+    
+        <img src="/images/docker-7-select.jpg" alt="Nuestra fila insertada sigue ahí" />
+    
+    
+    <figcaption>
+        <h4>Nuestra fila insertada sigue ahí</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>¿Convencidos ahora? <strong>Nos hemos cargado nuestro contenedor pero nuestros datos siguen intactos</strong>. Es más, también hemos comprobado
+que los volúmenes <strong>son reutilizables entre distintos contenedores</strong>.</p>
+
+<p>Esta sí es una aproximación interesante para contenedores de almacenamiento.</p>
+
+<blockquote>
+<p>Los volúmenes, además de ser persistentes y reutilizables, también pueden ser <strong>compartidos</strong> por varios contenedores.
+En un principio iba a realizar una introducción a esto, pero lo descarté. Y la razón es que, por el momento, Docker no resuelve
+el acceso compartido a un volumen entre varios contenedores. Es decir, si nuestras aplicaciones no resuelven en código el problema
+de acceso compartido (usando cerrojos, semáforos, monitores o lo que más rabia os dé), es muy probable que al final tengamos
+un buen puñado de <strong>datos corruptos</strong>. Mi consejo: por el momento, no utilicéis esta <em>posibilidad</em> que ofrece Docker.</p>
+</blockquote>
+
+<h1 id="bautizando-volúmenes">Bautizando volúmenes</h1>
+
+<p>Seguramente, ávidos lectores, os habréis dado cuenta que utilizar los nombres de volúmenes que nos genera Docker es de todo menos
+legible. Por ello es interesante bautizar a nuestros volúmenes.</p>
+
+<p>Primero tenemos que crear un volumen con el siguiente comando:</p>
+
+<pre><code>docker volume create --name mariadb-data
+</code></pre>
+
+<p>Con ello, habremos creado un volumen con el nombre <strong>mariadb-data</strong>.</p>
+
+<p>Para utilizarlo, se utiliza el comando <code>docker run</code> de nuevo con el parámetro <code>-v</code>:</p>
+
+<pre><code>docker run -d -p 3306:3306 -v mariadb-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secret mariadb
+</code></pre>
+
+<p>Con el anterior comando estamos lanzando un contenedor a partir de la imagen <strong>mariadb</strong>, en modo <strong>detached</strong>,
+estamos <strong>publicando</strong> el puerto 3306 del contenedor en el puerto 3306 de nuestro host, establecemos la
+<strong>variable de entorno</strong> <code>MYSQL_ROOT_PASSWORD</code> con la contraseña de <em>root</em> que queramos para nuestra base de datos,
+y estamos montando el volumen <strong>mariadb-data</strong> en el directorio <code>/var/lib/mysql</code>.</p>
+
+<p>A partir de aquí, todo funciona igual que en el caso anterior.</p>
+
+<blockquote>
+<p>Un apunte: al montar el volumen en el directorio <code>/var/lib/mysql</code> (tanto si optamos por Dockerfiles como si
+optamos por el comando <code>docker run</code> con el parámetro <code>-v</code>), si ya existen datos (ficheros, carpetas&hellip;) en dicho
+directorio, <strong>el montar el volumen encima no hace que desaparezcan</strong> sino que se trasladan al volumen.
+¡No tengáis miedo a montar volúmenes, que no os cargaréis nada de vuestros contenedores!</p>
+</blockquote>
+
+<h1 id="backup-restore">Backup &amp; Restore</h1>
+
+<p>Existe <a href="https://docs.docker.com/engine/reference/commandline/run/#mount-volumes-from-container---volumes-from">un parámetro</a>
+del comando <code>docker run</code> que nos permite <strong>montar los mismos volúmenes</strong> que está utilizando un contenedor en un contenedor nuevo.
+Dicho comando es <code>--volumes-from</code> y su sintaxis es la siguiente:</p>
+
+<p><code>--volumes-from [NOMBRE DEL CONTENEDOR]:[OPCIONES]</code></p>
+
+<p>Las opciones son dos:</p>
+
+<ul>
+<li><code>ro</code> (<em>read only</em>) si queremos que el nuevo contenedor tenga acceso de sólo lectura a los volúmenes del otro contenedor.</li>
+<li><code>rw</code> (<em>read write</em>) si queremos que el nuevo contenedor tenga acceso de lectura y escritura a los volúmenes del otro contenedor.</li>
+</ul>
+
+<p>Si no especificamos nada, el nuevo contenedor heredará el tipo de acceso del otro contenedor. Y si tampoco hemos especificado nada
+en el otro contenedor, entonces el modo por defecto siempre será <code>rw</code>.</p>
+
+<p>Sabiendo esto, la estrategia que propone la gente de Docker para realizar copias de seguridad de nuestros volúmenes de datos es
+bastante artesanal, pero también sencilla de entender, implementar y automatizar. Se basa en los siguientes pasos:</p>
+
+<ol>
+<li>Partimos de un contenedor con volúmenes montados de los que queremos realizar una copia de seguridad. En aras de una mejor explicación,
+bauticemos las cosas: llamemos a este contenedor <em>abraham_lincoln</em>.</li>
+<li>Escogemos una imagen de un sistema operativo en el que venga incluída alguna herramienta de compresión. Por ejemplo, Ubuntu con
+la aplicación tar.</li>
+<li>Lanzamos un nuevo contenedor (que llamaremos <em>benjamin_franklin</em>) a partir de dicha imagen, con las siguientes restricciones:
+
+<ul>
+<li>usará los mismos volúmenes que <em>abraham_lincoln</em> (esto lo especificaremos con el parámetro <code>--volumes-from</code>).</li>
+<li>montaremos un directorio de nuestra máquina anfitrión en un directorio específico del sistema de ficheros del contenedor, que llamaremos
+<em>directorio backup</em> (esto lo haremos como ya sabemos, a través del parámetro <code>-v</code>).</li>
+<li>el comando que ejecutará <em>benjamin_franklin</em> al ser lanzado será, precisamente, uno que comprima los directorios sobre los que se han
+montado los volúmenes de <em>abraham_lincoln</em> y que el resultado lo almacene en el <em>directorio backup</em>.</li>
+</ul></li>
+</ol>
+
+<p>Fijaos que:</p>
+
+<ul>
+<li>Al utilizar <code>--volumes-from</code>, <em>benjamin_franklin</em> tendrá los mismos directorios que los vinculados a los volúmenes de <em>abraham_lincoln</em>
+<strong>exactamente con el mismo contenido</strong>. Por lo tanto, al comprimir el contenido de dichos directorios dentro de <em>benjamin_franklin</em>, estamos
+comprimiendo el mismo contenido que posee <em>abraham_lincoln</em>.</li>
+<li>Al almacenar el resultado de la compresión en un directorio que está montado en la máquina anfitrión,
+<strong>tendremos dicho resultado ya disponible en la máquina anfitrión</strong>, por lo que el contenedor <em>morirá</em> pero nuestros archivos comprimidos
+estarán a salvo en nuestro equipo local.</li>
+</ul>
+
+<p>Es decir, al final lo que tenemos es un procedimiento por el cual comprimimos los datos de los volúmenes de <em>abraham_lincoln</em> y los almacenamos
+en nuestro equipo anfitrión. A partir de aquí, podemos hacer lo que queramos con ellos: moverlos a un disco externo, subirlos a un sistema
+de almacenamiento de terceros como <a href="https://aws.amazon.com/es/glacier/">Amazon Glacier</a> o jugarnos el pescuezo y dejarlos ahí mismo,
+en nuestro equipo anfitrión.</p>
+
+<p>Venga, que lo estáis pidiendo a gritos. ¡Vamos a por un ejemplo!</p>
+
+<p>Creamos el contenedor <em>abraham_lincoln</em> a partir de la imagen mariadb usando el volumen que habíamos llamado mariadb-data:</p>
+
+<pre><code>docker run -d --name abraham_lincoln -p 3306:3306 -v mariadb-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secret mariadb
+</code></pre>
+
+<p>Venticuatro horas y miles de inserciones después, lanzamos a <em>benjamin_franklin</em> para que haga el trabajo sucio:</p>
+
+<pre><code>docker run --rm --name benjamin_franklin --volumes-from abraham_lincoln -v /c/Users/moises/backups:/backup ubuntu tar cvf /backup/backup.tar /var/lib/mysql
+</code></pre>
+
+<blockquote>
+<p>El comando <code>--rm</code> fuerza la eliminación del contenedor una vez éste termina.</p>
+</blockquote>
+
+<p>En el directorio local <code>/c/Users/moises/backups</code> tendremos el archivo <code>backup.tar</code> con nuestra copia de seguridad de todas las bases de datos.</p>
+
+<p>Si ahora ocurre un desastre y tenemos que restaurar una copia de seguridad de nuestra base de datos, simplemente ejecutamos:</p>
+
+<pre><code>docker run --name bill_clinton --rm --volumes-from abraham_lincoln -v /c/Users/moises/backups:/backup ubuntu tar xvf /backup/backup.tar
+</code></pre>
+
+<p>Es decir, realizamos el proceso inverso: volvemos a lanzar un nuevo contenedor a partir de la imagen de ubuntu, que utilice los volúmenes de <em>abraham_lincoln</em>
+(para tener los directorios cuyo contenido queremos restaurar), que tenga montado en el directorio <em>backup</em> el directorio del equipo anfitrión donde tenemos
+la copia de seguridad, y que descomprima dicha copia de seguridad en los directorios de los volúmenes de <em>abraham_lincoln</em>.</p>
+
+<p>Por supuesto, todo esto no lo haríamos a mano, sino que tendríamos <em>scripts</em> que ejecutasen el proceso de <em>backups</em> de forma periódica y tendríamos nuestro <em>script</em>
+de restauración para que podamos ejecutarlo rápida y directamente.</p>
+
+<blockquote>
+<p>En mi (pequeña) experiencia con Docker, he visto que a veces va a ser necesario &ldquo;reiniciar&rdquo; el contenedor <em>abraham_lincoln</em> con <code>docker stop</code> seguido de un <code>docker start</code>
+para que el motor de base de datos vea los datos actualizados desde el volumen restaurado. Tenedlo en cuenta en vuestras pruebas.</p>
+</blockquote>
+
+<h1 id="eliminando-volúmenes">Eliminando volúmenes</h1>
+
+<p>Si finalmente queremos eliminar de manera definitiva nuestro volumen, simplemente tendremos que ejecutar el siguiente comando:</p>
+
+<pre><code>docker volume rm mariadb-container
+</code></pre>
+
+<h1 id="conclusiones">Conclusiones</h1>
+
+<p>Lo que hemos visto hoy:</p>
+
+<ol>
+<li>Cómo crear volúmenes de datos en nuestros Dockerfiles con la instrucción <code>VOLUME</code></li>
+<li>Como listar los volúmenes creados con el comando <code>docker volume ls</code></li>
+<li>Cómo crear volúmenes por línea de comandos con el comando <code>docker volume create</code></li>
+<li>Cómo vincular volúmenes a nuesros contenedores con el parámetro <code>-v</code> del comando <code>docker run</code></li>
+<li>Cómo establecer variables de entorno en nuestros contenedores con el parámetro <code>-e</code> del comando <code>docker run</code></li>
+<li>Cómo realizar un proceso de <em>backup &amp; restore</em> de nuestros volúmenes.</li>
+<li>Cómo eliminar definitivamente un volumen.</li>
+</ol>
+
+<p>Ahora es el momento de ponerse pragmáticos.</p>
+
+<p>Si bien el uso de Docker para la <em>parte estática</em> de nuestros proyectos (el código) suponía un buen número de
+ventajas (nos permitía montar entornos idénticos en las distintas fases: desarrollo, testing, preproducción, producción),
+¿el hecho de <em>dockerizar</em> bases de datos supone también una gran ventaja?</p>
+
+<p>Pues la respuesta es que no tanto.</p>
+
+<p>Al fin y al cabo, necesitamos un proceso de <em>backup &amp; restore</em> que sigue siendo demasiado artesanal, cuando otras
+alternativas <em>cloud</em> como <a href="https://cloud.google.com/sql/">Cloud SQL</a> de Google o <a href="https://aws.amazon.com/es/rds/">RDS</a>
+de Amazon nos ofrecen múltiples herramientas de Snapshot, copias de seguridad, restauración&hellip; muchísimo más potentes y
+sencillas de usar.</p>
+
+<p>Mi consejo: <em>dockerizad</em> bases de datos en la fase de desarrollo. Es una manera sencilla de independizar las bases de
+datos entre distintos miembros del equipo (compartir una base de datos en desarrollo
+<a href="https://www.troyhunt.com/unnecessary-evil-of-shared-development/">es una muy mala idea</a>), sin necesidad de
+tener que instalar un motor de base de datos en cada equipo (con el consiguiente consumo de recursos) y ahorrándote los
+posibles problemas derivados de que haya distintas versiones de los mismos motores en distintos equipos de desarrollo.</p>
+
+<p>Podéis <em>dockerizar</em> también las bases de datos de vuestros entornos de testing, sobre todo porque se adapta muy bien a la integración contínua.
+Tened un volumen creado <em>ad hoc</em> con vuestros datos de pruebas y cada vez que ejecutéis una batería de tests de integración realizad el siguiente
+proceso:</p>
+
+<ol>
+<li>Realizáis un <em>backup</em> del volumen.</li>
+<li>Lanzáis un contenedor de base de datos vinculado a dicho volumen.</li>
+<li>Ejecutáis el siguiente test.</li>
+<li>Restauráis el volumen con la <em>backup</em> del paso 1 para dejarlo en su estado inicial (porque cada test de integración debe ser idempotente, es decir,
+su estado no puede influir en el resultado de los posteriores test que ejecutéis)</li>
+<li>Volvéis a 3.</li>
+</ol>
+
+<p>Y esto, por supuesto, hacedlo de manera automática. Es decir, los pasos 1, 2 y 4 escribidlos en un script que pueda llamarse desde vuestro entorno
+de integración contínua.</p>
+
+<p>Ahora bien, en vuestros entornos de preproducción y producción, no hay ninguna ventaja aparente en usar Docker para las bases de datos. Usad un servicio cloud como los
+descritos antes. O vuestras propias máquinas si los requerimientos del proyecto así lo indican. Lo único en donde debéis tener cuidado es que las
+versiones de base de datos entre vuestros entornos <em>dockerizados</em> y los <em>no dockerizados</em> sean perfectamente compatibles entre sí, para evitar
+sorpresas de última hora.</p>
+
+<p>¡Por hoy nada más! La semana que viene (o quizás la siguiente más, porque a lo mejor no me da tiempo a preparar el artículo en siete días),
+usaremos todo lo aprendido hasta ahora para ver cómo montar un entorno completo perfectamente real, en lo que será el último artículo de Docker
+por el momento en Write Some Code!.</p>
+
+<p><strong>¡Nos vemos en nada!</strong></p>
+</div>
+  </div>
+
+  <footer class="article-footer">
+    <div class="content-inner clearfix">
+      
+        <a href="https://moisesvilar.github.io/post/docker-dockerfiles-6/" class="previous-post btn btn-info btn-lg">Anterior</a>
+      
+      
+    </div>
+  </footer>
+
+</article>
+
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'moisesvilar';
+    var disqus_identifier = 'https:\/\/moisesvilar.github.io\/post\/docker-volumes-7\/';
+    var disqus_title = 'docker VII - volúmenes';
+    var disqus_url = 'https:\/\/moisesvilar.github.io\/post\/docker-volumes-7\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  </div>
+</div>
+
+      </div>
+    </main>
+
+    <footer class="l-footer">
+      <div class="container">
+        <p>
+			<a href="" target="_blank" type="application/rss+xml"><i class="fa fa-rss-square"></i>&nbsp;RSS</a>&nbsp;
+			<a href="https://twitter.com/moisvilar" target="_blank"><i class="fa fa-twitter-square"></i>&nbsp;Twitter</a>&nbsp;
+			<a href="https://github.com/moisesvilar" target="_blank"><i class="fa fa-github-square"></i>&nbsp;Github</a>&nbsp;<br/>
+			&copy; Esta obra está bajo una <a target='_blank' rel='license' href='http://creativecommons.org/licenses/by/4.0/'>Licencia Creative Commons Atribución 4.0 Internacional</a>.<br/>
+			Powered by <a href="https://gohugo.io/">Hugo</a>.&nbsp;
+		</p>
+        <aside>
+          <p></p>
+        </aside>
+      </div>
+    </footer>
+
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+      $(document).ready(function() {
+        $('a:not([href^="https:\/\/moisesvilar.github.io\/"]):not([href^="#"]):not([href^="/"])').attr('target', '_blank');
+      });
+    </script>
+  </body>
+</html>
+
