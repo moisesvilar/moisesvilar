@@ -7,8 +7,147 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-ES</language>
     <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
-    <lastBuildDate>Sat, 11 Feb 2017 18:51:00 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 05 Apr 2017 19:18:55 +0200</lastBuildDate>
     <atom:link href="https://moisesvilar.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>docker VIII - en el mundo real</title>
+      <link>https://moisesvilar.github.io/post/docker-real-8/</link>
+      <pubDate>Wed, 05 Apr 2017 19:18:55 +0200</pubDate>
+      
+      <guid>https://moisesvilar.github.io/post/docker-real-8/</guid>
+      <description>
+
+&lt;p&gt;¡Llegamos al final de nuestra serie de Docker!&lt;/p&gt;
+
+&lt;p&gt;En este breve post de hoy voy a presentaros los entornos Docker con los que trabajamos en algunos nuestros proyectos reales.&lt;/p&gt;
+
+&lt;p&gt;Tenéis el código necesario en &lt;a href=&#34;https://github.com/moisesvilar/docker-viii.git&#34;&gt;este repositorio de Github&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Resumiendo:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Tenemos dos entornos: uno como &lt;em&gt;servidor de aplicaciones&lt;/em&gt; con Apache y PHP; otro para una base de datos MariaDB 5.5.&lt;/li&gt;
+&lt;li&gt;Ambos se basan en el sistema operativo CentOS 7. ¿Por qué? &lt;strong&gt;Porque nuestros entornos de &lt;em&gt;stage&lt;/em&gt; y &lt;em&gt;producción&lt;/em&gt; también están basados en CentOS 7&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&#34;apache-php&#34;&gt;Apache + PHP&lt;/h1&gt;
+
+&lt;p&gt;Si le echáis un vistazo a su &lt;a href=&#34;https://github.com/moisesvilar/docker-viii/blob/master/apache/Dockerfile&#34;&gt;Dockerfile&lt;/a&gt;,
+veréis que partimos de la imagen &lt;code&gt;centos:7&lt;/code&gt; y mediante un comando &lt;code&gt;RUN&lt;/code&gt; instalamos los binarios que necesitamos:
+1. El repositorio EPEL (necesario para instalar PHP en su versión 7).
+2. PHP 7.0.
+3. Las extensiones FPM, GD, Mcrypt, Mysql, devel, PEAR y Mbstring para PHP 7.0 (el código de nuestros proyectos hacen uso de ellas).
+4. Cosas de C: los compiladores gcc y gcc-c++, autoconf, automake y make
+5. Xdebug&lt;/p&gt;
+
+&lt;p&gt;Añadimos el archivo &lt;a href=&#34;https://github.com/moisesvilar/docker-viii/blob/master/apache/run-httpd.sh&#34;&gt;run-httpd.sh&lt;/a&gt;
+a la raíz de nuestro sistema de directorios de la imagen: éste va a ser el punto de inicio del contenedor,
+como veremos en un minuto.&lt;/p&gt;
+
+&lt;p&gt;Añadimos el archivo &lt;a href=&#34;https://github.com/moisesvilar/docker-viii/blob/master/apache/php.ini&#34;&gt;php.ini&lt;/a&gt;
+dentro del directorio &lt;code&gt;etc&lt;/code&gt; de nuestra imagen. Es decir, &lt;strong&gt;sobreescribimos&lt;/strong&gt; el &lt;code&gt;php.ini&lt;/code&gt; original directamente por el que tenemos
+en el repositorio. Esencialmente, este nuevo &lt;code&gt;php.ini&lt;/code&gt; lo que hace es activar las extensiones instaladas anteriormente.&lt;/p&gt;
+
+&lt;p&gt;Añadimos también el archivo &lt;a href=&#34;https://github.com/moisesvilar/docker-viii/blob/master/apache/httpd.conf&#34;&gt;httpd.conf&lt;/a&gt;
+dentro del directorio &lt;code&gt;/etc/httpd&lt;/code&gt;. Es decir, &lt;strong&gt;sobreescribimos&lt;/strong&gt; el &lt;code&gt;httpd.conf&lt;/code&gt; original directamente por el que tenemos en
+el repositorio. En esta nueva configuración tenemos cambiado el puerto de escucha al 80, activamos todas las directivas en los
+archivos &lt;code&gt;.htaccess&lt;/code&gt; y establecemos el manejador de archivos con extensión &lt;code&gt;php&lt;/code&gt; al motor PHP instalado.&lt;/p&gt;
+
+&lt;p&gt;Le damos permisos de ejecución al archivo &lt;code&gt;run-httpd.sh&lt;/code&gt; y por último lo ejecutamos.&lt;/p&gt;
+
+&lt;p&gt;Dicho script realiza tres tareas:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Primero, inserta al final del archivo &lt;code&gt;php.ini&lt;/code&gt; el contenido de una variable de entorno &lt;code&gt;XDEBUG_REMOTE_HOST&lt;/code&gt;, que contendrá la IP
+de nuestro host (lo veremos a continuación), como valor del parámetro &lt;code&gt;xdebug.remote_host&lt;/code&gt;. Es decir, le decimos a PHP que queremos depurar
+desde nuestra máquina anfitrión, como es evidente.&lt;/li&gt;
+&lt;li&gt;Elimina archivos temporales que pudiesen haber quedado de una ejecución anterior del contenedor y que evitan que &lt;code&gt;httpd&lt;/code&gt; (aka, Apache)
+casque horriblemente.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Ejecuta el servidor Apache en *foreground&lt;/strong&gt;*. ¿Por qué en Foreground? Repasad los artículos anteriores y si aún así os quedan dudas,
+&lt;strong&gt;disparad en los comentarios&lt;/strong&gt; :)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Con este Dockerfile hacemos uso del comando &lt;code&gt;docker build&lt;/code&gt; y creamos una imagen (llamémosla &lt;strong&gt;moisesvilar/apache&lt;/strong&gt;, por ejemplo).&lt;/p&gt;
+
+&lt;p&gt;Por último, ejecutamos nuestro contenedor con el siguiente comando:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 80:80 -v /c/Users/moisesvilar/projects:/var/www/html -e XDEBUG_REMOTE_HOST=&#39;192.168.51.87&#39; --name apache_container moisesvilar/apache
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;La IP &lt;em&gt;192.168.51.87&lt;/em&gt; es la dirección de mi máquina, donde tengo instalado mi IDE con la que realizar la depuración.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Sería la misma máquina anfitrión si utilizamos un entorno con soporte nativo de Docker o bien la máquina Windows si estamos utilizando la Docker Machine.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Dicha IP, evidentemente, es distinta para cada miembro del equipo de desarrollo. Por eso se la pasamos como una variable de entorno a la hora de ejecutar
+el contenedor, y no la establecemos directamente en el archivo &lt;code&gt;php.ini&lt;/code&gt;. Si lo hiciéramos así &lt;strong&gt;¡tendríamos que tener un Dockerfile para cada miembro del equipo!&lt;/strong&gt;
+y no serían reutilizables. ¿Lo vemos? Claro que sí. Sois gente más lista que yo :)&lt;/p&gt;
+
+&lt;h1 id=&#34;maria-db&#34;&gt;MARIA DB&lt;/h1&gt;
+
+&lt;p&gt;El &lt;a href=&#34;https://github.com/moisesvilar/docker-viii/blob/master/mariadb/Dockerfile&#34;&gt;Dockerfile&lt;/a&gt; del contenedor MariaDB parece más complicado de lo que parece.&lt;/p&gt;
+
+&lt;p&gt;Pero en resumen lo que hace es:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Parte de la imagen &lt;code&gt;centos:7&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Instala los paquetes necesarios para el servidor MariaDB&lt;/li&gt;
+&lt;li&gt;Copia en la imagen y ejecuta el archivo &lt;a href=&#34;https://github.com/moisesvilar/docker-viii/blob/master/mariadb/fix-permissions.sh&#34;&gt;fix-permissions.sh&lt;/a&gt;, que es un script
+que otorga permisos de escritura y ejecución a los archivos que se le pasan como parámetro.&lt;/li&gt;
+&lt;li&gt;Copia en la imagen y establece como punto de entrada el script &lt;code&gt;docker-entrypoint.sh&lt;/code&gt;, que lo que hace es ejecutar las instrucciones necesarias para inicializar
+la base de datos en función de los valores de unas variables de entorno, de las cuales nos centraremos sólo en una: &lt;code&gt;MYSQL_ROOT_PASSWORD&lt;/code&gt;, que contendrá la contraseña
+del usuario &lt;strong&gt;root&lt;/strong&gt; de la base de datos.&lt;/li&gt;
+&lt;li&gt;Monta un volumen de datos en el directorio &lt;code&gt;/var/lib/mysql&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Expone el puerto 3306&lt;/li&gt;
+&lt;li&gt;Ejecuta el comando &lt;code&gt;mysqld_safe&lt;/code&gt;, que recogerá el punto de entrada fijado en el script &lt;code&gt;docker-entrypoint.sh&lt;/code&gt; e inicializará la base de datos.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;De nuevo, ejecutamos un &lt;code&gt;docker build&lt;/code&gt; y creamos una imagen, por ejemplo, &lt;strong&gt;moisesvilar/mariadb&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;A continuación, lanzamos nuestro contenedor:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Ultrasecretpassword --name mariadb_container moisesvilar/mariadb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Como vemos, establecemos la contraseña de &lt;strong&gt;root&lt;/strong&gt; en la variable de entorno &lt;code&gt;MYSQL_ROOT_PASSWORD&lt;/code&gt; en el mismo comando &lt;code&gt;docker run&lt;/code&gt;. De esta manera,
+cada miembro del equipo puede tener la contraseña de &lt;strong&gt;root&lt;/strong&gt; que ellos consideren dejando el archivo Dockerfile totalmente reutilizable.&lt;/p&gt;
+
+&lt;h1 id=&#34;siguientes-pasos&#34;&gt;Siguientes pasos&lt;/h1&gt;
+
+&lt;p&gt;Como veis, nuestros entornos de desarrollo están enteramente basados en Docker. Esto nos da como ventaja el poder replicar entornos en distintos equipos
+de una manera ultrarápida y eficaz, además de tener la seguridad de que todos y cada uno de nosotros estamos desarrollando sobre el mismo entorno &lt;strong&gt;exactamente&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Y cuando digo &lt;em&gt;exactamente&lt;/em&gt; es exactamente: todos los bits, uno a uno (o cero a cero), son exactamente iguales entre mis imágenes Docker y las de cualquier otro miembro
+del equipo. Si estoy programando con &lt;a href=&#34;https://twitter.com/Nach_CaLa&#34;&gt;@Nach_CaLa&lt;/a&gt; en el mismo proyecto, cada uno con su entorno Docker, &lt;strong&gt;ambos tenemos la seguridad
+de que si funciona en mi entorno, también va a funcionar en el del otro&lt;/strong&gt;. Y eso, amigos míos, ayuda mucho a dormir bien por las noches.&lt;/p&gt;
+
+&lt;p&gt;Nuestros siguientes pasos en la adopción de Docker pasan por montar un entorno de integración contínua, de tal manera que al actualizar el código de nuestro repositorio
+central (Gitlab, Github, Bitbucket o el que más rabia o dé), se construya automáticamente una imagen de Docker con dicho código en su sistema de directorios, que se
+despliegue automáticamente tanto en los entornos de &lt;em&gt;staging&lt;/em&gt; como &lt;em&gt;production&lt;/em&gt; (o &lt;em&gt;testing&lt;/em&gt; o los que tengáis).&lt;/p&gt;
+
+&lt;p&gt;Y con este paso se cerraría el círculo: ya no sólo tendríamos la seguridad de que todos los miembros del equipo trabajan sobre el mismo entorno, sino que &lt;strong&gt;el código
+en producción se está ejecutando exactamente (uno a uno y cero a cero) en el mismo entorno que fue desarrollado&lt;/strong&gt;. Y con esto, niños, no es que ayude a dormir bien. Es que
+roncas a pierna suelta :)&lt;/p&gt;
+
+&lt;h1 id=&#34;conclusiones&#34;&gt;Conclusiones&lt;/h1&gt;
+
+&lt;p&gt;¡Terminamos Docker!&lt;/p&gt;
+
+&lt;p&gt;Hemos visto un montón de cosas pero hay muchas más que nos quedan en el tintero.&lt;/p&gt;
+
+&lt;p&gt;Mi próximo hito en este tema es ver &lt;a href=&#34;https://kubernetes.io/&#34;&gt;Kubernetes&lt;/a&gt; como plataforma de orquestación de contenedores Docker. Tan pronto lo tenga aprendido, controlado,
+experimentado e interiorizado, pasaré por aquí a dejaros mis impresiones, por supuesto.&lt;/p&gt;
+
+&lt;p&gt;Mientras tanto, para la semana que viene cambiaremos de tercio.&lt;/p&gt;
+
+&lt;p&gt;Voy a continuar con un par de posts un poco más concretos: cómo implementar sistemas de autenticación segura. Primero, de una manera algo más &lt;em&gt;&amp;ldquo;artesanal&amp;rdquo;&lt;/em&gt; pero
+perfectamente válida, y después empleando tokens &lt;a href=&#34;https://jwt.io/&#34;&gt;JWT&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Nos vemos en 7 días (¡prometido!).&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>docker VII - volúmenes</title>

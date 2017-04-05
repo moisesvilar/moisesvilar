@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="pinterest" content="nopin">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="theme-color" content="#263238">
+
+<meta name="generator" content="Hugo 0.18.1" />
+
+<link rel="apple-touch-icon" href="https://moisesvilar.github.io/images/logo.png">
+
+<link rel="canonical" href="https://moisesvilar.github.io/post/docker-real-8/">
+
+
+    
+    <link href="//fonts.googleapis.com/css?family=Noto+Sans:400,700|Montserrat" rel="stylesheet">
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    
+    <title>docker VIII - en el mundo real - Write some code!</title>
+    
+<meta name="description" content="Entornos Docker en el mundo real">
+
+<meta property="og:title" content="docker VIII - en el mundo real - Write some code!">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://moisesvilar.github.io/post/docker-real-8/">
+<meta property="og:image" content="https://moisesvilar.github.io/images/cover-docker-real.jpg">
+<meta property="og:site_name" content="Write some code!">
+<meta property="og:description" content="Entornos Docker en el mundo real">
+<meta property="og:locale" content="ja_JP">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="Write some code!">
+<meta name="twitter:url" content="https://moisesvilar.github.io/post/docker-real-8/">
+<meta name="twitter:title" content="docker VIII - en el mundo real - Write some code!">
+<meta name="twitter:description" content="Entornos Docker en el mundo real">
+<meta name="twitter:image" content="https://moisesvilar.github.io/images/cover-docker-real.jpg">
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "NewsArticle",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id":"https:\/\/moisesvilar.github.io\/"
+    },
+    "headline": "docker VIII - en el mundo real - Write some code!",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https:\/\/moisesvilar.github.io\/images\/cover-docker-real.jpg",
+      "height": 800,
+      "width": 800
+    },
+    "datePublished": "2017-04-05T19:18:55JST",
+    "dateModified": "2017-04-05T19:18:55JST",
+    "author": {
+      "@type": "Person",
+      "name": "Write some code!"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Write some code!",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https:\/\/moisesvilar.github.io\/images/logo.png",
+        "width": 600,
+        "height": 60
+      }
+    },
+    "description": "Entornos Docker en el mundo real"
+  }
+</script>
+
+
+    <style>
+      html { font-size: 18px;}@media (max-width: 768px) { html { font-size: 15px; }}body { font-family: 'Noto Sans','Hiragino Kaku Gothic Pro',メイリオ,Meiryo,sans-serif; font-size: inherit; font-weight: 300; line-height: 1rem; background-color: #eceff1;}p { margin: 0;}a { color: #4caf50;}a:hover { text-decoration: none; color: #388e3c;}ul,ol { margin: 0; padding: 0;}h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: 700;}h1 { font-size: 1.8rem; line-height: 2rem; margin: 1.5rem 0; }h2 { font-size: 1.4rem; line-height: 2rem; margin: 1.5rem 0; }h3 { font-size: 1.2rem; line-height: 1.5rem; margin: 1.5rem 0; }h4, h5, h6 { font-size: 1rem; line-height: 1.5rem; margin: 1.5rem 0; }main { display: block;}.content-inner { padding: 1rem 2rem;}.content-inner.thin { padding: .5rem 1rem;}@media (max-width: 768px) { .content-inner { padding: 1rem; }}/* Override */.container { position: relative;}/* Parts:layouts */.l-header { background-color: #fff; margin-bottom: 1rem; padding: 1rem 0; text-align: center;}.l-footer { font-size: .8rem; padding: 1.5rem 0;}/* Parts:menu */.p-menu { position: absolute; right: 15px; top: 0;}/* Parts:terms */.p-terms { list-style: none;}.p-terms .terms-title { margin: 0;}.p-terms a { display: inline-block; padding: .25rem 0;}.p-terms.inline li { display: inline-block; font-size: .8rem;}.p-terms.inline li::after { content: ',';}.p-terms.inline li:last-child::after { content: '';}/* Parts:paging */.p-paging { margin-bottom: 1.5rem; text-align: center;}.p-paging a { display: inline-block; padding: 1rem 1.5rem; margin: 0 .5rem; background-color: #cfd8dc; color: #263238;}/* Parts:section */section { margin-bottom: 1.5rem;}section>header { font-size: .8rem; font-weight: 700; margin-bottom: .5rem; text-transform: uppercase;}section>header a { color: #333; text-decoration: underline;}section.article-footer { margin-bottom: 1rem;}section.article-footer>header { margin-bottom: 0;}/* Parts:share */.p-share { min-width: 100%; margin-bottom: 1.5rem;}.p-share .share-inner { display: table; table-layout: fixed; width: 100%; border-spacing: .25rem;}.p-share a { display: table-cell; text-align: center; font-weight: 700; font-size: .7rem; padding: .5rem 0; color: #fff; border-radius: 5px;}.p-share a.ht { background-color: #00a4de; border-bottom: 2px solid #0083b1; }.p-share a.fb { background-color: #3b5998; border-bottom: 2px solid #2f4779; }.p-share a.tw { background-color: #1da1f2; border-bottom: 2px solid #1780c1; }.p-share a.gp { background-color: #dd4b39; border-bottom: 2px solid #b03c2d; }.p-share a.ln { background-color: #00c300; border-bottom: 2px solid #009c00; }.p-share a.ht::before { content: 'Hatena'; }.p-share a.fb::before { content: 'Facebook'; }.p-share a.tw::before { content: 'Twitter'; }.p-share a.gp::before { content: 'Google+'; }.p-share a.ln::before { content: 'LINE'; }/* Parts:logo */.h-logo { font-family: 'Montserrat', sans-serif;}.p-logo { display: inline-block; text-transform: uppercase;}.p-logo a { display: inline-block; font-size: 1.4rem; line-height: 2rem; color: #000;}/* Parts:crumb */.p-crumb ol { list-style: none; margin-bottom: 1rem;}.p-crumb li { display: inline; margin-right: .25rem; font-size: .8rem; color: #607d8b;}.p-crumb li::after { content: '/'; margin-left: .25rem;}.p-crumb li:last-child::after { content: '';}/* Parts:facts */.p-facts { list-style: none; font-size: .8rem; margin-bottom: 1rem;}.p-facts li { display: inline-block; margin-right: .5rem; color: #90a4ae;}.p-facts li i { margin-right: .5rem; color: #cfd8dc;}/* Parts:article */article { background-color: #fff;}article .title { margin: 0; margin-bottom: .5rem; font-weight: 700;}article .title a { color: #000;}article .thumb { display: block; background-image: url(https://moisesvilar.github.io/images/default.jpg); background-position: center; background-size: cover;}article .summary { margin-bottom: .5rem; max-height: 5rem; overflow: hidden;}article.single .thumb { height: 18rem; margin-bottom: 1rem;}@media (max-width: 768px) { article.single .thumb { height: 12rem; }}article.li { margin-bottom: 1rem;}article.li .thumb { height: 7.5rem; margin-bottom: .5rem;}article.li.sm { background-color: transparent; margin-bottom: .5rem;}article.li.sm>header { padding: .5rem 0;}article.li.sm .title { font-size: .8rem; line-height: 1rem; margin-bottom: .25rem;}article.li.sm .p-facts { font-size: .6rem; margin-bottom: 0;}article.li.sm .thumb { float: left; margin-right: .5rem; height: 3rem; width: 3rem;}.article-body h2 { padding: 1rem 0; border-bottom: 2px solid #eceff1;}.article-body h2:first-child { margin-top: 0; }.article-body h3 { color: #428bca;}.article-body h4 { border-left: solid .25rem #428bca; padding: 0 .5rem;}.article-body p { margin: 1.5rem 0; line-height: 1.5rem;}.article-body a { text-decoration: underline;}.article-body ul,.article-body ol { padding-left: 1.5rem; line-height: 1.5rem;}.article-body code { display: inline-block; font-family: Menlo, consolas, monospace; font-size: .8rem; padding: 0 .5rem; line-height: 1.5rem;}.article-body pre { margin: 1.5rem 0; padding: 0; font-size: .8rem; border: none; border-radius: 0;}.article-body pre code { display: block; line-height: 1rem; padding: 1rem;}.article-body blockquote { margin: 1.5rem 0; padding: .5rem 1rem; font-size: 1rem; border-top: 1px solid #eceff1; border-bottom: 1px solid #eceff1; color: #607d8b;}.article-body blockquote p { margin: .5rem 0; line-height: 1.5rem;}.article-body em { font-style: italic;}.article-body strong { color: #03a9f4;}.article-body figure { margin: 1.5rem 0; }.article-body figure.left,.article-body figure.right { width: 15rem; height: 12rem; margin-top: 0;}.article-body figure.left { float: left; margin-right: 1rem; }.article-body figure.right { float: right; margin-left: 1rem; }@media (max-width: 768px) { .article-body figure.left, .article-body figure.right { float: none; margin: 0; width: auto; height: auto; }}.article-body figcaption { padding: .5rem 0; font-size: .8rem; text-align: center;}.article-body figcaption a { color: #263238;}li.tag-fa {	margin-right: 0;}.tags.list { margin-top: 10px; color: #388e3c; font-size: 14px;}img[src$='#small-image'] { max-width: 100px;}img[src$='#medium-image'] { max-width: 300px;}figure.w100 > img { width: 100%;}figure.w50 > img { width: 50%;}figcaption h4 { font-size: 1em; margin: 0; font-style: italic; border-left: solid transparent !important;}.previous-post { float: left;}.next-post { float: right;}
+      
+      
+    </style>
+  </head>
+
+  <body>
+    
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-89820131-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+    <header class="l-header">
+      <div class="container">
+        <div class="p-logo">
+          <a href="https://moisesvilar.github.io/" class="h-logo"><i class="fa fa-code"></i> Write some code!</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        
+<div class="row">
+  <div class="col-md-12">
+    <article class="single">
+
+  <a href="https://moisesvilar.github.io/post/docker-real-8/" class="thumb" style="background-image: url(https://moisesvilar.github.io/images/cover-docker-real.jpg);"></a>
+  <div class="content-inner">
+    <h1 class="title">docker VIII - en el mundo real</h1>
+
+    <ul class="p-facts">
+      <li>
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        <time datetime="2017-04-05T19:18:55JST">05/04/2017</time>
+      </li>
+      
+        <li>
+          <span class="tags list">
+            <i class="fa fa-bookmark"></i>
+            <a href="/etiquetas/docker">docker</a>
+          </span>
+        </li>
+      
+    </ul>
+	
+	<aside class="p-share">
+  <div class="share-inner">
+    <a href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-real-8%2f&t=docker%20VIII%20-%20en%20el%20mundo%20real" title="Facebookでシェア" class="fb" target="_blank" rel="nofollow"></a>
+    <a href="http://twitter.com/intent/tweet?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-real-8%2f&text=docker%20VIII%20-%20en%20el%20mundo%20real&tw_p=tweetbutton" title="Twitterでシェア" class="tw" target="_blank" rel="nofollow"></a>
+    <a href="https://plus.google.com/share?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fdocker-real-8%2f" title="Google Plusでシェア" class="gp" target="_blank" rel="nofollow"></a>
+  </div>
+</aside>
+
+	
+    <div class="article-body">
+
+<p>¡Llegamos al final de nuestra serie de Docker!</p>
+
+<p>En este breve post de hoy voy a presentaros los entornos Docker con los que trabajamos en algunos nuestros proyectos reales.</p>
+
+<p>Tenéis el código necesario en <a href="https://github.com/moisesvilar/docker-viii.git">este repositorio de Github</a>.</p>
+
+<p>Resumiendo:</p>
+
+<ol>
+<li>Tenemos dos entornos: uno como <em>servidor de aplicaciones</em> con Apache y PHP; otro para una base de datos MariaDB 5.5.</li>
+<li>Ambos se basan en el sistema operativo CentOS 7. ¿Por qué? <strong>Porque nuestros entornos de <em>stage</em> y <em>producción</em> también están basados en CentOS 7</strong>.</li>
+</ol>
+
+<h1 id="apache-php">Apache + PHP</h1>
+
+<p>Si le echáis un vistazo a su <a href="https://github.com/moisesvilar/docker-viii/blob/master/apache/Dockerfile">Dockerfile</a>,
+veréis que partimos de la imagen <code>centos:7</code> y mediante un comando <code>RUN</code> instalamos los binarios que necesitamos:
+1. El repositorio EPEL (necesario para instalar PHP en su versión 7).
+2. PHP 7.0.
+3. Las extensiones FPM, GD, Mcrypt, Mysql, devel, PEAR y Mbstring para PHP 7.0 (el código de nuestros proyectos hacen uso de ellas).
+4. Cosas de C: los compiladores gcc y gcc-c++, autoconf, automake y make
+5. Xdebug</p>
+
+<p>Añadimos el archivo <a href="https://github.com/moisesvilar/docker-viii/blob/master/apache/run-httpd.sh">run-httpd.sh</a>
+a la raíz de nuestro sistema de directorios de la imagen: éste va a ser el punto de inicio del contenedor,
+como veremos en un minuto.</p>
+
+<p>Añadimos el archivo <a href="https://github.com/moisesvilar/docker-viii/blob/master/apache/php.ini">php.ini</a>
+dentro del directorio <code>etc</code> de nuestra imagen. Es decir, <strong>sobreescribimos</strong> el <code>php.ini</code> original directamente por el que tenemos
+en el repositorio. Esencialmente, este nuevo <code>php.ini</code> lo que hace es activar las extensiones instaladas anteriormente.</p>
+
+<p>Añadimos también el archivo <a href="https://github.com/moisesvilar/docker-viii/blob/master/apache/httpd.conf">httpd.conf</a>
+dentro del directorio <code>/etc/httpd</code>. Es decir, <strong>sobreescribimos</strong> el <code>httpd.conf</code> original directamente por el que tenemos en
+el repositorio. En esta nueva configuración tenemos cambiado el puerto de escucha al 80, activamos todas las directivas en los
+archivos <code>.htaccess</code> y establecemos el manejador de archivos con extensión <code>php</code> al motor PHP instalado.</p>
+
+<p>Le damos permisos de ejecución al archivo <code>run-httpd.sh</code> y por último lo ejecutamos.</p>
+
+<p>Dicho script realiza tres tareas:</p>
+
+<ol>
+<li>Primero, inserta al final del archivo <code>php.ini</code> el contenido de una variable de entorno <code>XDEBUG_REMOTE_HOST</code>, que contendrá la IP
+de nuestro host (lo veremos a continuación), como valor del parámetro <code>xdebug.remote_host</code>. Es decir, le decimos a PHP que queremos depurar
+desde nuestra máquina anfitrión, como es evidente.</li>
+<li>Elimina archivos temporales que pudiesen haber quedado de una ejecución anterior del contenedor y que evitan que <code>httpd</code> (aka, Apache)
+casque horriblemente.</li>
+<li><strong>Ejecuta el servidor Apache en *foreground</strong>*. ¿Por qué en Foreground? Repasad los artículos anteriores y si aún así os quedan dudas,
+<strong>disparad en los comentarios</strong> :)</li>
+</ol>
+
+<p>Con este Dockerfile hacemos uso del comando <code>docker build</code> y creamos una imagen (llamémosla <strong>moisesvilar/apache</strong>, por ejemplo).</p>
+
+<p>Por último, ejecutamos nuestro contenedor con el siguiente comando:</p>
+
+<pre><code>docker run -d -p 80:80 -v /c/Users/moisesvilar/projects:/var/www/html -e XDEBUG_REMOTE_HOST='192.168.51.87' --name apache_container moisesvilar/apache
+</code></pre>
+
+<p>La IP <em>192.168.51.87</em> es la dirección de mi máquina, donde tengo instalado mi IDE con la que realizar la depuración.</p>
+
+<blockquote>
+<p>Sería la misma máquina anfitrión si utilizamos un entorno con soporte nativo de Docker o bien la máquina Windows si estamos utilizando la Docker Machine.</p>
+</blockquote>
+
+<p>Dicha IP, evidentemente, es distinta para cada miembro del equipo de desarrollo. Por eso se la pasamos como una variable de entorno a la hora de ejecutar
+el contenedor, y no la establecemos directamente en el archivo <code>php.ini</code>. Si lo hiciéramos así <strong>¡tendríamos que tener un Dockerfile para cada miembro del equipo!</strong>
+y no serían reutilizables. ¿Lo vemos? Claro que sí. Sois gente más lista que yo :)</p>
+
+<h1 id="maria-db">MARIA DB</h1>
+
+<p>El <a href="https://github.com/moisesvilar/docker-viii/blob/master/mariadb/Dockerfile">Dockerfile</a> del contenedor MariaDB parece más complicado de lo que parece.</p>
+
+<p>Pero en resumen lo que hace es:</p>
+
+<ol>
+<li>Parte de la imagen <code>centos:7</code></li>
+<li>Instala los paquetes necesarios para el servidor MariaDB</li>
+<li>Copia en la imagen y ejecuta el archivo <a href="https://github.com/moisesvilar/docker-viii/blob/master/mariadb/fix-permissions.sh">fix-permissions.sh</a>, que es un script
+que otorga permisos de escritura y ejecución a los archivos que se le pasan como parámetro.</li>
+<li>Copia en la imagen y establece como punto de entrada el script <code>docker-entrypoint.sh</code>, que lo que hace es ejecutar las instrucciones necesarias para inicializar
+la base de datos en función de los valores de unas variables de entorno, de las cuales nos centraremos sólo en una: <code>MYSQL_ROOT_PASSWORD</code>, que contendrá la contraseña
+del usuario <strong>root</strong> de la base de datos.</li>
+<li>Monta un volumen de datos en el directorio <code>/var/lib/mysql</code></li>
+<li>Expone el puerto 3306</li>
+<li>Ejecuta el comando <code>mysqld_safe</code>, que recogerá el punto de entrada fijado en el script <code>docker-entrypoint.sh</code> e inicializará la base de datos.</li>
+</ol>
+
+<p>De nuevo, ejecutamos un <code>docker build</code> y creamos una imagen, por ejemplo, <strong>moisesvilar/mariadb</strong>.</p>
+
+<p>A continuación, lanzamos nuestro contenedor:</p>
+
+<pre><code>docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Ultrasecretpassword --name mariadb_container moisesvilar/mariadb
+</code></pre>
+
+<p>Como vemos, establecemos la contraseña de <strong>root</strong> en la variable de entorno <code>MYSQL_ROOT_PASSWORD</code> en el mismo comando <code>docker run</code>. De esta manera,
+cada miembro del equipo puede tener la contraseña de <strong>root</strong> que ellos consideren dejando el archivo Dockerfile totalmente reutilizable.</p>
+
+<h1 id="siguientes-pasos">Siguientes pasos</h1>
+
+<p>Como veis, nuestros entornos de desarrollo están enteramente basados en Docker. Esto nos da como ventaja el poder replicar entornos en distintos equipos
+de una manera ultrarápida y eficaz, además de tener la seguridad de que todos y cada uno de nosotros estamos desarrollando sobre el mismo entorno <strong>exactamente</strong>.</p>
+
+<p>Y cuando digo <em>exactamente</em> es exactamente: todos los bits, uno a uno (o cero a cero), son exactamente iguales entre mis imágenes Docker y las de cualquier otro miembro
+del equipo. Si estoy programando con <a href="https://twitter.com/Nach_CaLa">@Nach_CaLa</a> en el mismo proyecto, cada uno con su entorno Docker, <strong>ambos tenemos la seguridad
+de que si funciona en mi entorno, también va a funcionar en el del otro</strong>. Y eso, amigos míos, ayuda mucho a dormir bien por las noches.</p>
+
+<p>Nuestros siguientes pasos en la adopción de Docker pasan por montar un entorno de integración contínua, de tal manera que al actualizar el código de nuestro repositorio
+central (Gitlab, Github, Bitbucket o el que más rabia o dé), se construya automáticamente una imagen de Docker con dicho código en su sistema de directorios, que se
+despliegue automáticamente tanto en los entornos de <em>staging</em> como <em>production</em> (o <em>testing</em> o los que tengáis).</p>
+
+<p>Y con este paso se cerraría el círculo: ya no sólo tendríamos la seguridad de que todos los miembros del equipo trabajan sobre el mismo entorno, sino que <strong>el código
+en producción se está ejecutando exactamente (uno a uno y cero a cero) en el mismo entorno que fue desarrollado</strong>. Y con esto, niños, no es que ayude a dormir bien. Es que
+roncas a pierna suelta :)</p>
+
+<h1 id="conclusiones">Conclusiones</h1>
+
+<p>¡Terminamos Docker!</p>
+
+<p>Hemos visto un montón de cosas pero hay muchas más que nos quedan en el tintero.</p>
+
+<p>Mi próximo hito en este tema es ver <a href="https://kubernetes.io/">Kubernetes</a> como plataforma de orquestación de contenedores Docker. Tan pronto lo tenga aprendido, controlado,
+experimentado e interiorizado, pasaré por aquí a dejaros mis impresiones, por supuesto.</p>
+
+<p>Mientras tanto, para la semana que viene cambiaremos de tercio.</p>
+
+<p>Voy a continuar con un par de posts un poco más concretos: cómo implementar sistemas de autenticación segura. Primero, de una manera algo más <em>&ldquo;artesanal&rdquo;</em> pero
+perfectamente válida, y después empleando tokens <a href="https://jwt.io/">JWT</a>.</p>
+
+<p>Nos vemos en 7 días (¡prometido!).</p>
+</div>
+  </div>
+
+  <footer class="article-footer">
+    <div class="content-inner clearfix">
+      
+        <a href="https://moisesvilar.github.io/post/docker-volumes-7/" class="previous-post btn btn-info btn-lg">Anterior</a>
+      
+      
+    </div>
+  </footer>
+
+</article>
+
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'moisesvilar';
+    var disqus_identifier = 'https:\/\/moisesvilar.github.io\/post\/docker-real-8\/';
+    var disqus_title = 'docker VIII - en el mundo real';
+    var disqus_url = 'https:\/\/moisesvilar.github.io\/post\/docker-real-8\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  </div>
+</div>
+
+      </div>
+    </main>
+
+    <footer class="l-footer">
+      <div class="container">
+        <p>
+			<a href="" target="_blank" type="application/rss+xml"><i class="fa fa-rss-square"></i>&nbsp;RSS</a>&nbsp;
+			<a href="https://twitter.com/moisvilar" target="_blank"><i class="fa fa-twitter-square"></i>&nbsp;Twitter</a>&nbsp;
+			<a href="https://github.com/moisesvilar" target="_blank"><i class="fa fa-github-square"></i>&nbsp;Github</a>&nbsp;<br/>
+			&copy; Esta obra está bajo una <a target='_blank' rel='license' href='http://creativecommons.org/licenses/by/4.0/'>Licencia Creative Commons Atribución 4.0 Internacional</a>.<br/>
+			Powered by <a href="https://gohugo.io/">Hugo</a>.&nbsp;
+		</p>
+        <aside>
+          <p></p>
+        </aside>
+      </div>
+    </footer>
+
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+      $(document).ready(function() {
+        $('a:not([href^="https:\/\/moisesvilar.github.io\/"]):not([href^="#"]):not([href^="/"])').attr('target', '_blank');
+      });
+    </script>
+  </body>
+</html>
+
