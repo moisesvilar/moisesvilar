@@ -7,8 +7,58 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-ES</language>
     <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
-    <lastBuildDate>Wed, 05 Apr 2017 19:18:55 +0200</lastBuildDate>
+    <lastBuildDate>Sat, 08 Apr 2017 15:47:56 +0200</lastBuildDate>
     <atom:link href="https://moisesvilar.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Hasta pronto, Tecalis</title>
+      <link>https://moisesvilar.github.io/post/personal-tecalis/</link>
+      <pubDate>Sat, 08 Apr 2017 15:47:56 +0200</pubDate>
+      
+      <guid>https://moisesvilar.github.io/post/personal-tecalis/</guid>
+      <description>&lt;p&gt;Después de 2 años y 4 meses, es el momento de hacer un pequeño paréntesis en mi etapa en Tecalis.&lt;/p&gt;
+
+&lt;p&gt;Ayer, mis compañeros me hicieron una emotiva fiesta sorpresa de &lt;em&gt;&amp;ldquo;despedida&amp;rdquo;&lt;/em&gt; en la que me he emocionado profundamente.&lt;/p&gt;
+
+&lt;p&gt;Me gustaría dar las gracias en este pequeño posts a todas las magníficas personas que componen Tecalis:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;A los dos pilares de la empresa, Alberto e Isidoro. Gracias por la oportunidad y por la confianza. El gran valor de Tecalis
+es el trato humano. Y los grandes artífices de ello, sois vosotros. Los mejores jefes que he tenido nunca. Gracias por todo.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;A los chicos de marketing y ventas: Martín, Leticia y Berta. Un placer haber podido dar una visión &lt;em&gt;técnica&lt;/em&gt; en vuestras operaciones
+comerciales. Sois grandísimos profesionales y gran parte del éxito de Tecalis en los últimos años es gracias a vosotros.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;A mis chicos del departamento de desarrollo: Jose María, Ignacio, Dani, Souto y el más reciente, Juan. Gracias por vuestras palabras
+durante la fiesta sorpresa del viernes. &lt;em&gt;Gracias por todo lo que nos has enseñado&lt;/em&gt; me dijistéis. Me las llevaré conmigo para siempre. Gracias
+también a vosotros, porque he aprendido mucho a vuestro lado. El crecimiento que habéis tenido en los últimos meses ha sido espectacular
+y todavía tenéis mucho más recorrido por delante.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;A los chicos de Dexga: Camilo, César y Rafa. Seguid alegrando las mañanas con vuestras discusiones de &lt;em&gt;matrimonio&lt;/em&gt;. Una de las mejores decisiones
+de Tecalis en los últimos meses ha sido meter en las mismas cuatro paredes a ambos equipos de desarrollo, el de Tecalis y el de Dexga. Y ha sido un éxito
+por vosotros, por vuestro carisma y por vuestra simpatía.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Sabéis que durante este paréntesis estoy disponible para cualquier duda, problema, cuestión&amp;hellip; que me queráis plantear. Sabéis también que al menos un día
+a la semana estaremos en contacto para ver cómo va todo por ahí. Y sabéis que mi email, mi Twitter e incluso este blog está a vuestra entera disposición para
+lo que necesitéis.&lt;/p&gt;
+
+&lt;p&gt;Y recordad, amigos: Docker o plomo ;)
+
+&lt;figure class=&#34;text-center w100&#34;&gt;
+    
+        &lt;img src=&#34;https://moisesvilar.github.io/images/docker-o-plomo.jpeg&#34; alt=&#34;Docker o plomo&#34; /&gt;
+    
+    
+    &lt;figcaption&gt;
+        &lt;h4&gt;Docker o plomo&lt;/h4&gt;
+        
+    &lt;/figcaption&gt;
+    
+&lt;/figure&gt;
+&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>docker VIII - en el mundo real</title>
