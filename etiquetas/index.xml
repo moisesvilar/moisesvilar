@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Etiquetas on Write some code!</title>
+    <link>https://moisesvilar.github.io/etiquetas/</link>
+    <description>Recent content in Etiquetas on Write some code!</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>es-ES</language>
+    <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
+    <lastBuildDate>Wed, 05 Apr 2017 19:18:55 +0200</lastBuildDate>
+    
+	<atom:link href="https://moisesvilar.github.io/etiquetas/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Docker</title>
+      <link>https://moisesvilar.github.io/etiquetas/docker/</link>
+      <pubDate>Wed, 05 Apr 2017 19:18:55 +0200</pubDate>
+      
+      <guid>https://moisesvilar.github.io/etiquetas/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Personal</title>
+      <link>https://moisesvilar.github.io/etiquetas/personal/</link>
+      <pubDate>Sat, 08 Apr 2017 15:47:56 +0200</pubDate>
+      
+      <guid>https://moisesvilar.github.io/etiquetas/personal/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
