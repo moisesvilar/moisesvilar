@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="pinterest" content="nopin">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<meta name="theme-color" content="#263238">
+
+<meta name="generator" content="Hugo 0.20.2" />
+
+<link rel="apple-touch-icon" href="https://moisesvilar.github.io/images/logo.png">
+
+
+<link rel="canonical" href="https://moisesvilar.github.io/post/auth-intro/">
+
+
+    
+    <link href="//fonts.googleapis.com/css?family=Noto+Sans:400,700|Montserrat" rel="stylesheet">
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/solarized_dark.min.css">
+    
+    <title>Autenticación simple y segura para una API - Write some code!</title>
+    
+<meta name="description" content="No hace falta complicarse demasiado la vida para obtener autenticación segura en tus APIs REST">
+
+<meta property="og:title" content="Autenticación simple y segura para una API - Write some code!">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://moisesvilar.github.io/post/auth-intro/">
+<meta property="og:image" content="https://moisesvilar.github.io/images/cover-auth-1.jpeg">
+<meta property="og:site_name" content="Write some code!">
+<meta property="og:description" content="No hace falta complicarse demasiado la vida para obtener autenticación segura en tus APIs REST">
+<meta property="og:locale" content="ja_JP">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="Write some code!">
+<meta name="twitter:url" content="https://moisesvilar.github.io/post/auth-intro/">
+<meta name="twitter:title" content="Autenticación simple y segura para una API - Write some code!">
+<meta name="twitter:description" content="No hace falta complicarse demasiado la vida para obtener autenticación segura en tus APIs REST">
+<meta name="twitter:image" content="https://moisesvilar.github.io/images/cover-auth-1.jpeg">
+
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "NewsArticle",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id":"https://moisesvilar.github.io/"
+    },
+    "headline": "Autenticación simple y segura para una API - Write some code!",
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://moisesvilar.github.io/images/cover-auth-1.jpeg",
+      "height": 800,
+      "width": 800
+    },
+    "datePublished": "2017-05-11T15:47:56JST",
+    "dateModified": "2017-05-11T15:47:56JST",
+    "author": {
+      "@type": "Person",
+      "name": "Write some code!"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Write some code!",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://moisesvilar.github.io/images/logo.png",
+        "width": 600,
+        "height": 60
+      }
+    },
+    "description": "No hace falta complicarse demasiado la vida para obtener autenticación segura en tus APIs REST"
+  }
+</script>
+
+
+    <style>
+      html { font-size: 18px;}@media (max-width: 768px) { html { font-size: 15px; }}body { font-family: 'Noto Sans','Hiragino Kaku Gothic Pro',メイリオ,Meiryo,sans-serif; font-size: inherit; font-weight: 300; line-height: 1rem; background-color: #eceff1;}p { margin: 0;}a { color: #4caf50;}a:hover { text-decoration: none; color: #388e3c;}ul,ol { margin: 0; padding: 0;}h1, h2, h3, h4, h5, h6 { margin: 0; font-weight: 700;}h1 { font-size: 1.8rem; line-height: 2rem; margin: 1.5rem 0; }h2 { font-size: 1.4rem; line-height: 2rem; margin: 1.5rem 0; }h3 { font-size: 1.2rem; line-height: 1.5rem; margin: 1.5rem 0; }h4, h5, h6 { font-size: 1rem; line-height: 1.5rem; margin: 1.5rem 0; }main { display: block;}.content-inner { padding: 1rem 2rem;}.content-inner.thin { padding: .5rem 1rem;}@media (max-width: 768px) { .content-inner { padding: 1rem; }}/* Override */.container { position: relative;}/* Parts:layouts */.l-header { background-color: #fff; margin-bottom: 1rem; padding: 1rem 0; text-align: center;}.l-footer { font-size: .8rem; padding: 1.5rem 0;}/* Parts:menu */.p-menu { position: absolute; right: 15px; top: 0;}/* Parts:terms */.p-terms { list-style: none;}.p-terms .terms-title { margin: 0;}.p-terms a { display: inline-block; padding: .25rem 0;}.p-terms.inline li { display: inline-block; font-size: .8rem;}.p-terms.inline li::after { content: ',';}.p-terms.inline li:last-child::after { content: '';}/* Parts:paging */.p-paging { margin-bottom: 1.5rem; text-align: center;}.p-paging a { display: inline-block; padding: 1rem 1.5rem; margin: 0 .5rem; background-color: #cfd8dc; color: #263238;}/* Parts:section */section { margin-bottom: 1.5rem;}section>header { font-size: .8rem; font-weight: 700; margin-bottom: .5rem; text-transform: uppercase;}section>header a { color: #333; text-decoration: underline;}section.article-footer { margin-bottom: 1rem;}section.article-footer>header { margin-bottom: 0;}/* Parts:share */.p-share { min-width: 100%; margin-bottom: 1.5rem;}.p-share .share-inner { display: table; table-layout: fixed; width: 100%; border-spacing: .25rem;}.p-share a { display: table-cell; text-align: center; font-weight: 700; font-size: .7rem; padding: .5rem 0; color: #fff; border-radius: 5px;}.p-share a.ht { background-color: #00a4de; border-bottom: 2px solid #0083b1; }.p-share a.fb { background-color: #3b5998; border-bottom: 2px solid #2f4779; }.p-share a.tw { background-color: #1da1f2; border-bottom: 2px solid #1780c1; }.p-share a.gp { background-color: #dd4b39; border-bottom: 2px solid #b03c2d; }.p-share a.ln { background-color: #00c300; border-bottom: 2px solid #009c00; }.p-share a.ht::before { content: 'Hatena'; }.p-share a.fb::before { content: 'Facebook'; }.p-share a.tw::before { content: 'Twitter'; }.p-share a.gp::before { content: 'Google+'; }.p-share a.ln::before { content: 'LINE'; }/* Parts:logo */.h-logo { font-family: 'Montserrat', sans-serif;}.p-logo { display: inline-block; text-transform: uppercase;}.p-logo a { display: inline-block; font-size: 1.4rem; line-height: 2rem; color: #000;}/* Parts:crumb */.p-crumb ol { list-style: none; margin-bottom: 1rem;}.p-crumb li { display: inline; margin-right: .25rem; font-size: .8rem; color: #607d8b;}.p-crumb li::after { content: '/'; margin-left: .25rem;}.p-crumb li:last-child::after { content: '';}/* Parts:facts */.p-facts { list-style: none; font-size: .8rem; margin-bottom: 1rem;}.p-facts li { display: inline-block; margin-right: .5rem; color: #90a4ae;}.p-facts li i { margin-right: .5rem; color: #cfd8dc;}/* Parts:article */article { background-color: #fff;}article .title { margin: 0; margin-bottom: .5rem; font-weight: 700;}article .title a { color: #000;}article .thumb { display: block; background-image: url(https://moisesvilar.github.io/images/default.jpg); background-position: center; background-size: cover;}article .summary { margin-bottom: .5rem; max-height: 5rem; overflow: hidden;}article.single .thumb { height: 18rem; margin-bottom: 1rem;}@media (max-width: 768px) { article.single .thumb { height: 12rem; }}article.li { margin-bottom: 1rem;}article.li .thumb { height: 7.5rem; margin-bottom: .5rem;}article.li.sm { background-color: transparent; margin-bottom: .5rem;}article.li.sm>header { padding: .5rem 0;}article.li.sm .title { font-size: .8rem; line-height: 1rem; margin-bottom: .25rem;}article.li.sm .p-facts { font-size: .6rem; margin-bottom: 0;}article.li.sm .thumb { float: left; margin-right: .5rem; height: 3rem; width: 3rem;}.article-body h2 { padding: 1rem 0; border-bottom: 2px solid #eceff1;}.article-body h2:first-child { margin-top: 0; }.article-body h3 { color: #428bca;}.article-body h4 { border-left: solid .25rem #428bca; padding: 0 .5rem;}.article-body p { margin: 1.5rem 0; line-height: 1.5rem;}.article-body a { text-decoration: underline;}.article-body ul,.article-body ol { padding-left: 1.5rem; line-height: 1.5rem;}.article-body code { display: inline-block; font-family: Menlo, consolas, monospace; font-size: .8rem; padding: 0 .5rem; line-height: 1.5rem;}.article-body pre { margin: 1.5rem 0; padding: 0; font-size: .8rem; border: none; border-radius: 0;}.article-body pre code { display: block; line-height: 1rem; padding: 1rem;}.article-body blockquote { margin: 1.5rem 0;  padding: .5rem 1rem; font-size: 1rem; border-top: 1px solid #eceff1; border-bottom: 1px solid #eceff1; color: #607d8b;}.article-body blockquote p { margin: .5rem 0; line-height: 1.5rem;}.article-body em { font-style: italic;}.article-body strong { color: #03a9f4;}.article-body figure {  margin: 1.5rem 0; }.article-body figure.left,.article-body figure.right { width: 15rem; height: 12rem; margin-top: 0;}.article-body figure.left { float: left; margin-right: 1rem; }.article-body figure.right { float: right; margin-left: 1rem; }@media (max-width: 768px) { .article-body figure.left, .article-body figure.right { float: none; margin: 0; width: auto; height: auto; }}.article-body figcaption { padding: .5rem 0; font-size: .8rem; text-align: center;}.article-body figcaption a { color: #263238;}li.tag-fa {	margin-right: 0;}.tags.list { margin-top: 10px; color: #388e3c; font-size: 14px;}img[src$='#small-image'] { max-width: 100px;}img[src$='#medium-image'] { max-width: 300px;}figure.w100 > img { width: 100%;}figure.w50 > img { width: 50%;}figcaption h4 { font-size: 1em; margin: 0; font-style: italic; border-left: solid transparent !important;}.previous-post { float: left;}.next-post { float: right;}
+      
+      
+    </style>
+  </head>
+
+  <body>
+    
+    
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-89820131-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+    
+
+    <header class="l-header">
+      <div class="container">
+        <div class="p-logo">
+          <a href="https://moisesvilar.github.io/" class="h-logo"><i class="fa fa-code"></i> Write some code!</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        
+<div class="row">
+  <div class="col-md-12">
+    <article class="single">
+
+  <a href="https://moisesvilar.github.io/post/auth-intro/" class="thumb" style="background-image: url(https://moisesvilar.github.io/images/cover-auth-1.jpeg);"></a>
+  <div class="content-inner">
+    <h1 class="title">Autenticación simple y segura para una API</h1>
+
+    <ul class="p-facts">
+      <li>
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        <time datetime="2017-05-11T15:47:56JST">11/05/2017</time>
+      </li>
+      
+        <li>
+          <span class="tags list">
+            <i class="fa fa-bookmark"></i>
+            <a href="/etiquetas/autenticaci%C3%B3n">autenticación</a>, <a href="/etiquetas/seguridad">seguridad</a>
+          </span>
+        </li>
+      
+    </ul>
+	
+	<aside class="p-share">
+  <div class="share-inner">
+    <a href="http://www.facebook.com/sharer.php?u=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fauth-intro%2f&t=Autenticaci%c3%b3n%20simple%20y%20segura%20para%20una%20API" title="Facebookでシェア" class="fb" target="_blank" rel="nofollow"></a>
+    <a href="http://twitter.com/intent/tweet?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fauth-intro%2f&text=Autenticaci%c3%b3n%20simple%20y%20segura%20para%20una%20API&tw_p=tweetbutton" title="Twitterでシェア" class="tw" target="_blank" rel="nofollow"></a>
+    <a href="https://plus.google.com/share?url=https%3a%2f%2fmoisesvilar.github.io%2fpost%2fauth-intro%2f" title="Google Plusでシェア" class="gp" target="_blank" rel="nofollow"></a>
+  </div>
+</aside>
+
+	
+    <div class="article-body">
+
+<p>Si no has estado viviendo en un templo budista tibetano durante los últimos años
+seguramente has tenido que implementar alguna vez una API REST que de servicio
+a una aplicación (web, móvil o lo que sea).</p>
+
+<p>O por lo menos, una aproximación bastarda a lo que idealmente sería una API REST.</p>
+
+<p>Con este artículo no quiero entrar en la definición de una &ldquo;buena API REST&rdquo;.
+Quizás en otro momento.</p>
+
+<p>Pero sí quiero hacer hincapié en un aspecto importante y muchas veces ignorado,
+bien sea para una API REST perfectamente diseñada o para la pequeña <del>chapuza</del>,
+<del>aborto</del>, implementación rápida y flexible que has tenido que realizar en algún
+momento: la autenticación de usuarios que acceden a la misma.</p>
+
+<p>Aquí, como para muchas otras cosas, tenemos enfoques para todos los gustos y colores.
+Iremos estudiándolas una a una.</p>
+
+<p>Pero la conclusión rápida que quiero que saquéis es que <strong>no es difícil hacer una
+API REST mínimamente rigurosa en lo que a autenticación se refiere</strong>. ¡Por lo que tenéis
+excusa para hacer las cosas bien!</p>
+
+<p>Así que, <strong>¡vamos a ello!</strong></p>
+
+<h1 id="principios-básicos-de-autenticación">Principios básicos de autenticación</h1>
+
+<p>La autenticación intenta responder a la siguiente pregunta:</p>
+
+<p><strong><em>¿Puedo estar seguro de que la entidad que me habla es realmente quien dice ser?</em></strong></p>
+
+<p>Escena típica de película: el prota tiene que colarse en la guarida del malo. Para ello,
+llama a la puerta y debe responder correctamente a la pregunta secreta. Como es el prota, sabe la respuesta correcta,
+entra tranquilamente y desbarata los planes de su archienemigo. Si no fuese así, recibiría
+un tiro en la cara y la película habría finalizado.</p>
+
+<p>Éste es el escenario más simple: ambos interlocutores conocen una contraseña compartida
+(la <strong>clave privada</strong>) que los autentifica mútuamente. La propiedad principal de dicha clave
+es también su mayor debilidad: debe ser <strong>secreta</strong>. Efectivamente, si alguna otra persona
+conoce la clave privada, <strong>no hay manera de diferenciarla de un interlocutor autenticado</strong>.</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/auth-private-key.jpg" alt="Autenticación con clave simétrica y posible robo de la misma" />
+    
+    
+    <figcaption>
+        <h4>Autenticación con clave simétrica y posible robo de la misma</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Por lo tanto, los grandes retos a los que se enfrentan los esquemas que optan por este enfoque son:</p>
+
+<ol>
+<li>¿Cómo los interlocutores se ponen de acuerdo para establecer su clave privada?</li>
+<li>¿Cómo se comunican la clave privada entre ellos en el proceso de autenticación?</li>
+</ol>
+
+<p>Como respuesta a la primera pregunta, surgen algoritmos como el de <a href="https://es.wikipedia.org/wiki/Diffie-Hellman">Diffie-Hellman</a>,
+que están fuera del alcance de este post.</p>
+
+<p>Y como respuesta a la segunda pregunta, la regla de oro es sencilla: <strong>nunca digas
+la clave en alto</strong>. Traducido a lenguaje informático significa que nunca
+envíes tu clave en claro (es decir, sin encriptar). Y para ello, surgen muchos
+escenarios que veremos en la siguiente sección.</p>
+
+<p>Otro enfoque es el de <strong>clave asimétrica</strong>. En este escenario, cada interlocutor posee
+un par de claves: <strong>una pública y otra privada</strong>.</p>
+
+<p>La pública la conoce todo el mundo. La privada sólo la conoce él.</p>
+
+<p>La clave pública y privada poseen estas dos propiedades:</p>
+
+<ol>
+<li>Un mensaje cifrado con la clave pública sólo podrá ser descifrado con la clave privada.</li>
+<li>Un mensaje cifrado con la clave privada sólo podrá ser descifrado con la clave pública.</li>
+</ol>
+
+<p>La primera es la base de los sistemas de encriptación que utilizan este enfoque: si Alice
+le quiere enviar un mensaje a Bob <strong>y asegurarse de qué sólo Bob lo lea</strong> simplemente lo
+tiene que encriptar con la clave pública de Bob.</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/auth-public-private-key.jpg" alt="Encriptación con clave asimétrica e interceptación del mensaje cifrado" />
+    
+    
+    <figcaption>
+        <h4>Encriptación con clave asimétrica e interceptación del mensaje cifrado</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>En cambio, la segunda es la base de los sistemas de autenticación que utilizan este enfoque. Alice envía un mensaje a Bob y <em>lo firma</em>, es decir, lo encripta empleando su clave privada. A continuación envía ambos a Bob, tanto el mensaje original como el mensaje encriptado (su firma). Para asegurarse de que ha sido Alice quién ha escrito el mensaje, lo único que tiene que hacer Bob es desencriptar la firma con la clave pública de Alice y compararlo con el mensaje original para comprobar que son exactamente iguales.</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/auth-public-private-key-sign.jpg" alt="Autenticación con clave asimétrica y verificación" />
+    
+    
+    <figcaption>
+        <h4>Autenticación con clave asimétrica y verificación</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>Si alguien intercepta el mensaje de Alice e intenta encriptarlo con la clave pública de Alice (la única disponible para todo el mundo), el resultado de la desencriptación (es decir, la firma) será diferente al mensaje original y Bob sabrá que no ha sido Alice quien lo ha enviado.</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/auth-public-private-key-sign-interception.jpg" alt="Interceptación de mensaje firmado con clave asimétrica y fallo en la verificación" />
+    
+    
+    <figcaption>
+        <h4>Interceptación de mensaje firmado con clave asimétrica y fallo en la verificación</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<blockquote>
+<p>Si os fijais, ya podéis ver un pequeño problema en este enfoque. Si el atacante consigue obtener ambos, tanto el mensaje original como su firma, y los envía tal cual a Bob, éste no podrá diferenciar si el mensaje lo ha escrito Alice o no. Para evitar esto, debemos añadir cierta <em>aleatoriedad</em> a la firma, como veremos más adelante.</p>
+</blockquote>
+
+<p>Los retos de este enfoque se centran en cómo validar que la clave pública que tengo
+realmente es la de Alice y no la de cualquier otro. Aquí surgen cosas como PKG, los
+certificados digitales y toda una fauna y flora que seguramente más de una vez nos habrán dado algún dolor de muelas.</p>
+
+<p>No nos meteremos en ese mundo. Como promete la descripción de este post, nosotros no vamos a complicarnos
+la vida para implementar seguridad en nuestra API.</p>
+
+<p>Para mantenernos en la sencillez, supondremos que todos nuestros usuarios poseen una clave privada, una contraseña que sólo ellos conocen. A su vez, también poseen un nombre de usuario, o una <strong>API key</strong> que hará las veces de <em>clave pública</em>. ¡Ah! Y que utilicemos protocolos seguros para la comunicación extremo a extremo, como por ejemplo, <strong>HTTPS</strong>.</p>
+
+<p>Partiendo de estos supuestos, veamos a continuación las diferentes leyes que debe cumplir nuestra API para cumplir con un mínimo de seguridad.</p>
+
+<h1 id="primera-ley-la-clave-privada-sólo-la-conoce-el-usuario">Primera ley: la clave privada sólo la conoce el usuario</h1>
+
+<p>Esta frase, que puede parecer simple de entender, a menudo es vapuleada a las primeras de cambio.</p>
+
+<p>Nuestro sistema nunca, nunca, <strong>nunca</strong> debe conocer la contraseña del usuario.</p>
+
+<p>Esto significa que <strong>nunca almacenaremos la contraseña en claro</strong>. Todas las fugas de contraseñas de sistemas aparentemente seguros han tenido éxito porque algún desaprensivo ha almacenado dichas contraseñas <em>tal cual</em> y se ha quedado tan ancho.</p>
+
+<p>Para ello, se utilizan las archiconocidas <a href="https://es.wikipedia.org/wiki/Funci%C3%B3n_hash">funciones hash</a>. Son funciones de encriptación que poseen dos propiedades interesantes:</p>
+
+<ol>
+<li><strong>No es invertible</strong>. Es decir, no puedo recuperar el mensaje original a partir del mensaje cifrado.</li>
+<li><strong>Es muy difícil que dos mensajes encriptados den el mismo resultado</strong>. Por lo que (casi) podemos asegurar que dos resultados de una función hash distintos pertenecen a mensajes originales distintos.</li>
+</ol>
+
+<p>Por lo tanto, son funciones idóneas para nuestra casuística: no almacenemos la contraseña en claro, <strong>sino el resultado de aplicarle alguna función <em>hash</em> a la misma</strong>. De esta manera, nadie podría recuperar la contraseña original (porque no es una función invertible) y además dos <em>hash</em> distintos nos indican, casi con toda probabilidad, dos contraseñas distintas.</p>
+
+<blockquote>
+<p>Por ejemplo, el resultado de aplicar la función hash SHA-256 a la contraseña <em>MyAwesomeS3cReT</em> es 2c3ce6087b5810f20c6aae1dc666c8a63557d33a7b38854779e8181f91a40239</p>
+</blockquote>
+
+<p>En realidad, cuanto menor sea la probabilidad de que dos aplicaciones de una función <em>hash</em> den el mismo resultado, mayor será la <strong>resistencia a colisiones</strong> de dicha función <em>hash</em>.</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Category:Broken_hash_functions">Hay funciones <em>hash</em> que están &ldquo;rotas&rdquo;</a>, es decir, se han descubierto algoritmos que permiten obtener el mensaje original en un número de pasos notablemente inferior a los necesarios si optásemos por la fuerza bruta.</p>
+
+<p>Por supuesto, cuanto peor sea la calidad de la contraseña, más conocida será el resultado de cualquier función hash que utilicemos. Es más, para estas contraseñas simples una simple búsqueda en Google nos ofrecerá centenares de páginas web donde introduces el <em>hash</em> y te devuelve la contraseña original. Usan lo que se conoce como <a href="https://es.wikipedia.org/wiki/Tabla_arco%C3%ADris">Rainbow Tables</a></p>
+
+<p>Unificando todo:</p>
+
+<ol>
+<li>No almacenes tus contraseñas en claro, <strong>aplícales primero una funcion hash</strong>.</li>
+<li><strong>No utilices funciones hash rotas</strong> como SHA-1 o MD5. Emplea SHA-256, que es el niño bonito de las funciones <em>hash</em> en la actualidad.</li>
+<li>En la medida de lo posible, <strong>intenta que las contraseñas sean fuertes</strong>. Si las especifica el usuario, oblígales que tengan una longitud mínima, o que usen mayúsculas, minísculas, números, caracteres especiales etc. En cambio, si las genera el sistema, es más fácil que éstas cumplan esas premisas, pero tampoco te pases, no vaya ser que ni siquiera tus usuarios las recuerden. Aquí tendrás que buscar una solución de compromiso: usabilidad frente a seguridad.</li>
+</ol>
+
+<blockquote>
+<p>Y recuerda, aunque sea tu sistema el que genere las contraseñas de tus usuarios, <strong>aplícales una función <em>hash</em> antes de almacenarlas!!</strong>.</p>
+</blockquote>
+
+<h1 id="segunda-ley-la-clave-privada-sólo-la-conoce-el-usuario">Segunda ley: ¡la clave privada sólo la conoce el usuario!</h1>
+
+<p>¡Sí, otra vez! No me he equivocado.</p>
+
+<p>Y es que esta frase no sólo implica que no almacenemos la contraseña en claro.</p>
+
+<p>Sino que tampoco <strong>nunca la transmitamos en claro</strong>.</p>
+
+<p>Y ahora es cuando todos hemos tropezado en esta piedra: <em>enviamos el hash de la contraseña y asunto arreglado&hellip; ¿verdad? ¡¿VERDAD?!</em>.</p>
+
+<p>Pues no.</p>
+
+<p>Hacer esto, queridos niños, es a todos los efectos <strong>lo mismo que enviar la contraseña en claro</strong>.</p>
+
+<p>Me explico.</p>
+
+<p>Mi contraseña es <em>MyAwesomeS3cReT</em>, uso SHA-256 como función de <em>hash</em> y uso su resultado en las distintas peticiones para autenticar el usuario. Es decir, la API, al recibir una petición, recoge de ella el <em>hash</em>, la comprueba con el que está almacenado en la base de datos y, si son iguales, ¡eureka!, usuario autenticado.</p>
+
+<p>¿Vemos el problema?</p>
+
+<p>Cualquier persona que conozca el <em>hash</em> de nuestra contraseña podrá autenticarse sin problemas como nosotros antes la API.</p>
+
+
+<figure class="text-center">
+    
+        <img src="/images/auth-simple-hash-key.jpg" alt="Envío simple de hash de contraseña e interceptación" />
+    
+    
+    <figcaption>
+        <h4>Envío simple de hash de contraseña e interceptación</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<p>El atacante no conoce nuestra contraseña original <strong>¡y ni falta que le hace!</strong>.</p>
+
+<p>Lo que tenemos que hacer es dotar de cierta <em>aleatoriedad</em> al componente que utilicemos para autentificar al usuario en cada una de las peticiones, con el objetivo de que, si un atacante obtiene dicho componente, no le valga para gran cosa.</p>
+
+<p>Y es algo realmente sencillo, como veremos en la siguiente sección.</p>
+
+<h1 id="un-método-sencillo-para-autenticar-nuestras-peticiones">Un método sencillo para autenticar nuestras peticiones</h1>
+
+<p>Bauticemos las cosas. Ese componente que permite al usuario autenticarse frente a la API, esto es, decirle <em>¡soy yo y sólo yo!</em> es lo que comunmente se conoce como <strong>token</strong>.</p>
+
+<p>Hemos visto en la sección anterior que no podemos usar como token simplemente el hash de nuestra contraseña, porque sería muy sencillo que alguien se hiciese pasar por nosotros.</p>
+
+<p>El objetivo es que, en cada petición, ese token sea distinto, de tal manera que si alguien lo obtiene, no pueda volver a utilizarlo. A esto se le llama otorgarle <strong>aleatoriedad</strong> al token.</p>
+
+<p>Una manera sencilla de lograrlo es <strong>emplear la misma petición en la generación del token</strong>.</p>
+
+<p>Cada petición siempre contendrá unos datos que parametrizan la acción que se va a realizar. Como mímino, la ruta del método de la API que queremos utilizar (<code>/book</code> por ejemplo, si esa es la ruta para obtener un listado de todos nuestros libros). Pero también puede contener parámetros en la <em>query string</em> (<code>since=2017-04-27&amp;until=2017-04-28</code> por ejemplo), el propio cuerpo del mensaje HTTP (el objeto JSON que contiene los datos, o en formato <em>x-www-form-urlencoded</em> o en <em>multipart/formdata</em> o en XML o en lo que sea) o incluso las propias cabeceras de la petición (donde especificamos el <code>Content-Type</code>, por ejemplo).</p>
+
+<p>La idea es utilizar todos esos datos que hacen que dicha petición sea única para formar el token.</p>
+
+<p>Es decir, el token sería el resultado de la función hash de la concatenación de los siguientes valores:</p>
+
+<ol>
+<li>La clave pública del usuario: su nombre de usuario, su <em>API key</em>, su identificador de usuario&hellip; Aquello que nos indique quién está realizando la petición.</li>
+<li>Todos los datos que hacen única la petición: su ruta (o <em>path</em>), su <em>query string</em> y sus parámetros (cuerpo y/o cabecera).</li>
+<li>El hash de la contraseña, la clave privada del usuario.</li>
+</ol>
+
+<pre><code>token = sha256(user_id + {path} + {query_string} + {parameters} + sha256(password))
+</code></pre>
+
+<p>Si ahora, un atacante obtiene dicho token, no podrá autenticarse como nosotros ante todo el sistema. <strong>Pero sí si repite exactamente la misma petición</strong>.</p>
+
+<p>Es decir, si un atacante obtiene de alguna manera toda la petición, token incluído, de un recurso concreto (<code>book</code>, por ejemplo) de un usuario real y válido de nuestra API, al repetir él mismo dicha petición nuestro sistema no tendría manera de identificarlo como inválido y le daría acceso sin problema, eso sí, únicamente a ese recurso al que se refiere la petición.</p>
+
+<p>Eso sí, si intenta utilizar el mismo token para un recurso diferente (<code>author</code>, por ejemplo), entonces nuestro sistema, al verificar el token, verá que no coincide y le denegará el acceso. Y esto se aplica también si varía la <em>query string</em> (realizar otro filtrado de los libros, por ejemplo), o si varía alguna de las cabeceras (si queremos obtener los datos por XML en vez de JSON, por ejemplo).</p>
+
+<p>¡Hey! ¡Por lo menos hemos conseguido que el atacante no tenga acceso a toda la API simplemente obteniendo un token (como sí ocurre si el token es simplemente la contraseña <em>&ldquo;hasheada&rdquo;</em>).</p>
+
+<p>Ahora bien, si queremos evitar este pequeño problema, la única manera es incluir en el token un componente temporal, un <strong>instante de expiración</strong> a partir del cual la petición no es válida.</p>
+
+<p>Cabe decir que, para evitar complejidad computacional del lado del servidor, es aconsejable enviar dicho instante de expiración también en claro en nuestra petición.</p>
+
+<p>De este modo, el token ahora se calcula aplicando la función hash a la concatenación de los siguientes elementos:</p>
+
+<ol>
+<li>La clave pública del usuario: nombre de usuario, <em>API key</em>, identificador de usuario&hellip;</li>
+<li>Todos los datos que hacen única la petición: su ruta (o <em>path</em>), su <em>query string</em> y sus parámetros.</li>
+<li>El instance de ejecución de la petición, o <em>timestamp</em>.</li>
+<li>El hash de la contraseña, la clave privada del usuario.</li>
+</ol>
+
+<pre><code>token = sha256(user_id + {path} + {query_string} + {parameters} + timestamp + sha256(password))
+</code></pre>
+
+<blockquote>
+<p>Una pequeña indicación con respecto al <em>timestamp</em>: <strong>utilizad siempre valores UTC</strong>. Nunca utilicéis sellos temporales en la zona horaria del usuario, u os volveréis locos para verificarlas en el servidor.</p>
+</blockquote>
+
+<p>La siguiente figura resume todo el proceso.</p>
+
+
+<figure class="text-center w100">
+    
+        <img src="/images/auth-method.jpg" alt="Método simple de autenticación segura" />
+    
+    
+    <figcaption>
+        <h4>Método simple de autenticación segura</h4>
+        
+    </figcaption>
+    
+</figure>
+
+
+<ol>
+<li>La aplicación cliente compone el token tal y como hemos especificado arriba</li>
+<li>La aplicación cliente realiza la petición a la ruta especificada, con la <em>query string</em> y los parámetros necesarios, y a mayores también envía el identificador de usuario y el <em>timestamp</em> en claro.</li>
+<li>El servidor, antes de hacer nada, comprueba que el <em>timestamp</em> recibido se encuentra dentro de los parámetros aceptables. Por ejemplo, que no sea más antiguo que cinco minutos (es decir, las peticiones a la API tienen un periodo de validez de cinco minutos). Si la petición ha expirado, directamente la descartamos e informamos a la aplicación cliente.</li>
+<li>En caso contrario, el servidor utiliza el identificador de usuario para recuperar el hash de su clave privada (de una base de datos, por ejemplo).</li>
+<li>A continuación, recalcula el token. Fijaos que tiene todos los datos necesarios: el identificador del usuario, la ruta, la <em>query string</em>, los parámetros, el timestamp y el hash de la contraseña, que la acaba de recuperar en el paso anterior.</li>
+<li>Si el token recalculado es igual al token recibido, acepta la petición y ejecuta lo que tenga que ejecutar, devolviendo el resultado a la aplicación cliente.</li>
+<li>En caso contrario, rechaza la petición, notificando de ello a la aplicación cliente.</li>
+</ol>
+
+<h1 id="conclusiones">Conclusiones</h1>
+
+<p>Hemos hecho un pequeño y muy simplificado repaso de los aspectos básicos de autenticación y ciertas definiciones, siendo la más importante las funciones hash.</p>
+
+<p>Finalmente, os he propuesto un método súper sencillo de aplicar para implementar autenticación segura en peticiones a una API.</p>
+
+<p>Ahora bien, si queréis aplicar seguridad <strong>DE VERDAD</strong> (en negrita y mayúsculas) porque vuestra API así lo requiere (es un sistema crítico que tiene que cumplir ciertos requerimientos para que lo certifiquen, por ejemplo), entonces descartad esta aproximación.</p>
+
+<p>Tened en cuenta que este método no evita problemas derivados a que el atacante tenga acceso al equipo del usuario. Por ejemplo, si la aplicación cliente es una aplicación web, nuestro hash de la contraseña podemos almacenarla en una <em>cookie</em> para no tener que pedirle la contraseña al usuario cada vez que realice una petición. Entonces, si dicho dispositivo tiene instalado un <em>malware</em> que consigue acceder a las cookies del navegador y las envía al servidor del atacante&hellip; <em>we are screwed up</em>. ¡Tiene todos los datos necesarios para suplantar la identidad de nuestro usuario cada vez que quiera!</p>
+
+<blockquote>
+<p>No os confundais. Ahora el atacante ha obtenido el hash de la contraseña <strong>desde el mismo dispositivo del usuario</strong> no a través del propio canal de comunicación, que es lo que hemos evitado otorgando aletoriedad al token de autenticación.</p>
+</blockquote>
+
+<p>En estos casos, entonces tenéis que optar por implementar <strong>estándares de seguridad</strong>. Concretamente, os recomiendo que echéis un vistazo a <a href="https://jwt.io/">JSON Web Tokens (JWT)</a> o si queremos ir más allá, implementar el estandar <a href="https://oauth.net/2/">OAuth 2.0</a>. Pero eso es carne para otro artículo.</p>
+
+<p>Así a todo: pragmatismo. El método de este artículo es perfectamente válido para muchas APIs que podéis llegar a implementar y además (creo) es simple e intuitivo de entender. ¡Y no solo APIs! En general, para cualquier &ldquo;artefacto&rdquo; que requiera una autenticación de los usuarios.</p>
+
+<p>En todo caso, ante cualquier duda, ya sabéis: <strong>¡comentarios!</strong>.</p>
+
+<p>¡Nos vemos en nada!</p>
+</div>
+  </div>
+
+  <footer class="article-footer">
+    <div class="content-inner clearfix">
+      
+        <a href="https://moisesvilar.github.io/post/personal-tecalis/" class="previous-post btn btn-info btn-lg">Anterior</a>
+      
+      
+    </div>
+  </footer>
+
+</article>
+
+    <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'moisesvilar';
+    var disqus_identifier = 'https:\/\/moisesvilar.github.io\/post\/auth-intro\/';
+    var disqus_title = 'Autenticación simple y segura para una API';
+    var disqus_url = 'https:\/\/moisesvilar.github.io\/post\/auth-intro\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+  </div>
+</div>
+
+      </div>
+    </main>
+
+    <footer class="l-footer">
+      <div class="container">
+        <p>
+			<a href="" target="_blank" type="application/rss+xml"><i class="fa fa-rss-square"></i>&nbsp;RSS</a>&nbsp;
+			<a href="https://twitter.com/moisvilar" target="_blank"><i class="fa fa-twitter-square"></i>&nbsp;Twitter</a>&nbsp;
+			<a href="https://github.com/moisesvilar" target="_blank"><i class="fa fa-github-square"></i>&nbsp;Github</a>&nbsp;<br/>
+			&copy; Esta obra está bajo una <a target='_blank' rel='license' href='http://creativecommons.org/licenses/by/4.0/'>Licencia Creative Commons Atribución 4.0 Internacional</a>.<br/>
+			Powered by <a href="https://gohugo.io/">Hugo</a>.&nbsp;
+		</p>
+        <aside>
+          <p></p>
+        </aside>
+      </div>
+    </footer>
+
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script>
+      $(document).ready(function() {
+        $('a:not([href^="https:\/\/moisesvilar.github.io\/"]):not([href^="#"]):not([href^="/"])').attr('target', '_blank');
+      });
+    </script>
+  </body>
+</html>
+

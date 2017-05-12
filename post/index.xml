@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>es-ES</language>
     <copyright>&amp;copy; Esta obra está bajo una &lt;a target=&#39;_blank&#39; rel=&#39;license&#39; href=&#39;http://creativecommons.org/licenses/by/4.0/&#39;&gt;Licencia Creative Commons Atribución 4.0 Internacional&lt;/a&gt;.</copyright>
-    <lastBuildDate>Sat, 08 Apr 2017 15:47:56 +0200</lastBuildDate>
+    <lastBuildDate>Thu, 11 May 2017 15:47:56 +0200</lastBuildDate>
     
 	<atom:link href="https://moisesvilar.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Autenticación simple y segura para una API</title>
+      <link>https://moisesvilar.github.io/post/auth-intro/</link>
+      <pubDate>Thu, 11 May 2017 15:47:56 +0200</pubDate>
+      
+      <guid>https://moisesvilar.github.io/post/auth-intro/</guid>
+      <description>Si no has estado viviendo en un templo budista tibetano durante los últimos años seguramente has tenido que implementar alguna vez una API REST que de servicio a una aplicación (web, móvil o lo que sea).
+O por lo menos, una aproximación bastarda a lo que idealmente sería una API REST.
+Con este artículo no quiero entrar en la definición de una &amp;ldquo;buena API REST&amp;rdquo;. Quizás en otro momento.</description>
+    </item>
     
     <item>
       <title>Hasta pronto, Tecalis!</title>
